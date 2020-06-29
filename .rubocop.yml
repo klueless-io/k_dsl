@@ -1,4 +1,5 @@
 AllCops:
+  NewCops: enable
   DisplayCopNames: true
   ExtraDetails: true
 
@@ -42,4 +43,24 @@ Style/BlockComments:
   Include:
     - "**/spec/*"
 
-inherit_from: .rubocop_todo.yml
+# Style/ExponentialNotation
+# Style/HashEachMethods
+# Style/HashTransformKeys
+# Style/HashTransformValues
+# Style/RedundantFetchBlock
+# Style/RedundantRegexpCharacterClass
+# Style/RedundantRegexpEscape
+# Style/SlicingWithRange
+
+# inherit_from: .rubocop_todo.yml
+
+
+
+# The following cops were added to RuboCop, but are not configured. Please set Enabled to either `true` or `false` in your `.rubocop.yml` file:
+#  - Layout/EmptyLinesAroundAttributeAccessor (0.83)
+#  - Layout/SpaceAroundMethodCallOperator (0.82)
+#  - Lint/DeprecatedOpenSSLConstant (0.84)
+#  - Lint/MixedRegexpCaptureTypes (0.85)
+#  - Lint/RaiseException (0.81)
+#  - Lint/StructNewOverride (0.81)
+# For more information: https://docs.rubocop.org/rubocop/versioning.html

@@ -30,6 +30,9 @@ k_dsl.yml
 *.a
 mkmf.log
 
+# Ruby Version
+.ruby-version
+
 # Environment File
 .env
 
