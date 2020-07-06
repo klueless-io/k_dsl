@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# require 'rails_helper'
 require 'spec_helper'
 
 RSpec.describe KDsl::SettingsDsl do
@@ -45,7 +44,7 @@ RSpec.describe KDsl::SettingsDsl do
           expect(subject).to respond_to(:the)
         end
         it 'will respond to setter' do
-          expect(subject).to respond_to(:the=).with(1).argument
+          expect(subject).to respond_to(:the=)
         end
       end
 
@@ -54,7 +53,7 @@ RSpec.describe KDsl::SettingsDsl do
           expect(subject).not_to respond_to(:unknown_attribute)
         end
         it 'will not respond to setter' do
-          expect(subject).not_to respond_to(:unknown_attribute=).with(1).argument
+          expect(subject).not_to respond_to(:unknown_attribute=)
         end
       end
     end
@@ -113,22 +112,6 @@ RSpec.describe KDsl::SettingsDsl do
   #   expect(settings.k_parent).to_not be_nil
   #   expect(settings.k_parent.k_key).to eq(:x)
   #   expect(settings.k_parent.type).to eq(:entity)
-  # end
-
-  # context '' do
-  #   dsl = KDsl::SettingsDsl.new(data) do
-  #     the 'quick'
-  #     brown 'fox'
-  #   end
-
-  #   dsl.k_debug
-  #   puts dsl.the
-  #   puts dsl.brown
-  #   puts dsl.fox
-
-  #   puts dsl.respond_to?(:the)
-  #   puts dsl.respond_to?(:brown)
-  #   puts dsl.respond_to?(:fox)
   # end
 
   context 'setting key/values' do
