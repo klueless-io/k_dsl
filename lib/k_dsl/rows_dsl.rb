@@ -26,24 +26,32 @@ module KDsl
       end
     end
 
-    def row(*args, **options)
+    # rubocop:disable Metrics/AbcSize
+    def row(*args, **named_args)
       fields = @data[@name]['fields']
 
       raise "To many values for row, argument #{i}" if args.length > fields.length
 
-      # Set default key / values
-      row = fields.reduce({}) { |hash, f| hash[f['name']] = f['default']; hash }
+      # Apply column names with defaults
+      row = fields.each_with_object({}) do |f, hash|
+        hash[f['name']] = f['default']
+      end
 
-      # Override with positional args
-      args.each_with_index { |arg, i| row[fields[i]['name']] = convert_symbol(arg) }
+      # Override with positional arguments
+      args.each_with_index do |arg, i|
+        row[fields[i]['name']] = clean_symbol(arg)
+      end
 
-      # Override with named options
-      safe_options = HashWithIndifferentAccess.new(options)
-      safe_options.keys.each { |key| row[key] = safe_options[key] }
+      # Override with named args
+      named_args.each_key do |key|
+        row[key.to_s] = named_args[key]
+      end
 
       @data[@name]['rows'] << row
     end
+    # rubocop:enable Metrics/AbcSize
 
+    # rubocop:disable Naming/AccessorMethodName
     def get_fields
       @data[@name]['fields']
     end
@@ -51,6 +59,7 @@ module KDsl
     def get_rows
       @data[@name]['rows']
     end
+    # rubocop:enable Naming/AccessorMethodName
 
     def find_row(key, value)
       @data[@name]['rows'].find { |r| r[key] == value }
@@ -59,13 +68,12 @@ module KDsl
     # Field definition
     #
     # @param [String|Symbol] name Name of the field
-    # @param arg_default Default value if not specified, nil if not set
-    # @param arg_type Type of data, string if not set
+    # @param args[0] Default value if not specified, nil if not set
+    # @param args[1] Type of data, string if not set
     # @param default: Default value (using named params), as above
     # @param type: Type of data (using named params), as above
     # @return [Hash] Field definition
     def field(name, *args, default: nil, type: nil)
-
       # default value can be found at position 0 or default: tag (see unit test edge cases)
       default_value = if args.length.positive?
                         args[0].nil? ? default : args[0]
@@ -74,12 +82,12 @@ module KDsl
                       end
 
       # type can be found at position 1 or type: tag
-      type_value = args.length > 1 ? args[1] : type
+      type_value = (args.length > 1 ? args[1] : type) || :string
 
       {
-        name: clean_symbol(name),
-        default: clean_symbol(default_value),
-        type: clean_symbol(type_value)
+        'name' => clean_symbol(name),
+        'default' => clean_symbol(default_value),
+        'type' => clean_symbol(type_value)
       }
     end
     alias f field
@@ -89,31 +97,5 @@ module KDsl
 
       value.is_a?(Symbol) ? value.to_s : value
     end
-
-    def method_missing(key, *_args, &_block)
-      puts "method missing #{key}"
-      # @data[@name][key] = args[0]
-    end
-
-    # ------------------------------------------------------------
-    # The following methods really need to be in their own specialized
-    # classes that extend RowDsl and exist specificall for each
-    # DocumentDsl that exists
-    # ------------------------------------------------------------
-    
-    # There are not tests, this is just concept code for now
-
-    def one2one(entity, **args)
-      raise "one2one can only be used with entity types: #{entity.model}" if entity.artifact_type != 'entity'
-
-      row entity.model, entity.models , "#{entity.model}_id", 'OneToOne', nil, entity.main_key, entity.td_key1, entity.td_key2, entity.td_key3, args
-    end
-
-    def one2many(entity)
-      raise "one2many can only be used with entity types: #{entity.model}" if entity.artifact_type != 'entity'
-
-      row entity.model, entity.models , "#{entity.model}_id", 'OneToMany', nil, entity.main_key, entity.td_key1, entity.td_key2, entity.td_key3, args
-    end
-
   end
 end
