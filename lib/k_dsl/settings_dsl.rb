@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'json'
+
 module KDsl
   # Builds up key/value settings from the block and applies them to a key coded node on the hash 
   class SettingsDsl
@@ -14,8 +16,7 @@ module KDsl
 
       @k_parent = options[:k_parent] if !options.nil? && options.key?(:k_parent)
 
-      @data[@k_key] = {} # HashWithIndifferentAccess.new
-      @i = 5
+      @data[@k_key] = {}
 
       # Need a way to find out the line number for errors and report it correctly
       begin
@@ -31,49 +32,43 @@ module KDsl
       end
     end
 
-    # NEEDS REFACTOR
-    # READ THIS: https://rubystyle.guide/#no-method-missing
-    # def respond_to_missing?(method_name, *args)
-    #   method_name == :bark or super
-    # end
-
-    # rubocop:disable Style/MethodMissingSuper, Style/MissingRespondToMissing
-    def method_missing(name, *args, &_block)
-      if args.length.zero?
-        @data[@k_key][name.to_s]
-      else
-        @data[@k_key][name.to_s] = args[0]
-      end
-
-      # puts [@k_key,name, args, block, @data]
-
-      # read_attribute = <<-RUBY
-      # def #{name}
-      #   # get_value(name.to_s)
-      #   @data['#{@k_key}']['#{name}']
-      # end
-      # RUBY
-
-      # Have not got this working yet
-      # https://www.mindmeister.com/1391592384
-      #
-      # As a developer, I may want to call description "value" x 2 and not see exception, so that I an redefined a property
-      #
-      # L.block "DUPLICATE SETTING '#{name}', you have used this setting previously in the block"
-      # write_attribute = <<-RUBY
-      # def #{name}=(value)
-      #   @data['#{@k_key}']['#{name}'] = value
-      # end
-      # RUBY
-      # puts 'WRITE ATTRIBUTE'
-      # self.class_eval(read_attribute, __FILE__, __LINE__)
-
-      # puts write_attribute
-      # SettingsDsl.class_eval(write_attribute, __FILE__, __LINE__)
-
-      # result
+    # Refactor this to 
+    def respond_to_missing?(name, *_args, &_block)
+      n = name.to_s
+      n = n[0..-2] if n.end_with?('=')
+      @data[@k_key].key?(n.to_s)
     end
-    # rubocop:enable Style/MethodMissingSuper, Style/MissingRespondToMissing
+
+    def method_missing(name, *missing_method_args, &_block)
+      add_getter_or_setter_method(name)
+      add_setter_method(name)
+
+      send("#{name}=", missing_method_args[0])
+
+      super unless self.class.method_defined?(name)
+    end
+
+    def add_getter_or_setter_method(name)
+      self.class.class_eval do
+        define_method(name) do |*args|
+          raise StandardError, 'SettingsDSL does not know how to handle multiple paramater setters' if args.length > 1
+
+          if args.length.zero?
+            get_value(name)
+          else
+            send("#{name}=", args[0])
+          end
+        end
+      end
+    end
+
+    def add_setter_method(name)
+      self.class.class_eval do
+        define_method("#{name}=") do |value|
+          @data[@k_key][name.to_s] = value
+        end
+      end
+    end
 
     def get_value(name)
       @data[@k_key][name.to_s]
@@ -84,7 +79,7 @@ module KDsl
     end
 
     def k_debug
-      puts JSON.pretty_generate(@data[@k_name])
+      puts JSON.pretty_generate(@data[@k_key])
     end
   end
 end
