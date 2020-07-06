@@ -151,20 +151,19 @@ RSpec.describe KDsl::SettingsDsl do
         td_query             %w[01 02 03 04 10 11 12 13]
       end
 
-      expect(data).to eq({
-                            'key_values' => {
-                              'rails_port' => 3000,
-                              'model_type' => 'AdminUser',
-                              'model' => 'AdminUser',
-                              'models' => 'AdminUsers',
-                              'main_key' => 'email',
-                              'note' => 'password is an alias to encrypted_password',
-                              'td_key1' => 'super',
-                              'td_key2' => 'management',
-                              'td_key3' => 'engineering',
-                              'td_query' => %w[01 02 03 04 10 11 12 13]
-                            }
-                          })
+      expect(data).to eq('key_values' =>
+        {
+          'rails_port' => 3000,
+          'model_type' => 'AdminUser',
+          'model' => 'AdminUser',
+          'models' => 'AdminUsers',
+          'main_key' => 'email',
+          'note' => 'password is an alias to encrypted_password',
+          'td_key1' => 'super',
+          'td_key2' => 'management',
+          'td_key3' => 'engineering',
+          'td_query' => %w[01 02 03 04 10 11 12 13]
+        })
     end
   end
 

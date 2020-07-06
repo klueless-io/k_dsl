@@ -3,7 +3,8 @@
 require 'json'
 
 module KDsl
-  # Builds up key/value settings from the block and applies them to a key coded node on the hash 
+  # Builds up key/value settings from the block
+  # and applies them to a key coded node on the hash
   class SettingsDsl
     attr_reader :k_parent
     attr_reader :k_key
@@ -32,7 +33,7 @@ module KDsl
       end
     end
 
-    # Refactor this to 
+    # Refactor this
     def respond_to_missing?(name, *_args, &_block)
       n = name.to_s
       n = n[0..-2] if n.end_with?('=')
