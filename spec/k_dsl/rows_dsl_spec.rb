@@ -141,13 +141,25 @@ RSpec.describe KDsl::RowsDsl do
   end
 
   describe '#fields (configuration)' do
+    it 'minimal configuration' do
+      KDsl::RowsDsl.new(data) do
+      end
+
+      expect(data).to eq(
+        KDsl.config.default_rows_key.to_s => {
+          'fields' => [],
+          'rows' => []
+        }
+      )
+    end
+
     it 'simple fields' do
-      KDsl::RowsDsl.new(data, :rows) do
+      KDsl::RowsDsl.new(data, :items) do
         fields %i[column1 column2]
       end
 
       expect(data).to eq(
-        'rows' => {
+        'items' => {
           'fields' => [
             { 'name' => 'column1', 'type' => 'string', 'default' => nil },
             { 'name' => 'column2', 'type' => 'string', 'default' => nil }

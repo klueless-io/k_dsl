@@ -9,19 +9,19 @@ RSpec.describe KDsl::SettingsDsl do
     it 'and key is nil' do
       KDsl::SettingsDsl.new(data)
 
-      expect(data).to eq({ 'settings' => {} })
+      expect(data).to eq({ KDsl.config.default_settings_key.to_s => {} })
     end
 
-    it 'and key is :settings' do
-      KDsl::SettingsDsl.new(data, :settings)
+    it 'and key is :key_values' do
+      KDsl::SettingsDsl.new(data, :key_values)
 
-      expect(data).to eq({ 'settings' => {} })
+      expect(data).to eq({ 'key_values' => {} })
     end
 
-    it 'and key is "settings"' do
-      KDsl::SettingsDsl.new(data, 'settings')
+    it 'and key is "key_values"' do
+      KDsl::SettingsDsl.new(data, 'key_values')
 
-      expect(data).to eq({ 'settings' => {} })
+      expect(data).to eq({ 'key_values' => {} })
     end
 
     it 'and key is :key_values' do
@@ -30,7 +30,6 @@ RSpec.describe KDsl::SettingsDsl do
       expect(data).to eq({ 'key_values' => {} })
     end
   end
-  # descrive 'with internally constructed attributes' do
 
   context 'simple setting' do
     subject do
@@ -192,6 +191,20 @@ RSpec.describe KDsl::SettingsDsl do
       expect(subject.rails_port).to eq(3000)
       expect(subject.model).to eq('User')
       expect(subject.active).to eq(true)
+    end
+  end
+
+  describe 'error handling' do
+    context 'multiple setting values from &block' do
+      subject { KDsl::SettingsDsl.new(data) { multiple 1, 2 } }
+
+      it { expect { subject }.to raise_error(KDsl::DslError) }
+    end
+
+    context 'multiple setting values from attribute' do
+      subject { KDsl::SettingsDsl.new(data) }
+
+      it { expect { subject.multiple(1, 2) }.to raise_error(KDsl::DslError) }
     end
   end
 end

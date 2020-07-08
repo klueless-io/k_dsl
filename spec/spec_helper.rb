@@ -5,6 +5,8 @@ require 'bundler/setup'
 require 'k_dsl'
 require 'k_dsl/dsl_error'
 require 'k_dsl/dsl_invalid_type_error'
+require 'k_dsl/configuration'
+require 'k_dsl/document_dsl'
 require 'k_dsl/settings_dsl'
 require 'k_dsl/rows_dsl'
 
