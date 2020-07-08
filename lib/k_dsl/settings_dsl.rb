@@ -13,7 +13,7 @@ module KDsl
 
     def initialize(data, key = nil, **options, &block)
       @data = data
-      @k_key = (key || 'settings').to_s
+      @k_key = (key || KDsl.config.default_settings_key).to_s
 
       @k_parent = options[:k_parent] if !options.nil? && options.key?(:k_parent)
 
@@ -23,10 +23,10 @@ module KDsl
       begin
         instance_eval(&block) if block_given?
         # rubocop:disable Style/RescueStandardError
-      rescue => e
+      rescue # => e
         # rubocop:enable Style/RescueStandardError
-        puts "Invalid code block in settings_dsl: #{@k_key}"
-        puts e.message
+        # puts "Invalid code block in settings_dsl: #{@k_key}"
+        # puts e.message
         # L.heading "Invalid code block in settings_dsl: #{@k_key}"
         # L.exception e
         raise
@@ -41,6 +41,8 @@ module KDsl
     end
 
     def method_missing(name, *missing_method_args, &_block)
+      raise DslError, 'Multiple setting values is not supported' if missing_method_args.length > 1
+
       add_getter_or_setter_method(name)
       add_setter_method(name)
 
@@ -52,7 +54,7 @@ module KDsl
     def add_getter_or_setter_method(name)
       self.class.class_eval do
         define_method(name) do |*args|
-          raise StandardError, 'SettingsDSL does not know how to handle multiple paramater setters' if args.length > 1
+          raise DslError, 'Multiple setting values is not supported' if args.length > 1
 
           if args.length.zero?
             get_value(name)
