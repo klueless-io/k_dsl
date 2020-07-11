@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-# require 'klue/klue'
-RSpec.describe KDsl::DocumentDsl do
-  subject(:dsl) { described_class.new(key, &block) }
+
+RSpec.describe KDsl::Model::Document do
+  subject { described_class.new(key, &block) }
 
   let(:key) { 'some name' }
   let(:block) { nil }
@@ -111,7 +111,7 @@ RSpec.describe KDsl::DocumentDsl do
   end
 
   describe 'configure settings' do
-    subject(:dsl) { described_class.new(key, &block) }
+    subject { described_class.new(key, &block) }
 
     context 'setting groups' do
       context 'with default name' do
@@ -261,10 +261,10 @@ RSpec.describe KDsl::DocumentDsl do
 
         it do
           expect(subject.data).to eq({
-                                            'table' => { 'fields' => [], 'rows' => [] },
-                                            'table2' => { 'fields' => [], 'rows' => [] },
-                                            'table3' => { 'fields' => [], 'rows' => [] }
-                                          })
+                                       'table' => { 'fields' => [], 'rows' => [] },
+                                       'table2' => { 'fields' => [], 'rows' => [] },
+                                       'table3' => { 'fields' => [], 'rows' => [] }
+                                     })
         end
       end
     end
@@ -294,29 +294,29 @@ RSpec.describe KDsl::DocumentDsl do
         # dsl.debug
 
         expect(dsl.data).to eq({
-                                      'table' => {
-                                        'fields' => [
-                                          { 'name' => 'column1', 'type' => 'string', 'default' => nil },
-                                          { 'name' => 'column2', 'type' => 'string', 'default' => nil },
-                                          { 'name' => 'column3', 'type' => 'string', 'default' => false },
-                                          { 'name' => 'column4', 'type' => 'string', 'default' => 'CUSTOM VALUE' }
-                                        ],
-                                        'rows' => [
-                                          { 'column1' => 'row1-c1', 'column2' => 'row1-c2', 'column3' => true , 'column4' => 'row1-c4' },
-                                          { 'column1' => nil, 'column2' => nil, 'column3' => false, 'column4' => 'CUSTOM VALUE' }
-                                        ]
-                                      },
-                                      'another_table' => {
-                                        'fields' => [
-                                          { 'name' => 'column1', 'type' => 'string', 'default' => nil },
-                                          { 'name' => 'column2', 'type' => 'string', 'default' => nil }
-                                        ],
-                                        'rows' => [
-                                          { 'column1' => 'david', 'column2' => nil },
-                                          { 'column1' => nil, 'column2' => 'cruwys' }
-                                        ]
-                                      }
-                                    })
+                                 'table' => {
+                                   'fields' => [
+                                     { 'name' => 'column1', 'type' => 'string', 'default' => nil },
+                                     { 'name' => 'column2', 'type' => 'string', 'default' => nil },
+                                     { 'name' => 'column3', 'type' => 'string', 'default' => false },
+                                     { 'name' => 'column4', 'type' => 'string', 'default' => 'CUSTOM VALUE' }
+                                   ],
+                                   'rows' => [
+                                     { 'column1' => 'row1-c1', 'column2' => 'row1-c2', 'column3' => true , 'column4' => 'row1-c4' },
+                                     { 'column1' => nil, 'column2' => nil, 'column3' => false, 'column4' => 'CUSTOM VALUE' }
+                                   ]
+                                 },
+                                 'another_table' => {
+                                   'fields' => [
+                                     { 'name' => 'column1', 'type' => 'string', 'default' => nil },
+                                     { 'name' => 'column2', 'type' => 'string', 'default' => nil }
+                                   ],
+                                   'rows' => [
+                                     { 'column1' => 'david', 'column2' => nil },
+                                     { 'column1' => nil, 'column2' => 'cruwys' }
+                                   ]
+                                 }
+                               })
       end
     end
   end
