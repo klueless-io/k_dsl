@@ -6,7 +6,6 @@ module KDsl
     #
     # When given a hash, the modifier can make a decision to alter that hash based on the hash contents.
     class Processor
-
       # Pass a set of modifiers using an array in the format of
       # :symbol, class or lambda
       #

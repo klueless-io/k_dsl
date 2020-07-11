@@ -49,4 +49,3 @@ RSpec.describe KDsl do
     end
   end
 end
-
