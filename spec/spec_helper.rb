@@ -9,9 +9,9 @@ require 'k_dsl/modifier/lowercase_modifier'
 require 'k_dsl/dsl_error'
 require 'k_dsl/dsl_invalid_type_error'
 require 'k_dsl/configuration'
-require 'k_dsl/document_dsl'
-require 'k_dsl/settings_dsl'
-require 'k_dsl/table_dsl'
+require 'k_dsl/model/document'
+require 'k_dsl/model/settings'
+require 'k_dsl/model/table'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

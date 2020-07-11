@@ -2,30 +2,30 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::SettingsDsl do
+RSpec.describe KDsl::Model::Settings do
   let(:data) { {} }
 
   context 'with setting groups' do
     it 'and key is nil' do
-      KDsl::SettingsDsl.new(data)
+      described_class.new(data)
 
       expect(data).to eq({ KDsl.config.default_settings_key.to_s => {} })
     end
 
     it 'and key is :key_values' do
-      KDsl::SettingsDsl.new(data, :key_values)
+      described_class.new(data, :key_values)
 
       expect(data).to eq({ 'key_values' => {} })
     end
 
     it 'and key is "key_values"' do
-      KDsl::SettingsDsl.new(data, 'key_values')
+      described_class.new(data, 'key_values')
 
       expect(data).to eq({ 'key_values' => {} })
     end
 
     it 'and key is :key_values' do
-      KDsl::SettingsDsl.new(data, :key_values)
+      described_class.new(data, :key_values)
 
       expect(data).to eq({ 'key_values' => {} })
     end
@@ -33,7 +33,7 @@ RSpec.describe KDsl::SettingsDsl do
 
   context 'simple setting' do
     subject do
-      KDsl::SettingsDsl.new(data) do
+      described_class.new(data) do
         the 'quick'
       end
     end
@@ -106,7 +106,7 @@ RSpec.describe KDsl::SettingsDsl do
   end
 
   # it 'attach parent' do
-  #   settings = KDsl::SettingsDsl.new(data, k_parent: KDsl::DocumentDsl.new(:x)) do; end
+  #   settings = described_class.new(data, k_parent: KDsl::DocumentDsl.new(:x)) do; end
 
   #   expect(settings.k_parent).to_not be_nil
   #   expect(settings.k_parent.k_key).to eq(:x)
@@ -115,13 +115,13 @@ RSpec.describe KDsl::SettingsDsl do
 
   context 'setting key/values' do
     it 'no &block' do
-      KDsl::SettingsDsl.new(data)
+      described_class.new(data)
 
       expect(data).to eq({ 'settings' => {} })
     end
 
     it 'default limited and get value' do
-      dsl = KDsl::SettingsDsl.new(data, :settings) do
+      dsl = described_class.new(data, :settings) do
         rails_port        3000
         model             'User'
         active            true
@@ -135,7 +135,7 @@ RSpec.describe KDsl::SettingsDsl do
     end
 
     it 'default full' do
-      KDsl::SettingsDsl.new(data, :key_values) do
+      described_class.new(data, :key_values) do
         rails_port           3000
         model_type           'AdminUser'
         model                'AdminUser'
@@ -168,7 +168,7 @@ RSpec.describe KDsl::SettingsDsl do
 
   context 'setting get values by key' do
     subject do
-      KDsl::SettingsDsl.new(data, :settings) do
+      described_class.new(data, :settings) do
         rails_port        3000
         model             'User'
         active            true
@@ -196,13 +196,13 @@ RSpec.describe KDsl::SettingsDsl do
 
   describe 'error handling' do
     context 'multiple setting values from &block' do
-      subject { KDsl::SettingsDsl.new(data) { multiple 1, 2 } }
+      subject { described_class.new(data) { multiple 1, 2 } }
 
       it { expect { subject }.to raise_error(KDsl::DslError) }
     end
 
     context 'multiple setting values from attribute' do
-      subject { KDsl::SettingsDsl.new(data) }
+      subject { described_class.new(data) }
 
       it { expect { subject.multiple(1, 2) }.to raise_error(KDsl::DslError) }
     end
