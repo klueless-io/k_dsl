@@ -3,7 +3,42 @@
 require 'spec_helper'
 # require 'klue/klue'
 RSpec.describe KDsl::DocumentDsl do
+  subject(:dsl) { described_class.new(key, &block) }
+
   let(:key) { 'some name' }
+  let(:block) { nil }
+
+  class Pluralizer
+    def update(data)
+      return unless data.key?('model') && (!data.key?('model_plural') || data['model_plural'].nil?)
+
+      data['model_plural'] = "#{data['model']}s"
+    end
+  end
+
+  class AlterKeyValues
+    def update(data)
+      data.update(data) do |key, value|
+        if key.to_s == 'first_name'
+          value.gsub('David', 'Davo')
+        elsif key.to_s == 'last_name'
+          value.gsub('Cruwys', 'The Great')
+        else
+          value
+        end
+      end
+      data['full_name'] = "#{data['first_name']} #{data['last_name']}"
+    end
+  end
+
+  class AlterStructure
+    def update(data)
+      return unless data.key?('full_name')
+
+      data['funny_name'] = data['full_name'].downcase
+      data.delete('full_name')
+    end
+  end
 
   # before(:example) do
   #   Klue.reset
@@ -14,8 +49,6 @@ RSpec.describe KDsl::DocumentDsl do
   # end
 
   describe 'constructor' do
-    subject { described_class.new key }
-
     context 'with minimum params' do
       it {
         expect(subject).to have_attributes(
@@ -23,7 +56,7 @@ RSpec.describe KDsl::DocumentDsl do
           type: :entity,
           namespace: '',
           options: {},
-          meta_data: {}
+          data: {}
         )
       }
     end
@@ -77,11 +110,10 @@ RSpec.describe KDsl::DocumentDsl do
     end
   end
 
-  describe 'configure settings via block' do
+  describe 'configure settings' do
     subject(:dsl) { described_class.new(key, &block) }
 
-    context 'setting group' do
-
+    context 'setting groups' do
       context 'with default name' do
         let(:block) do
           lambda do |_|
@@ -90,7 +122,7 @@ RSpec.describe KDsl::DocumentDsl do
           end
         end
 
-        it { expect(subject.meta_data).to eq('settings' => {}) }
+        it { expect(subject.data).to eq('settings' => {}) }
       end
 
       context 'with custom name' do
@@ -101,7 +133,7 @@ RSpec.describe KDsl::DocumentDsl do
           end
         end
 
-        it { expect(subject.meta_data).to eq('key_values' => {}) }
+        it { expect(subject.data).to eq('key_values' => {}) }
       end
 
       context 'with multiple groups' do
@@ -116,15 +148,15 @@ RSpec.describe KDsl::DocumentDsl do
           end
         end
 
-        it { expect(subject.meta_data).to eq('settings' => {}, 'key_values' => {}, 'name_values' => {}) }
+        it { expect(subject.data).to eq('settings' => {}, 'key_values' => {}, 'name_values' => {}) }
       end
     end
 
-    context 'with key/values' do
+    context 'setting key/values' do
       let(:block) do
         lambda do |_|
           settings do
-            name              'user'
+            model             'user'
             rails_port        3000
             active            true
           end
@@ -132,210 +164,162 @@ RSpec.describe KDsl::DocumentDsl do
       end
 
       it do
-        expect(subject.meta_data).to eq('settings' =>
+        expect(subject.data).to eq('settings' =>
           {
-            'name' => 'user',
+            'model' => 'user',
             'rails_port' => 3000,
             'active' => true
           })
       end
+
+      context 'with modifiers - sample 1' do
+        let(:block) do
+          lambda do |_|
+            settings modifiers: [Pluralizer, :uppercase] do
+              model             'user'
+              rails_port        3000
+              active            true
+            end
+          end
+        end
+
+        it do
+          expect(subject.data).to eq('settings' =>
+            {
+              'model' => 'USER',
+              'model_plural' => 'USERS',
+              'rails_port' => 3000,
+              'active' => true
+            })
+        end
+      end
+
+      context 'with modifiers - sample 2' do
+        let(:block) do
+          lambda do |_|
+            settings modifiers: [AlterKeyValues, AlterStructure] do
+              first_name 'David'
+              last_name 'Cruwys'
+              age 40
+            end
+          end
+        end
+
+        it do
+          expect(subject.data).to eq('settings' =>
+            {
+              'first_name' => 'Davo',
+              'last_name' => 'The Great',
+              'funny_name' => 'davo the great',
+              'age' => 40
+            })
+        end
+      end
     end
   end
 
-  #     it 'standard settings with visitor on setting' do
-  #       dsl = Klue::Dsl::DocumentDsl.new name do 
-  #         settings visitors: [Klue::Dsl::ArtifactSettingsVisitor] do
-  #           rails_port        3000
-  #           model             'User'
-  #           active            true
-  #         end
-  #         settings :key_values do
-  #           rails_port        3000
-  #           model             'User'
-  #           active            true
-  #         end
-  #       end
+  describe 'config table' do
+    subject(:dsl) { described_class.new(key, &block) }
 
-  #       expect(dsl.meta_data).to eq('settings' => {
-  #                                         'rails_port' => 3000,
-  #                                         'model' => 'User',
-  #                                         'model_plural' => 'Users',
-  #                                         'active' => true
-  #                                       },
-  #                                       'key_values' => {
-  #                                         'rails_port' => 3000,
-  #                                         'model' => 'User',
-  #                                         'active' => true
-  #                                       })
-  #     end
+    context 'table groups' do
+      context 'with default key' do
+        let(:block) do
+          lambda do |_|
+            table do
+            end
+          end
+        end
 
-  #     it 'standard settings with visitor on artifact' do
-  #       dsl = Klue::Dsl::DocumentDsl.new name,
-  #                                        visitors: [Klue::Dsl::ArtifactSettingsVisitor] do
-  #         settings do
-  #           rails_port        3000
-  #           model             'User'
-  #           active            true
-  #         end
-  #         settings :key_values do
-  #           rails_port        3000
-  #           model             'User'
-  #           active            true
-  #         end
-  #       end
+        it { expect(subject.type).to eq(:entity) }
+        it { expect(subject.data).to eq('table' => { 'fields' => [], 'rows' => [] }) }
+      end
 
-  #       expect(dsl.meta_data).to eq('settings' => {
-  #                                         'rails_port' => 3000,
-  #                                         'model' => 'User',
-  #                                         'model_plural' => 'Users',
-  #                                         'active' => true
-  #                                       },
-  #                                       'key_values' => {
-  #                                         'rails_port' => 3000,
-  #                                         'model' => 'User',
-  #                                         'model_plural' => 'Users',
-  #                                         'active' => true
-  #                                       })
-  #     end
+      context 'with custom key' do
+        let(:block) do
+          lambda do |_|
+            table :custom do
+            end
+          end
+        end
 
-  #     context 'with options' do
-  #       subject {
-  #         Klue::Dsl::DocumentDsl.new name, options do
-  #           settings do
-  #             first_name      'David'
-  #             last_name       'Cruwys'
-  #             full_name       'David Cruwys'
-  #           end
-  #         end
-  #       }
+        it { expect(subject.data).to eq('custom' => { 'fields' => [], 'rows' => [] }) }
+      end
 
-  #       context 'upcase all values' do
-  #         let(:options) { { upcase: true } }
-  #         it { expect(subject.meta_data).to eq('settings' => { 'first_name' => 'DAVID', 'last_name' => 'CRUWYS', 'full_name' => 'DAVID CRUWYS' }) }
-  #       end
+      context 'with multiple tables' do
+        let(:block) do
+          lambda do |_|
+            table do
+            end
 
-  #       context 'downcase all values' do
-  #         let(:options) { { downcase: true } }
-  #         it { expect(subject.meta_data).to eq('settings' => { 'first_name' => 'david', 'last_name' => 'cruwys', 'full_name' => 'david cruwys' }) }
-  #       end
+            table :table2 do
+            end
 
-  #       context 'change values with a visitor' do
-  #         let(:options) { { visitors: [MockAlterKeyValues] } }
-  #         it { expect(subject.meta_data).to eq('settings' => { 'first_name' => 'Davo', 'last_name' => 'The Great', 'full_name' => 'Davo The Great' }) }
-  #       end
+            table :table3 do
+            end
+          end
+        end
 
-  #       context 'change and insert values with multiple visitors' do
-  #         let(:options) { { visitors: [MockAlterKeyValues, MockAlterStructure] } }
-  #         it { expect(subject.meta_data).to eq({'settings' => { 'first_name' => 'Davo', 'last_name' => 'The Great', 'funny_name' => 'Some Funny Name' }}) }
-  #       end
+        it do
+          expect(subject.data).to eq({
+                                            'table' => { 'fields' => [], 'rows' => [] },
+                                            'table2' => { 'fields' => [], 'rows' => [] },
+                                            'table3' => { 'fields' => [], 'rows' => [] }
+                                          })
+        end
+      end
+    end
 
-  #     end
+    context 'table rows' do
+      subject(:dsl) { described_class.new(key, &block) }
 
-  #   end
+      let(:block) do
+        lambda do |_|
+          table do
+            fields [:column1, :column2, f(:column3, false), f(:column4, default: 'CUSTOM VALUE')]
 
-  # end
+            row 'row1-c1', 'row1-c2', true, 'row1-c4'
+            row
+          end
 
-  # describe 'config rows via block' do
+          table :another_table do
+            fields %w[column1 column2]
 
-  #   context 'row groups' do
+            row column1: 'david'
+            row column2: 'cruwys'
+          end
+        end
+      end
 
-  #     it 'default' do
-  #       dsl = Klue::Dsl::DocumentDsl.new name do 
-  #         rows do
-  #         end
-  #       end
+      it 'multiple row groups, multiple rows and positional and key/valued data' do
+        # dsl.debug
 
-  #       expect(dsl.type).to eq(:entity)
-  #       expect(dsl.meta_data).to eq('rows' => { 'fields' =>[], 'rows' =>[] })
-  #     end
-
-  #     it 'custom' do
-  #       dsl = Klue::Dsl::DocumentDsl.new name do 
-  #         rows :custom_rows do
-  #         end
-  #       end
-  
-  #       expect(dsl.type).to eq(:entity)
-  #       expect(dsl.meta_data).to eq('custom_rows' => { 'fields' =>[], 'rows' =>[] })
-  #     end
-
-  #     it 'multiple' do
-  #       dsl = Klue::Dsl::DocumentDsl.new name do 
-  #         rows :custom_rows1 do
-  #         end
-
-  #         rows do
-  #         end
-
-  #         rows :custom_rows2 do
-  #         end
-
-  #       end
-  
-  #       expect(dsl.meta_data).to eq({
-  #         'custom_rows1' => { 'fields' =>[], 'rows' => [] },
-  #         'rows' => { 'fields' =>[], 'rows' =>[] },
-  #         'custom_rows2' => { 'fields' =>[], 'rows' =>[] }
-  #         })
-  #     end
-  
-  #   end
-    
-  #   context 'row values' do
-
-  #     it 'multiple row groups, multiple rows and positional and key/valued data' do
-
-  #       dsl = Klue::Dsl::DocumentDsl.new name   do 
-
-  #         rows do
-
-  #           fields [:column1, :column2, f(:column3, false), f(:column4, default: 'CUSTOM VALUE')]
-
-  #           row 'row1-c1', 'row1-c2',  true, 'row1-c4'
-  #           row   
-    
-  #         end
-
-  #         rows :custom_rows do
-
-  #           fields [:column1, :column2]
-
-  #           row column1: 'david'  
-  #           row column2: 'cruwys'
-  
-  #         end
-  #       end
-
-  #       # dsl.debug
-
-  #       expect(dsl.meta_data).to eq({ 
-  #         'rows' => { 
-  #           'fields' => [
-  #             { 'name' => 'column1', 'type' => 'string', 'default' => nil },
-  #             { 'name' => 'column2', 'type' => 'string', 'default' => nil },
-  #             { 'name' => 'column3', 'type' => 'string', 'default' => false },
-  #             { 'name' => 'column4', 'type' => 'string', 'default' => 'CUSTOM VALUE' }
-  #           ], 
-  #           'rows' => [
-  #             { 'column1' => 'row1-c1', 'column2' => 'row1-c2', 'column3' => true , 'column4' => 'row1-c4' },
-  #             { 'column1' => nil      , 'column2' => nil      , 'column3' => false, 'column4' => 'CUSTOM VALUE' }
-  #           ] 
-  #         },
-  #         'custom_rows' => { 
-  #           'fields' => [
-  #             { 'name' => 'column1', 'type' => 'string', 'default' => nil },
-  #             { 'name' => 'column2', 'type' => 'string', 'default' => nil }
-  #           ], 
-  #           'rows' => [
-  #             { 'column1' => 'david', 'column2' => nil },
-  #             { 'column1' => nil    , 'column2' => 'cruwys' }
-  #           ]
-  #         }
-  #       })
-
-  #     end
-
-  #   end
+        expect(dsl.data).to eq({
+                                      'table' => {
+                                        'fields' => [
+                                          { 'name' => 'column1', 'type' => 'string', 'default' => nil },
+                                          { 'name' => 'column2', 'type' => 'string', 'default' => nil },
+                                          { 'name' => 'column3', 'type' => 'string', 'default' => false },
+                                          { 'name' => 'column4', 'type' => 'string', 'default' => 'CUSTOM VALUE' }
+                                        ],
+                                        'rows' => [
+                                          { 'column1' => 'row1-c1', 'column2' => 'row1-c2', 'column3' => true , 'column4' => 'row1-c4' },
+                                          { 'column1' => nil, 'column2' => nil, 'column3' => false, 'column4' => 'CUSTOM VALUE' }
+                                        ]
+                                      },
+                                      'another_table' => {
+                                        'fields' => [
+                                          { 'name' => 'column1', 'type' => 'string', 'default' => nil },
+                                          { 'name' => 'column2', 'type' => 'string', 'default' => nil }
+                                        ],
+                                        'rows' => [
+                                          { 'column1' => 'david', 'column2' => nil },
+                                          { 'column1' => nil, 'column2' => 'cruwys' }
+                                        ]
+                                      }
+                                    })
+      end
+    end
+  end
 
   #   describe 'write as' do
 
@@ -614,31 +598,6 @@ RSpec.describe KDsl::DocumentDsl do
   #     it { expect(subject.rows[0].f2).to eq(true) }
   #     it { expect(subject.rows[1].f1).to eq('C') }
   #     it { expect(subject.rows[1].f2).to eq(false) }
-  #   end
-  # end
-
-  # class MockAlterKeyValues
-  #   def visit(hash)
-  #     hash.keys.each do |key|
-  #       if key.to_s == 'first_name'
-  #         hash[key] = hash[key].gsub('David', 'Davo')
-  #       end
-
-  #       if key.to_s == 'last_name'
-  #         hash[key] = hash[key].gsub('Cruwys', 'The Great')
-  #       end
-
-  #       if key.to_s == 'full_name'
-  #         hash[key] = "#{hash[:first_name]} #{hash[:last_name]}"
-  #       end
-  #     end
-  #   end
-  # end
-
-  # class MockAlterStructure
-  #   def visit(hash)
-  #     hash[:funny_name] = 'Some Funny Name'
-  #     hash.delete(:full_name)
   #   end
   # end
 

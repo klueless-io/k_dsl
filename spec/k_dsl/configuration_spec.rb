@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl do #::Configuration do
+RSpec.describe KDsl do
   describe '#config' do
     subject { described_class.config }
 
@@ -29,5 +29,24 @@ RSpec.describe KDsl do #::Configuration do
 
       it { is_expected.to eq(:rows) }
     end
+
+    context '.modifiers' do
+      subject { described_class.config.modifiers }
+
+      it { is_expected.to be_an(Hash) }
+      it { is_expected.to include(:uppercase) }
+      it { is_expected.to include(:lowercase) }
+    end
+  end
+
+  describe '#get_modifier' do
+    subject { described_class.config.get_modifier(key) }
+
+    context 'when valid key' do
+      let(:key) { :uppercase }
+
+      it { is_expected.not_to be_nil }
+    end
   end
 end
+

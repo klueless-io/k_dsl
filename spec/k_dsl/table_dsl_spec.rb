@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::RowsDsl do
+RSpec.describe KDsl::TableDsl do
   let(:data) { {} }
   let(:instance) { described_class.new(data) }
 
@@ -127,7 +127,7 @@ RSpec.describe KDsl::RowsDsl do
 
   describe '#get_fields' do
     it 'get fields' do
-      dsl = KDsl::RowsDsl.new(data, :rows) do
+      dsl = KDsl::TableDsl.new(data, :rows) do
         fields %i[name type]
       end
 
@@ -142,7 +142,7 @@ RSpec.describe KDsl::RowsDsl do
 
   describe '#fields (configuration)' do
     it 'minimal configuration' do
-      KDsl::RowsDsl.new(data) do
+      KDsl::TableDsl.new(data) do
       end
 
       expect(data).to eq(
@@ -154,7 +154,7 @@ RSpec.describe KDsl::RowsDsl do
     end
 
     it 'simple fields' do
-      KDsl::RowsDsl.new(data, :items) do
+      KDsl::TableDsl.new(data, :items) do
         fields %i[column1 column2]
       end
 
@@ -170,7 +170,7 @@ RSpec.describe KDsl::RowsDsl do
     end
 
     it 'fields with custom default value for column2' do
-      KDsl::RowsDsl.new(data, :rows) do
+      KDsl::TableDsl.new(data, :rows) do
         fields [:column1, field(:column2, 'CUSTOM DEFAULT')]
       end
 
@@ -186,7 +186,7 @@ RSpec.describe KDsl::RowsDsl do
     end
 
     it 'fields with custom default boolean FALSE' do
-      KDsl::RowsDsl.new(data, :rows) do
+      KDsl::TableDsl.new(data, :rows) do
         fields [field(:column1, false), field(:column2, default: false)]
       end
 
@@ -202,7 +202,7 @@ RSpec.describe KDsl::RowsDsl do
     end
 
     it 'fields with custom default boolean TRUE' do
-      KDsl::RowsDsl.new(data, :rows) do
+      KDsl::TableDsl.new(data, :rows) do
         fields [field(:column1, true), field(:column2, default: true)]
       end
 
@@ -218,7 +218,7 @@ RSpec.describe KDsl::RowsDsl do
     end
 
     it 'fields with custom type & default value in column2' do
-      KDsl::RowsDsl.new(data, :rows) do
+      KDsl::TableDsl.new(data, :rows) do
         fields [:column1, field(:column2, 333, :integer)]
       end
 
@@ -234,7 +234,7 @@ RSpec.describe KDsl::RowsDsl do
     end
 
     it 'fields with custom type & default value in column2 using the (f) alias' do
-      KDsl::RowsDsl.new(data, :rows) do
+      KDsl::TableDsl.new(data, :rows) do
         fields [:column1, f(:column2, 3.33, type: :float)]
       end
 
@@ -250,7 +250,7 @@ RSpec.describe KDsl::RowsDsl do
     end
 
     it 'fields with custom type & default value in column2 using named paramaters' do
-      KDsl::RowsDsl.new(data, :rows) do
+      KDsl::TableDsl.new(data, :rows) do
         fields [:column1, f(:column2, default: 'CUSTOM VALUE', type: 'customtype')]
       end
 
@@ -266,7 +266,7 @@ RSpec.describe KDsl::RowsDsl do
     end
 
     it 'mixed fields' do
-      KDsl::RowsDsl.new(data, :rows) do
+      KDsl::TableDsl.new(data, :rows) do
         fields [:name, f(:type, 'String'), f(:title, ''), f(:default, nil), f(:required, true, :bool), :reference_type, :db_type, :format_type, :description]
       end
 
@@ -292,21 +292,21 @@ RSpec.describe KDsl::RowsDsl do
   describe '#rows (configuration)' do
     context 'row groupings' do
       it 'name defaults to :rows' do
-        KDsl::RowsDsl.new(data)
+        KDsl::TableDsl.new(data)
 
         expect(data).to eq('rows' => { 'fields' => [], 'rows' => [] })
       end
 
       it 'name :people' do
-        KDsl::RowsDsl.new(data, :people)
+        KDsl::TableDsl.new(data, :people)
 
         expect(data).to eq('people' => { 'fields' => [], 'rows' => [] })
       end
 
       it 'name :people and places and rows' do
-        KDsl::RowsDsl.new(data, :people)
-        KDsl::RowsDsl.new(data)
-        KDsl::RowsDsl.new(data, :places)
+        KDsl::TableDsl.new(data, :people)
+        KDsl::TableDsl.new(data)
+        KDsl::TableDsl.new(data, :places)
 
         expect(data).to eq(
           'people' => { 'fields' => [], 'rows' => [] },
@@ -320,7 +320,7 @@ RSpec.describe KDsl::RowsDsl do
   describe 'table (configuration)' do
     context 'using positional arguments' do
       it 'with 2 rows, 2 columns and nil data' do
-        KDsl::RowsDsl.new(data) do
+        KDsl::TableDsl.new(data) do
           fields %i[column1 column2]
 
           row
@@ -342,7 +342,7 @@ RSpec.describe KDsl::RowsDsl do
       end
 
       it 'with 2 rows, 2 columns and data' do
-        KDsl::RowsDsl.new(data) do
+        KDsl::TableDsl.new(data) do
           fields %i[column1 column2]
 
           row   'row1-c1', 'row1-c2'
@@ -364,7 +364,7 @@ RSpec.describe KDsl::RowsDsl do
       end
 
       it 'with 2 rows, 2 columns using mixed nil mixed data' do
-        KDsl::RowsDsl.new(data) do
+        KDsl::TableDsl.new(data) do
           fields %i[column1 column2]
 
           row   nil, 'row1-c2'
@@ -386,7 +386,7 @@ RSpec.describe KDsl::RowsDsl do
       end
 
       it 'with 2 rows, 3 columns using mixed default types' do
-        KDsl::RowsDsl.new(data) do
+        KDsl::TableDsl.new(data) do
           fields [:column1, :column2, f(:column3, false)]
 
           row   nil, 'row1-c2', true
@@ -412,7 +412,7 @@ RSpec.describe KDsl::RowsDsl do
 
   context 'using named arguments' do
     it 'with 2 rows, 2 columns using named values' do
-      KDsl::RowsDsl.new(data) do
+      KDsl::TableDsl.new(data) do
         fields %i[column1 column2]
 
         row column1: 'david'
@@ -438,7 +438,7 @@ RSpec.describe KDsl::RowsDsl do
 
   context 'using positional and named arguments' do
     it 'add 2 rows, 2 columns with named values' do
-      KDsl::RowsDsl.new(data) do
+      KDsl::TableDsl.new(data) do
         fields %i[column1 column2]
 
         row 'david'
@@ -462,7 +462,7 @@ RSpec.describe KDsl::RowsDsl do
 
   describe 'get rows' do
     subject do
-      KDsl::RowsDsl.new(data) do
+      KDsl::TableDsl.new(data) do
         fields %i[column1 column2]
 
         row 1
