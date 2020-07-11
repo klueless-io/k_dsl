@@ -2,7 +2,7 @@
 
 module KDsl
   # Build rows (aka DataTable) with field definitions and rows of data
-  class RowsDsl
+  class TableDsl
     attr_reader :name
 
     def initialize(data, name = nil, &block)

@@ -3,12 +3,15 @@
 require 'pry'
 require 'bundler/setup'
 require 'k_dsl'
+require 'k_dsl/modifier/processor'
+require 'k_dsl/modifier/uppercase_modifier'
+require 'k_dsl/modifier/lowercase_modifier'
 require 'k_dsl/dsl_error'
 require 'k_dsl/dsl_invalid_type_error'
 require 'k_dsl/configuration'
 require 'k_dsl/document_dsl'
 require 'k_dsl/settings_dsl'
-require 'k_dsl/rows_dsl'
+require 'k_dsl/table_dsl'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
