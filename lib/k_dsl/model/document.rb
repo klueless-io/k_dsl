@@ -16,7 +16,7 @@ module KDsl
       # @param [String|Symbol] name Name of the document
       # @param args[0] Type of the document, defaults to KDsl.config.default_document_type if not set
       # @param default: Default value (using named params), as above
-      # rubocop:disable Style/RescueStandardError, Metrics/AbcSize
+      # rubocop:disable Metrics/AbcSize
       def initialize(key, *args, **options, &block)
         @key = key
         @type = args.length.positive? ? args[0] || KDsl.config.default_document_type : KDsl.config.default_document_type
@@ -32,9 +32,10 @@ module KDsl
         #   # L.kv 'AM I EVER IN', 'Artifact.new &Block'
         #   # L.block block.source
 
+        # TODO: raise_error Unit Test
         begin
           instance_eval(&block)
-        rescue => e
+        rescue KDsl::DslError => e
           puts "Invalid code block in document_dsl during registration: #{key}"
           puts e.message
           # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
@@ -44,7 +45,7 @@ module KDsl
 
         # Klue.register_instance_or_default.save self
       end
-      # rubocop:enable Style/RescueStandardError, Metrics/AbcSize
+      # rubocop:enable Metrics/AbcSize
 
       def settings(key = nil, **options, &block)
         options ||= {}
@@ -52,22 +53,30 @@ module KDsl
         opts = {}.merge(@options) # Document Options
                  .merge(options)  # Settings Options
 
+        # IOC/DI this instance
         settings = KDsl::Model::Settings.new(@data, key, k_parent: self, &block)
+        settings.run_modifiers(opts)
 
-        modifiers = processor.modifiers(opts[:modifiers])
-        processor.modify_settings(modifiers, @data[settings.k_key])
+        # # Shift into the settings class (+ tests)
+        # modifiers = processor.modifiers(opts[:modifiers])
+        # processor.modify_settings(modifiers, @data[settings.k_key])
 
         settings
       end
 
       def table(key = :table, &block)
-        @key = key
-
+        # IOC/DI this instance
         table = KDsl::Model::Table.new(@data, key, &block)
 
         table
       end
       alias rows table
+
+      # Sweet add-on would be builders
+      # def builder(key, &block)
+      #   # example
+      #   KDsl::Builder::Shotstack.new(@data, key, &block)
+      # end
 
       def data
         @data.clone
@@ -75,6 +84,7 @@ module KDsl
 
       private
 
+      # Deprecate
       def processor
         @processor ||= KDsl::Modifier::Processor.new
       end
