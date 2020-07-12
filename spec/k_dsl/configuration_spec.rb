@@ -30,6 +30,24 @@ RSpec.describe KDsl do
       it { is_expected.to eq(:table) }
     end
 
+    # context '.document_class' do
+    #   subject { described_class.config.document_class }
+
+    #   it { is_expected.to eq(KDsl::Model::Document) }
+    # end
+
+    # context '.table_class' do
+    #   subject { described_class.config.table_class }
+
+    #   it { is_expected.to eq(KDsl::Model::Table) }
+    # end
+
+    # context '.settings_class' do
+    #   subject { described_class.config.settings_class }
+
+    #   it { is_expected.to eq(KDsl::Model::Settings) }
+    # end
+
     context '.modifiers' do
       subject { described_class.config.modifiers }
 

@@ -16,15 +16,8 @@ module KDsl
       # @param [String|Symbol] name Name of the document
       # @param args[0] Type of the document, defaults to KDsl.config.default_document_type if not set
       # @param default: Default value (using named params), as above
-      # rubocop:disable Metrics/AbcSize
       def initialize(key, *args, **options, &block)
-        @key = key
-        @type = args.length.positive? ? args[0] || KDsl.config.default_document_type : KDsl.config.default_document_type
-
-        @options = options || {}
-        @namespace = options[:namespace] || ''
-        @namespace = @namespace.to_s
-        @data = {}
+        initialize_attributes(key, *args, **options)
 
         # # L.kv 'CURRENT STATE', Klue::Dsl::RegisterDsl.get_instance.current_state
         return unless block_given? # if !Klue.registering && block_given?
@@ -45,7 +38,6 @@ module KDsl
 
         # Klue.register_instance_or_default.save self
       end
-      # rubocop:enable Metrics/AbcSize
 
       def settings(key = nil, **options, &block)
         options ||= {}
@@ -54,19 +46,15 @@ module KDsl
                  .merge(options)  # Settings Options
 
         # IOC/DI this instance
-        settings = KDsl::Model::Settings.new(@data, key, k_parent: self, &block)
+        settings = KDsl.config.settings_class.new(@data, key, k_parent: self, &block)
         settings.run_modifiers(opts)
-
-        # # Shift into the settings class (+ tests)
-        # modifiers = processor.modifiers(opts[:modifiers])
-        # processor.modify_settings(modifiers, @data[settings.k_key])
 
         settings
       end
 
       def table(key = :table, &block)
         # IOC/DI this instance
-        table = KDsl::Model::Table.new(@data, key, &block)
+        table = KDsl.config.table_class.new(@data, key, &block)
 
         table
       end
@@ -84,9 +72,14 @@ module KDsl
 
       private
 
-      # Deprecate
-      def processor
-        @processor ||= KDsl::Modifier::Processor.new
+      def initialize_attributes(key, *args, **options)
+        @key = key
+        @type = args.length.positive? ? args[0] || KDsl.config.default_document_type : KDsl.config.default_document_type
+
+        @options = options || {}
+        @namespace = options[:namespace] || ''
+        @namespace = @namespace.to_s
+        @data = {}
       end
     end
   end
