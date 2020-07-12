@@ -45,16 +45,14 @@ module KDsl
         opts = {}.merge(@options) # Document Options
                  .merge(options)  # Settings Options
 
-        # IOC/DI this instance
-        settings = KDsl.config.settings_class.new(@data, key, k_parent: self, &block)
+        # settings = KDsl.config.settings_class.new(@data, key, k_parent: self, &block)
+        settings = settings_instance(@data, key, k_parent: self, &block)
         settings.run_modifiers(opts)
-
         settings
       end
 
       def table(key = :table, &block)
-        # IOC/DI this instance
-        table = KDsl.config.table_class.new(@data, key, &block)
+        table = table_instance(@data, key, &block)
 
         table
       end
@@ -80,6 +78,14 @@ module KDsl
         @namespace = options[:namespace] || ''
         @namespace = @namespace.to_s
         @data = {}
+      end
+
+      def settings_instance(data, key, **options, &block)
+        KDsl.config.settings_class.new(data, key, options, &block)
+      end
+
+      def table_instance(data, key, &block)
+        KDsl.config.table_class.new(data, key, &block)
       end
     end
   end
