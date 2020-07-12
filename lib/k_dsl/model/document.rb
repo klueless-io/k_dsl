@@ -51,6 +51,7 @@ module KDsl
       end
 
       def table(key = :table, &block)
+        # NEED to add support for parent and run_modifiers I think
         table = table_instance(@data, key, &block)
 
         table
