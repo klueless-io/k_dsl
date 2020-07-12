@@ -6,6 +6,14 @@ module KDsl
     #
     # When given a hash, the modifier can make a decision to alter that hash based on the hash contents.
     class Processor
+      def self.processor
+        @processor ||= KDsl::Modifier::Processor.new
+      end
+
+      def self.get_modifiers(modifiers)
+        processor.modifiers(modifiers)
+      end
+
       # Pass a set of modifiers using an array in the format of
       # :symbol, class or lambda
       #
