@@ -34,11 +34,26 @@ module KDsl
         end
       end
 
+      def my_data
+        @data[@k_key]
+      end
+
+      def run_modifiers(opts)
+        modifiers = KDsl::Modifier::Processor.get_modifiers(opts[:modifiers])
+
+        return if modifiers.empty?
+
+        modifiers.each do |modifier|
+          modifier.send(:update, my_data) if modifier.respond_to?(:update)
+          modifier.send(:call, my_data) if modifier.respond_to?(:call)
+        end
+      end
+
       # Refactor this
       def respond_to_missing?(name, *_args, &_block)
         n = name.to_s
         n = n[0..-2] if n.end_with?('=')
-        @data[@k_key].key?(n.to_s)
+        my_data.key?(n.to_s)
       end
 
       def method_missing(name, *missing_method_args, &_block)
@@ -55,7 +70,7 @@ module KDsl
       def add_getter_or_setter_method(name)
         self.class.class_eval do
           define_method(name) do |*args|
-            raise DslError, 'Multiple setting values is not supported' if args.length > 1
+            raise Dsl::DslError, 'Multiple setting values is not supported' if args.length > 1
 
             if args.length.zero?
               get_value(name)
@@ -69,21 +84,17 @@ module KDsl
       def add_setter_method(name)
         self.class.class_eval do
           define_method("#{name}=") do |value|
-            @data[@k_key][name.to_s] = value
+            my_data[name.to_s] = value
           end
         end
       end
 
       def get_value(name)
-        @data[@k_key][name.to_s]
-      end
-
-      def to_h
-        @data
+        my_data[name.to_s]
       end
 
       def k_debug
-        puts JSON.pretty_generate(@data[@k_key])
+        puts JSON.pretty_generate(my_data)
       end
     end
   end
