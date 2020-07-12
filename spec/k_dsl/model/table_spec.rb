@@ -144,10 +144,10 @@ RSpec.describe KDsl::Model::Table do
 
   describe '#fields (configuration)' do
     it 'minimal configuration' do
-      described_class.new(data, :rows)
+      described_class.new(data)
 
       expect(data).to eq(
-        KDsl.config.default_rows_key.to_s => {
+        KDsl.config.default_table_key.to_s => {
           'fields' => [],
           'rows' => []
         }
@@ -290,12 +290,12 @@ RSpec.describe KDsl::Model::Table do
     end
   end
 
-  describe '#rows (configuration)' do
+  describe '#table (configuration)' do
     context 'row groupings' do
-      it 'name defaults to :rows' do
+      it 'name defaults to :table' do
         described_class.new(data)
 
-        expect(data).to eq('rows' => { 'fields' => [], 'rows' => [] })
+        expect(data).to eq('table' => { 'fields' => [], 'rows' => [] })
       end
 
       it 'name :people' do
@@ -311,7 +311,7 @@ RSpec.describe KDsl::Model::Table do
 
         expect(data).to eq(
           'people' => { 'fields' => [], 'rows' => [] },
-          'rows' => { 'fields' => [], 'rows' => [] },
+          'table' => { 'fields' => [], 'rows' => [] },
           'places' => { 'fields' => [], 'rows' => [] }
         )
       end
@@ -329,7 +329,7 @@ RSpec.describe KDsl::Model::Table do
         end
 
         expect(data).to eq(
-          'rows' => {
+          'table' => {
             'fields' => [
               { 'name' => 'column1', 'type' => 'string', 'default' => nil },
               { 'name' => 'column2', 'type' => 'string', 'default' => nil }
@@ -351,7 +351,7 @@ RSpec.describe KDsl::Model::Table do
         end
 
         expect(data).to eq(
-          'rows' => {
+          'table' => {
             'fields' => [
               { 'name' => 'column1', 'type' => 'string', 'default' => nil },
               { 'name' => 'column2', 'type' => 'string', 'default' => nil }
@@ -373,7 +373,7 @@ RSpec.describe KDsl::Model::Table do
         end
 
         expect(data).to eq(
-          'rows' => {
+          'table' => {
             'fields' => [
               { 'name' => 'column1', 'type' => 'string', 'default' => nil },
               { 'name' => 'column2', 'type' => 'string', 'default' => nil }
@@ -395,7 +395,7 @@ RSpec.describe KDsl::Model::Table do
         end
 
         expect(data).to eq(
-          'rows' => {
+          'table' => {
             'fields' => [
               { 'name' => 'column1', 'type' => 'string', 'default' => nil },
               { 'name' => 'column2', 'type' => 'string', 'default' => nil },
@@ -423,7 +423,7 @@ RSpec.describe KDsl::Model::Table do
       # puts JSON.pretty_generate(data)
 
       expect(data).to eq(
-        'rows' => {
+        'table' => {
           'fields' => [
             { 'name' => 'column1', 'type' => 'string', 'default' => nil },
             { 'name' => 'column2', 'type' => 'string', 'default' => nil }
@@ -447,7 +447,7 @@ RSpec.describe KDsl::Model::Table do
       end
 
       expect(data).to eq(
-        'rows' => {
+        'table' => {
           'fields' => [
             { 'name' => 'column1', 'type' => 'string', 'default' => nil },
             { 'name' => 'column2', 'type' => 'string', 'default' => nil }

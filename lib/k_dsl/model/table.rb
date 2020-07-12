@@ -8,7 +8,7 @@ module KDsl
 
       def initialize(data, name = nil, &block)
         @data = data
-        @name = (name || 'rows').to_s
+        @name = (name || KDsl.config.default_table_key.to_s).to_s
 
         @data[@name] = { 'fields' => [], 'rows' => [] }
 

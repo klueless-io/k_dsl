@@ -18,14 +18,14 @@ module KDsl
     # Rename settings & rows
     attr_accessor :default_document_type
     attr_accessor :default_settings_key
-    attr_accessor :default_rows_key
+    attr_accessor :default_table_key
 
     attr_accessor :modifiers
 
     def initialize
       @default_document_type = :entity
+      @default_table_key = :table
       @default_settings_key = :settings
-      @default_rows_key = :rows
 
       @modifiers = default_modifiers
     end
