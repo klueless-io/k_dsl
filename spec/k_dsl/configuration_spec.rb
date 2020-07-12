@@ -24,10 +24,10 @@ RSpec.describe KDsl do
       it { is_expected.to eq(:settings) }
     end
 
-    context '.default_rows_key' do
-      subject { described_class.config.default_rows_key }
+    context '.default_table_key' do
+      subject { described_class.config.default_table_key }
 
-      it { is_expected.to eq(:rows) }
+      it { is_expected.to eq(:table) }
     end
 
     context '.modifiers' do
