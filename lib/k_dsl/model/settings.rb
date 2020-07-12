@@ -7,18 +7,13 @@ module KDsl
     # Builds up key/value settings from the block
     # and applies them to a key coded node on the hash
     class Settings
-      attr_reader :k_parent
-      attr_reader :k_key
+      attr_reader :parent
+      attr_reader :key
 
-      alias kp k_parent
+      alias kp parent
 
       def initialize(data, key = nil, **options, &block)
-        @data = data
-        @k_key = (key || KDsl.config.default_settings_key).to_s
-
-        @k_parent = options[:k_parent] if !options.nil? && options.key?(:k_parent)
-
-        @data[@k_key] = {}
+        initialize_attributes(data, key, **options)
 
         # Need a way to find out the line number for errors and report it correctly
         begin
@@ -26,16 +21,16 @@ module KDsl
           # rubocop:disable Style/RescueStandardError
         rescue # => e
           # rubocop:enable Style/RescueStandardError
-          # puts "Invalid code block in settings_dsl: #{@k_key}"
+          # puts "Invalid code block in settings_dsl: #{@key}"
           # puts e.message
-          # L.heading "Invalid code block in settings_dsl: #{@k_key}"
+          # L.heading "Invalid code block in settings_dsl: #{@key}"
           # L.exception e
           raise
         end
       end
 
       def my_data
-        @data[@k_key]
+        @data[@key]
       end
 
       def run_modifiers(opts)
@@ -95,6 +90,19 @@ module KDsl
 
       def k_debug
         puts JSON.pretty_generate(my_data)
+      end
+
+      private
+
+      def initialize_attributes(data, key = nil, **options)
+        raise 'k_parent has been deprecated' if !options.nil? && options.key?(:k_parent)
+
+        @data = data
+        @key = (key || KDsl.config.default_settings_key).to_s
+
+        @parent = options[:parent] if !options.nil? && options.key?(:parent)
+
+        @data[@key] = {}
       end
     end
   end

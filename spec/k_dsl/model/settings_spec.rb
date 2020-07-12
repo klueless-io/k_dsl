@@ -5,6 +5,52 @@ require 'spec_helper'
 RSpec.describe KDsl::Model::Settings do
   let(:data) { {} }
 
+  describe '.key' do
+    context 'when no key' do
+      subject { described_class.new(data).key }
+
+      it { expect(subject).to eq('settings') }
+    end
+
+    context 'when key supplied' do
+      subject { described_class.new(data, 'my-key').key }
+
+      it { expect(subject).to eq('my-key') }
+    end
+  end
+
+  describe '.parent' do
+    subject { described_class.new(data, parent: parent).parent }
+
+    context 'when not attached to parent' do
+      let(:parent) { nil }
+
+      it 'parent is nil' do
+        expect(subject).to be_nil
+      end
+    end
+
+    context 'when parent supplied' do
+      subject { described_class.new(data, parent: parent).parent }
+
+      context 'when attached to a parent object' do
+        let(:parent) { KDsl::Model::Document.new(:x) }
+
+        it { expect(subject).not_to be_nil }
+        it { expect(subject.key).to eq(:x) }
+        it { expect(subject.type).to eq(:entity) }
+      end
+    end
+  end
+
+  context 'deprecations' do
+    context 'when k_parent supplied' do
+      subject { described_class.new(data, k_parent: 'some object') }
+
+      it { expect { subject }.to raise_error 'k_parent has been deprecated'}
+    end
+  end
+
   context 'with setting groups' do
     it 'and key is nil' do
       described_class.new(data)
@@ -104,14 +150,6 @@ RSpec.describe KDsl::Model::Settings do
       end
     end
   end
-
-  # it 'attach parent' do
-  #   settings = described_class.new(data, k_parent: KDsl::DocumentDsl.new(:x)) do; end
-
-  #   expect(settings.k_parent).to_not be_nil
-  #   expect(settings.k_parent.k_key).to eq(:x)
-  #   expect(settings.k_parent.type).to eq(:entity)
-  # end
 
   context 'setting key/values' do
     it 'no &block' do

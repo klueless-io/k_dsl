@@ -45,8 +45,7 @@ module KDsl
         opts = {}.merge(@options) # Document Options
                  .merge(options)  # Settings Options
 
-        # settings = KDsl.config.settings_class.new(@data, key, k_parent: self, &block)
-        settings = settings_instance(@data, key, k_parent: self, &block)
+        settings = settings_instance(@data, key, parent: self, &block)
         settings.run_modifiers(opts)
         settings
       end
