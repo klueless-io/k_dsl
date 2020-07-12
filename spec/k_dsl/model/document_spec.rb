@@ -152,6 +152,12 @@ RSpec.describe KDsl::Model::Document do
       end
     end
 
+    context 'default DI/IOC class' do
+      subject { described_class.new(key).settings }
+
+      it { expect(subject).to be_a(KDsl::Model::Settings) }
+    end
+
     context 'setting key/values' do
       let(:block) do
         lambda do |_|
@@ -243,6 +249,12 @@ RSpec.describe KDsl::Model::Document do
         end
 
         it { expect(subject.data).to eq('custom' => { 'fields' => [], 'rows' => [] }) }
+      end
+
+      context 'default DI/IOC class' do
+        subject { described_class.new(key).table }
+
+        it { expect(subject).to be_a(KDsl::Model::Table) }
       end
 
       context 'with multiple tables' do
