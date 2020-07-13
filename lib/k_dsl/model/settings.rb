@@ -52,7 +52,7 @@ module KDsl
       end
 
       def method_missing(name, *missing_method_args, &_block)
-        raise DslError, 'Multiple setting values is not supported' if missing_method_args.length > 1
+        raise KDsl::Error, 'Multiple setting values is not supported' if missing_method_args.length > 1
 
         add_getter_or_setter_method(name)
         add_setter_method(name)
@@ -65,7 +65,7 @@ module KDsl
       def add_getter_or_setter_method(name)
         self.class.class_eval do
           define_method(name) do |*args|
-            raise Dsl::DslError, 'Multiple setting values is not supported' if args.length > 1
+            raise KDsl::Error, 'Multiple setting values is not supported' if args.length > 1
 
             if args.length.zero?
               get_value(name)

@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::DslInvalidTypeError do
+RSpec.describe KDsl::InvalidTypeError do
   describe '#constructor' do
     context 'no params' do
       subject { described_class.new }

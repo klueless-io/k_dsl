@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module KDsl
-  # General purpose document DSL
+  # Klue-Less generator
   #
-  # Made up of settings groups and table groups
   class Extras
     # OTHER_TYPES = %i[cmd].freeze
     # MICROAPP_TYPES = %i[microapp domain blueprint structure].freeze
