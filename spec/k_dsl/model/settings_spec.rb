@@ -236,13 +236,13 @@ RSpec.describe KDsl::Model::Settings do
     context 'multiple setting values from &block' do
       subject { described_class.new(data) { multiple 1, 2 } }
 
-      it { expect { subject }.to raise_error(KDsl::DslError) }
+      it { expect { subject }.to raise_error(KDsl::Error) }
     end
 
     context 'multiple setting values from attribute' do
       subject { described_class.new(data) }
 
-      it { expect { subject.multiple(1, 2) }.to raise_error(KDsl::DslError) }
+      it { expect { subject.multiple(1, 2) }.to raise_error(KDsl::Error) }
     end
   end
 end

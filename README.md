@@ -4,15 +4,13 @@
 
 KDSL is a DSL builder that uses natural language constructs and applies an MVC pattern to produce SloCode
 
-KDSL follows an MVC pattern for producing code.
+KDSL follows the MVC pattern for producing code.
 
 The model folder contains DSLS for producing documents with multiple setting groups and tables
 The view folder uses Handlebars to merge with the models to produce various code assets
 
 - KDsl -> for the controller actions and memory management
 - This is the aggregate root gem
-
-Welcome to your new ruby gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/k_dsl`.
 
 When using the source code for this gem, start by running `bin/setup` to install locally or `bundle install`
 
@@ -40,12 +38,7 @@ gem install k_dsl
 
 ## Stories
 
-
 As a Developer, I should be able to implement a flexible DSL quickly, so that I build my own Domain Language
-
-- Create new gem
-- Setup deployment pipeline
-- Setup guard and unit tests
 
 
 ## Usage
