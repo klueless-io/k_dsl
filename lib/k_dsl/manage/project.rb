@@ -2,9 +2,7 @@
 
 module KDsl
   module Manage
-    # REFACTOR: I shlould using some sort of configuration object to pass this information in
-    #
-    # Manager all the file paths and DSL documents that are avialable.
+    # Project all the file paths and DSL documents that are avialable.
     #
     # It is assumed there is a root path that DSL's live under,
     # but you can register from outside this root path using
@@ -15,55 +13,32 @@ module KDsl
     #    the available DSL's that you can interact with.
     # 2. Import happens after registrationg and represents the instantiation
     #    of a DSL for use either on it's own or by other DSL's
-    class Manager
-      # @@instance = nil
-
-      def initialize(config = KDsl::Manager::Config.new)
-      end
-
-      attr_reader :base_dsl_path                # Default root path for your DSL's
-      attr_reader :base_data_path               # Default path where data is written to
-      attr_reader :base_definition_path         # Path to Templated DSLs. These are the basis for new DSL's
-      attr_reader :base_template_path           # Default path for view templates
-      attr_reader :base_app_template_path       # Application specific override for templates (need to find a hidden location for this)
-
-      attr_reader :dsls                         # List of DSL's instances
+    class Project
+      # attr_reader :dsls                         # List of DSL's instances
 
       # There is currently a tight cupling between is boolean and DSL's so that they know whether they are being refrenced for registration or importation
       # The difference is that importation will execute their interal code block while registration will not.
       # attr_reader :current_state
       # attr_reader :current_register_file
 
-      # attr_reader :register_paths
+      attr_reader :dsl_paths
 
       # what file is currently being processed
       # attr_reader :current_processing_file
 
       # def initialize(base_dsl_path, base_data_path = nil, base_definition_path = nil, base_template_path = nil, base_app_template_path = nil)
       #   @base_dsl_path = base_dsl_path.is_a?(Pathname) ? base_dsl_path.to_s : base_dsl_path
-        
 
-      #   # L.heading 'in initialize'
-      #   # L.kv 'base_dsl_path'          , @base_dsl_path 
-      #   # L.kv 'base_data_path'         , @base_data_path 
-      #   # L.kv 'base_definition_path'   , @base_definition_path
-      #   # L.kv 'base_template_path'     , @base_template_path
-      #   # L.kv 'base_app_template_path' , @base_app_template_path
-        
-      #   @dsls = {}
-      #   @current_state = :dynamic
-      #   @current_register_file = nil
-      #   @register_paths = []
-      # end
+      attr_reader :config
 
-      # def self.reset
-      #   @@instance = nil
-      # end
+      def initialize(config = nil)
+        @config = config || KDsl::Manage::Config.new
 
-      # def self.get_instance
-      #   # Note: if you have already created an instance using custom code then it will re-used
-      #   @@instance
-      # end
+        @dsls = {}
+        # @current_state = :dynamic
+        # @current_register_file = nil
+        @dsl_paths = []
+      end
 
       # def self.create(base_dsl_path, base_data_path: nil, base_definition_path: nil, base_template_path: nil, &block)
       #   # L.kv 'create1', '@@instance is Present'  if @@instance.present?
@@ -88,7 +63,7 @@ module KDsl
       #   path = expand_path(path)
 
       #   Dir[path].sort.each do |file|
-      #     @register_paths << File.dirname(file) unless @register_paths.include? File.dirname(file)
+      #     @dsl_paths << File.dirname(file) unless @dsl_paths.include? File.dirname(file)
       #     register_file(file, path_expansion: false)
       #   end
       # end
@@ -103,7 +78,7 @@ module KDsl
       #     # L.info 'no source files'
       #   end
 
-      #   if source_file.present? && !source_file.starts_with?(*@register_paths)
+      #   if source_file.present? && !source_file.starts_with?(*@dsl_paths)
       #     L.kv 'source_file', source_file
       #     raise Klue::Dsl::DslError, 'source file skipped, file is not on a registered path'
       #   end
@@ -394,6 +369,16 @@ module KDsl
       #     k[:last_data] = k[:data]
       #     k[:data] = dsl.get_data()
       #   end
+      # end
+
+      # This makes more sense at an APP level, instead of a project level
+      # def self.reset
+      #   @@instance = nil
+      # end
+
+      # def self.get_instance
+      #   # Note: if you have already created an instance using custom code then it will re-used
+      #   @@instance
       # end
     end
   end
