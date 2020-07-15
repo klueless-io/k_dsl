@@ -9,6 +9,7 @@ group :development, :test do
   gem 'guard-bundler'
   gem 'guard-rspec'
   # pry on steroids
+  gem 'pry-coolline', github: 'owst/pry-coolline', branch: 'support_new_pry_config_api'
   gem 'jazz_fingers'
   gem 'rake', '~> 12.0'
   # this is used for cmdlets 'self-executing gems'
