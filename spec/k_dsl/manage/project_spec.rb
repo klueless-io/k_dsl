@@ -2,8 +2,23 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::Manage::Manager do
-  subject { described_class.new }
+RSpec.describe KDsl::Manage::Project do
+  let(:project) { described_class.new(config) }
+  let(:config) { nil }
+
+  describe '#constructor' do
+    context '.configuration' do
+      subject { project.config }
+
+      it { is_expected.not_to be_nil }
+    end
+
+    context '.dsl_paths' do
+      subject { project.dsl_paths }
+
+      it { is_expected.to be_empty }
+    end
+  end
   # let(:base_dsl_path1) { File.join(Rails.root, 'spec', '_', 'klue-files') }
   # let(:base_dsl_path2) { Rails.root }
 

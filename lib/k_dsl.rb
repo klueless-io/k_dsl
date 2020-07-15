@@ -12,7 +12,7 @@ require 'k_dsl/logger/log_util'
 
 # Memory management for DSLs
 require 'k_dsl/manage/config'
-require 'k_dsl/manage/manager'
+require 'k_dsl/manage/project'
 require 'k_dsl/manage/register'
 
 # DSL document structures
