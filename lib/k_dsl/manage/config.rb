@@ -28,6 +28,16 @@ module KDsl
         yield self if block_given?
       end
 
+      def to_h
+        {
+          base_dsl_path: base_dsl_path,
+          base_data_path: base_data_path,
+          base_definition_path: base_definition_path,
+          base_template_path: base_template_path,
+          base_app_template_path: base_app_template_path
+        }
+      end
+
       def base_data_path
         if @base_data_path.nil?
           File.join(base_dsl_path, '.data')
