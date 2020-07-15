@@ -19,6 +19,24 @@ RSpec.describe KDsl::Manage::Project do
       it { is_expected.to be_empty }
     end
   end
+
+  describe '#add_dsl_path' do
+    context 'with valid files' do
+      it "register multiple DSL's from single folder" do
+        expect(subject.dsls.values.length).to eq(0)
+        subject.add_dsl_path('common-auth/*.rb')
+        # expect(subject.dsls.values.length).to eq(2)
+      end
+    end
+
+    context 'with valid files in deep nested path' do
+      it "register multiple DSL's from single folder" do
+        expect(subject.dsls.values.length).to eq(0)
+        subject.add_dsl_path('**/*.rb')
+        # expect(subject.dsls.values.length).to eq(5)
+      end
+    end
+  end
   # let(:base_dsl_path1) { File.join(Rails.root, 'spec', '_', 'klue-files') }
   # let(:base_dsl_path2) { Rails.root }
 
@@ -461,26 +479,20 @@ RSpec.describe KDsl::Manage::Project do
 
   #   context 'dsl path 1' do
   #     subject { register_dsl1 }
-
   #     it { expect(subject.get_relative_folder(File.join(base_dsl_path1, 'a','b','c','somefile.rb'))).to eq('a/b/c') }
   #     it { expect(subject.get_relative_folder(File.join(base_dsl_path1, 'a','b','c','somefile'))).to eq('a/b/c') }
   #     it { expect(subject.get_relative_folder(File.join(base_dsl_path1, 'somefile.rb'))).to eq('.') }
-
   #   end
 
   #   context 'dsl path 2' do
   #     subject { register_dsl2 }
-
   #     it { expect(subject.get_relative_folder(File.join(base_dsl_path2, 'a','b','c','somefile.rb'))).to eq('a/b/c') }
   #     it { expect(subject.get_relative_folder(File.join(base_dsl_path2, 'a','b','c','somefile'))).to eq('a/b/c') }
   #     it { expect(subject.get_relative_folder(File.join(base_dsl_path2, 'somefile.rb'))).to eq('.') }
-
   #   end
-    
   # end
 
   # describe 'registration' do
-
   #   before(:example) {
   #     Klue.reset
   #   }
@@ -489,7 +501,6 @@ RSpec.describe KDsl::Manage::Project do
   #   }
 
   #   describe 'register_file' do
-
   #     context 'raise error on bad k_key' do
   #       it "k_key must be string or symbol" do
   #         expect { subject.register_file(bad_k_key) }.to raise_error(Klue::Dsl::DslError, 'k_key must be a string or symbol')
@@ -497,7 +508,6 @@ RSpec.describe KDsl::Manage::Project do
   #     end
 
   #     context 'with k_key as string' do
-        
   #       it 'should register file' do
   #         expect(subject.dsls.values.length).to eq(0)
   #         subject.register_file(admin_user_file)
@@ -511,18 +521,14 @@ RSpec.describe KDsl::Manage::Project do
   #           source: :file,
   #           file: File.join(base_dsl_path1, admin_user_file)
   #         )
-       
   #       end
-      
   #     end
 
   #     context 'with k_key as symbol' do
-        
   #       it 'should register file' do
   #         expect(subject.dsls.values.length).to eq(0)
   #         subject.register_file(basic_user_file)
   #         expect(subject.dsls.values.length).to eq(1)
-          
   #         expect(subject.dsls.values.first).to include(
   #           k_key: :basic_user, 
   #           k_type: :entity,
@@ -531,13 +537,10 @@ RSpec.describe KDsl::Manage::Project do
   #           source: :file,
   #           file: File.join(base_dsl_path1, basic_user_file)
   #         )
-
   #       end
-      
   #     end
 
   #     context 'multiple file register' do
-  
   #       it 'should register multiple files with same k_type and different k_key' do
   #         expect(subject.dsls.values.length).to eq(0)
   #         subject.register_file(admin_user_file)
@@ -563,29 +566,6 @@ RSpec.describe KDsl::Manage::Project do
   #     end
 
   #   end
-  
-  #   describe 'register_path' do
-
-  #     context 'with valid files' do
-      
-  #       it "register multiple DSL's from single folder" do
-  #         expect(subject.dsls.values.length).to eq(0)
-  #         subject.register_path('common-auth/*.rb')
-  #         expect(subject.dsls.values.length).to eq(2)
-  #       end
-  #     end
-
-  #     context 'with valid files in deep nested path' do
-      
-  #       it "register multiple DSL's from single folder" do
-  #         expect(subject.dsls.values.length).to eq(0)
-  #         subject.register_path('**/*.rb')
-  #         expect(subject.dsls.values.length).to eq(5)
-  #       end
-  #     end
-
-  #   end
-
   # end
 
   # describe 'load_file' do

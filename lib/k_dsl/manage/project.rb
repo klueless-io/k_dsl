@@ -14,22 +14,22 @@ module KDsl
     # 2. Import happens after registrationg and represents the instantiation
     #    of a DSL for use either on it's own or by other DSL's
     class Project
-      # attr_reader :dsls                         # List of DSL's instances
+      # Project configuration
+      attr_reader :config
+
+      # List of DSL's instances
+      attr_reader :dsls
+
+      # List of paths containing DSL's
+      attr_reader :dsl_paths
 
       # There is currently a tight cupling between is boolean and DSL's so that they know whether they are being refrenced for registration or importation
       # The difference is that importation will execute their interal code block while registration will not.
       # attr_reader :current_state
       # attr_reader :current_register_file
 
-      attr_reader :dsl_paths
-
       # what file is currently being processed
       # attr_reader :current_processing_file
-
-      # def initialize(base_dsl_path, base_data_path = nil, base_definition_path = nil, base_template_path = nil, base_app_template_path = nil)
-      #   @base_dsl_path = base_dsl_path.is_a?(Pathname) ? base_dsl_path.to_s : base_dsl_path
-
-      attr_reader :config
 
       def initialize(config = nil)
         @config = config || KDsl::Manage::ProjectConfig.new
@@ -38,6 +38,15 @@ module KDsl
         # @current_state = :dynamic
         # @current_register_file = nil
         @dsl_paths = []
+      end
+
+      def add_dsl_path(path)
+        path = KDsl::Util::FileHelper.expand_path(path, config.base_dsl_path)
+
+        Dir[path].sort.each do |file|
+          @dsl_paths << File.dirname(file) unless @dsl_paths.include? File.dirname(file)
+          # register_file(file, path_expansion: false)
+        end
       end
 
       # def self.create(base_dsl_path, base_data_path: nil, base_definition_path: nil, base_template_path: nil, &block)
@@ -59,14 +68,6 @@ module KDsl
 
       # private_class_method :new
 
-      # def register_path(path)
-      #   path = expand_path(path)
-
-      #   Dir[path].sort.each do |file|
-      #     @dsl_paths << File.dirname(file) unless @dsl_paths.include? File.dirname(file)
-      #     register_file(file, path_expansion: false)
-      #   end
-      # end
 
       # def process_code(caller, code, source_file = nil)
       #   # L.kv 'process_code.caller', caller
@@ -211,20 +212,6 @@ module KDsl
       #   dsl[:data]
       # end
             
-      # def is_pathname_absolute(pathname)
-      #   Pathname.new(pathname).absolute?
-      # end
-
-      # def expand_path(filename)
-      #   if is_pathname_absolute(filename)
-      #     filename
-      #   elsif filename.start_with?('~/')
-      #     File.expand_path(filename)
-      #   else
-      #     File.expand_path(filename, base_dsl_path)
-      #   end
-      # end
-
       # def get_relative_folder(fullpath)
       #   absolute_path = Pathname.new(fullpath)
       #   project_root  = Pathname.new(base_dsl_path)

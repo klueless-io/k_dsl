@@ -28,6 +28,9 @@ require 'k_dsl/decorator/uppercase_decorator'
 # General configuration
 require 'k_dsl/configuration'
 
+# General utilities
+require 'k_dsl/util/file_helper'
+
 # Klue DSL
 module KDsl
   class << self
