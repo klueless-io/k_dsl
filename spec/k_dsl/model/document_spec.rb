@@ -178,10 +178,10 @@ RSpec.describe KDsl::Model::Document do
           })
       end
 
-      context 'with modifiers - sample 1' do
+      context 'with decorators - sample 1' do
         let(:block) do
           lambda do |_|
-            settings modifiers: [Pluralizer, :uppercase] do
+            settings decorators: [Pluralizer, :uppercase] do
               model             'user'
               rails_port        3000
               active            true
@@ -200,10 +200,10 @@ RSpec.describe KDsl::Model::Document do
         end
       end
 
-      context 'with modifiers - sample 2' do
+      context 'with decorators - sample 2' do
         let(:block) do
           lambda do |_|
-            settings modifiers: [AlterKeyValues, AlterStructure] do
+            settings decorators: [AlterKeyValues, AlterStructure] do
               first_name 'David'
               last_name 'Cruwys'
               age 40

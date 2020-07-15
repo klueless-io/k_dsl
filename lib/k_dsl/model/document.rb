@@ -46,12 +46,12 @@ module KDsl
                  .merge(options)  # Settings Options
 
         settings = settings_instance(@data, key, parent: self, &block)
-        settings.run_modifiers(opts)
+        settings.run_decorators(opts)
         settings
       end
 
       def table(key = :table, &block)
-        # NEED to add support for parent and run_modifiers I think
+        # NEED to add support for parent and run_decorators I think
         table = table_instance(@data, key, &block)
 
         table

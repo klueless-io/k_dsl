@@ -33,14 +33,14 @@ module KDsl
         @data[@key]
       end
 
-      def run_modifiers(opts)
-        modifiers = KDsl::Modifier::Processor.get_modifiers(opts[:modifiers])
+      def run_decorators(opts)
+        decorators = KDsl::Decorator.decorate.decorators(opts[:decorators])
 
-        return if modifiers.empty?
+        return if decorators.empty?
 
-        modifiers.each do |modifier|
-          modifier.send(:update, my_data) if modifier.respond_to?(:update)
-          modifier.send(:call, my_data) if modifier.respond_to?(:call)
+        decorators.each do |decorator|
+          decorator.send(:update, my_data) if decorator.respond_to?(:update)
+          decorator.send(:call, my_data) if decorator.respond_to?(:call)
         end
       end
 

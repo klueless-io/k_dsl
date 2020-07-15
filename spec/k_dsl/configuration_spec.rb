@@ -48,8 +48,8 @@ RSpec.describe KDsl do
     #   it { is_expected.to eq(KDsl::Model::Settings) }
     # end
 
-    context '.modifiers' do
-      subject { described_class.config.modifiers }
+    context '.decorators' do
+      subject { described_class.config.decorators }
 
       it { is_expected.to be_an(Hash) }
       it { is_expected.to include(:uppercase) }
@@ -57,8 +57,8 @@ RSpec.describe KDsl do
     end
   end
 
-  describe '#get_modifier' do
-    subject { described_class.config.get_modifier(key) }
+  describe '#get_decorator' do
+    subject { described_class.config.get_decorator(key) }
 
     context 'when valid key' do
       let(:key) { :uppercase }
