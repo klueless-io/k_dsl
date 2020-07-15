@@ -6,7 +6,7 @@ module KDsl
     #
     # You may want to have multiple managers and so it is useful to
     # store the configuation in an object that can be passed. 
-    class Config
+    class ProjectConfig
       # Base path for your DSL's (defaults to current working directory)
       attr_accessor :base_dsl_path
 

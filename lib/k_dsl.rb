@@ -11,8 +11,8 @@ require 'k_dsl/logger/log_helper'
 require 'k_dsl/logger/log_util'
 
 # Memory management for DSLs
-require 'k_dsl/manage/config'
 require 'k_dsl/manage/project'
+require 'k_dsl/manage/project_config'
 require 'k_dsl/manage/register'
 
 # DSL document structures
@@ -20,10 +20,10 @@ require 'k_dsl/model/document'
 require 'k_dsl/model/table'
 require 'k_dsl/model/settings'
 
-# Data modifiers (fyi processor needs better naming)
-require 'k_dsl/modifier/processor'
-require 'k_dsl/modifier/uppercase_modifier'
-require 'k_dsl/modifier/lowercase_modifier'
+# Data decorators
+require 'k_dsl/decorator/helper'
+require 'k_dsl/decorator/lowercase_decorator'
+require 'k_dsl/decorator/uppercase_decorator'
 
 # General configuration
 require 'k_dsl/configuration'

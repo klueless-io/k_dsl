@@ -32,7 +32,7 @@ module KDsl
       attr_reader :config
 
       def initialize(config = nil)
-        @config = config || KDsl::Manage::Config.new
+        @config = config || KDsl::Manage::ProjectConfig.new
 
         @dsls = {}
         # @current_state = :dynamic

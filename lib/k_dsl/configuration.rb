@@ -5,11 +5,12 @@ module KDsl
   # Config will need to be available on a per App/DSL namespace?
   # This is because when you run two different DSL's at the same time
   # you may ned to instantiate different classes and have different
-  # default keys and modifiers based on the app space.
+  # default keys and decorators based on the app space.
   class << self
     attr_accessor :config
   end
 
+  # https://thoughtbot.com/blog/mygem-configure-block
   # This is just a fake config for now
   class Configuration
     attr_accessor :document_class
@@ -20,7 +21,7 @@ module KDsl
     attr_accessor :default_settings_key
     attr_accessor :default_table_key
 
-    attr_accessor :modifiers
+    attr_accessor :decorators
 
     def initialize
       @default_document_type = :entity
@@ -31,21 +32,21 @@ module KDsl
       @table_class = KDsl::Model::Table
       @settings_class = KDsl::Model::Settings
 
-      @modifiers = default_modifiers
+      @decorators = default_decorators
     end
 
-    def get_modifier(key)
-      @modifiers[key]
+    def get_decorator(key)
+      @decorators[key]
     end
 
     private
 
     # This needs to be configured from the App Space
-    # but there may also be global modifiers like these two.
-    def default_modifiers
+    # but there may also be global decorators like these two.
+    def default_decorators
       {
-        uppercase: KDsl::Modifier::UppercaseModifier,
-        lowercase: KDsl::Modifier::LowercaseModifier
+        uppercase: KDsl::Decorator::UppercaseDecorator,
+        lowercase: KDsl::Decorator::LowercaseDecorator
       }
     end
   end
