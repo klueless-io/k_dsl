@@ -546,7 +546,7 @@ module KDsl
     private
 
     def processor
-      @processor ||= KDsl::Modifier::Processor.new
+      @processor ||= KDsl::Decorator::Processor.new
     end
     
     def quote_and_ljust(value, size)

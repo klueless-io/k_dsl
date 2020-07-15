@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::Modifier::UppercaseModifier do
+RSpec.describe KDsl::Decorator::UppercaseDecorator do
   subject { described_class.new.update(data) }
 
   describe '#update' do

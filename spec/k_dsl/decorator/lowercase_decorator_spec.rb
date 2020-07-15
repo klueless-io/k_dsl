@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::Modifier::LowercaseModifier do
+RSpec.describe KDsl::Decorator::LowercaseDecorator do
   subject { described_class.new.update(data) }
 
   describe '#update' do

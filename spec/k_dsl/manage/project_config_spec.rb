@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::Manage::Config do
+RSpec.describe KDsl::Manage::ProjectConfig do
   let(:config) { described_class.new }
 
   describe '.base_dsl_path' do
