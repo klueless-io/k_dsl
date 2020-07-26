@@ -10,7 +10,7 @@ module KDsl
     # Helper methods attached to the namespace for working with DSL's
     class DslHelper
       class << self
-        def build_unique_key(key, namespace = nil, type = nil)
+        def build_unique_key(key, type = nil, namespace = nil)
           raise KDsl::Error, 'key is required when generating unique key' if key.nil? || key.empty?
 
           type ||= KDsl.config.default_document_type

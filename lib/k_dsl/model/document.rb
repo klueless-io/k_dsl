@@ -41,7 +41,7 @@ module KDsl
       end
 
       def unique_key
-        KDsl::Util.dsl.build_unique_key(key, namespace, type)
+        KDsl::Util.dsl.build_unique_key(key, type, namespace)
       end
 
       def settings(key = nil, **options, &block)
