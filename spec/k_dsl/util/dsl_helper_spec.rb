@@ -8,11 +8,11 @@ RSpec.describe KDsl::Util::DslHelper do
 
     it { is_expected.not_to be_nil }
 
-    it { expect(subject.build_unique_key('key', 'namespace', 'type')).to eq('namespace_key_type') }
+    it { expect(subject.build_unique_key('key', 'type', 'namespace')).to eq('namespace_key_type') }
   end
 
   describe '#build_unique_key' do
-    subject { described_class.build_unique_key(key, namespace) }
+    subject { described_class.build_unique_key(key, nil, namespace) }
 
     let(:key) { nil }
     let(:namespace) { nil }
@@ -40,7 +40,7 @@ RSpec.describe KDsl::Util::DslHelper do
       end
 
       context 'with type' do
-        subject { described_class.build_unique_key(key, namespace, type) }
+        subject { described_class.build_unique_key(key, type, namespace) }
 
         context 'nil' do
           let(:type) { nil }

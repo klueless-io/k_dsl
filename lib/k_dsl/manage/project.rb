@@ -51,8 +51,27 @@ module KDsl
           key: document.key.to_s,
           type: document.type.to_s,
           namespace: document.namespace.to_s,
+          state: :registered,
           document: document
         }
+      end
+
+      def get_dsl(key, type = nil, namespace = nil)
+        unique_key = KDsl::Util.dsl.build_unique_key(key, type, namespace)
+
+        @dsls[unique_key]
+      end
+
+      def get_dsls_by_type(type = nil, namespace = nil)
+        type ||= KDsl.config.default_document_type
+        type = type.to_s
+
+        if namespace.nil? || namespace.empty?
+          @dsls.values.select { |dsl| dsl[:type] == type.to_s }
+        else
+          namespace = namespace.to_s
+          @dsls.values.select { |dsl| dsl[:namespace] == namespace && dsl[:type] == type }
+        end
       end
 
       def add_dsl_path(path)
@@ -95,7 +114,7 @@ module KDsl
           # When they run they can figure out for themselves what file called them by
           # storing @current_processing_file into a document propert
           # rubocop:disable Security/Eval
-          
+
           # This code is not thread safe
           # SET self as the current project so that we can register within in the document
 
@@ -125,7 +144,7 @@ module KDsl
 
       #   if @@instance.nil?
       #     # L.heading 'in create'
-      #     # L.kv 'dsl', base_dsl_path; 
+      #     # L.kv 'dsl', base_dsl_path;
       #     # L.kv 'data', base_data_path
 
       #     @@instance = new(base_dsl_path, base_data_path, base_definition_path, base_template_path)

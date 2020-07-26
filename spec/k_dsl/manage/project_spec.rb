@@ -15,6 +15,7 @@ RSpec.describe KDsl::Manage::Project do
   let(:document1) { KDsl::Model::Document.new :xmen }
   let(:document2) { KDsl::Model::Document.new :xmen, :model }
   let(:document3) { KDsl::Model::Document.new :xmen, :model, namespace: :child }
+  let(:document4) { KDsl::Model::Document.new :ymen }
   let(:document) { document1 }
 
   describe '#constructor' do
@@ -46,6 +47,7 @@ RSpec.describe KDsl::Manage::Project do
                                 key: 'xmen',
                                 type: 'entity',
                                 namespace: '',
+                                state: :registered,
                                 document: document1
                               })
       end
@@ -72,6 +74,55 @@ RSpec.describe KDsl::Manage::Project do
         project.register_dsl(document3)
         expect(project.dsls.length).to eq 3
       end
+    end
+  end
+
+  describe 'get_dsl' do
+    subject { project.get_dsl(document.key, document.type, document.namespace) }
+
+    let(:document) { document3 }
+
+    before { project.register_dsl(document) }
+
+    it { expect(subject).not_to be_nil }
+    it { expect(subject[:document]).not_to be_nil }
+    it { expect(subject[:document].unique_key).to eq(document.unique_key) }
+  end
+
+  describe 'get_dsl_by_type' do
+    before do
+      project.register_dsl(document1)
+      project.register_dsl(document2)
+      project.register_dsl(document3)
+      project.register_dsl(document4)
+    end
+
+    context 'for default type' do
+      subject { project.get_dsls_by_type }
+
+      it 'returns dsls of type :entity' do
+        expect(subject.length).to eq 2
+        expect(subject).to all(include(type: 'entity'))
+      end
+    end
+
+    context 'for custom type' do
+      subject { project.get_dsls_by_type(:model) }
+
+      it 'returns dsls of type :model' do
+        expect(subject.length).to eq 2
+        expect(subject).to all(include(type: 'model'))
+      end
+
+      context 'with namespace' do
+        subject { project.get_dsls_by_type(:model, :child) }
+
+        it 'returns dsls of type :model' do
+          expect(subject.length).to eq 1
+          expect(subject).to all(include(namespace: 'child'))
+        end
+      end
+
     end
   end
 
