@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe KDsl::Model::Document do
   subject { described_class.new(key, &block) }
 
-  let(:key) { 'some name' }
+  let(:key) { 'some_name' }
   let(:block) { nil }
 
   class Pluralizer
@@ -48,11 +48,147 @@ RSpec.describe KDsl::Model::Document do
   #   # Klue.print
   # end
 
-  describe 'constructor' do
+  describe '#unique_key' do
+    context 'with nil key' do
+      subject { described_class.new(nil).unique_key }
+
+      # REFACTOR: I think nil keys should generate a GUID
+      #           or use the underlying file name so that
+      #           we don't have duplicate documents in memory
+      it { is_expected.to eq('_entity') }
+    end
+
+    context 'with key' do
+      subject { described_class.new(key).unique_key }
+
+      let(:namespace) { :spaceman }
+
+      context 'containing a space' do
+        let(:key) { 'some name' }
+        # REFACTOR: I think the space needs to be replaced by underscore, not sure yet
+        subject { described_class.new(key).unique_key }
+
+        it { expect(subject).to eq("some name_#{KDsl.config.default_document_type}") }
+      end
+
+      it { is_expected.to eq('some_name_entity') }
+
+      context 'with namespace' do
+        subject { described_class.new(key, namespace: namespace).unique_key }
+
+        it { expect(subject).to eq("spaceman_some_name_#{KDsl.config.default_document_type}") }
+      end
+
+      context 'with type' do
+        subject { described_class.new(key, type).unique_key }
+
+        context 'nil' do
+          let(:type) { nil }
+
+          it { expect(subject).to eq("some_name_#{KDsl.config.default_document_type}") }
+        end
+
+        context 'controller' do
+          let(:type) { :controller }
+
+          it { expect(subject).to eq('some_name_controller') }
+
+          context 'and with namespace' do
+            subject { described_class.new(key, type, namespace: namespace).unique_key }
+
+            it { expect(subject).to eq('spaceman_some_name_controller') }
+          end
+        end
+      end
+    end
+
+    context 'with namespace' do
+      subject { described_class.new key, namespace: namespace }
+
+      context 'when nil' do
+        let(:namespace) { nil }
+
+        it { expect(subject.namespace).to eq('') }
+      end
+
+      context 'when :some_namespace' do
+        let(:namespace) { :some_namespace }
+
+        it { expect(subject.namespace).to eq('some_namespace') }
+      end
+    end
+
+    context 'with options' do
+      let(:options) { {} }
+
+      subject { described_class.new key, **options }
+
+      context 'when options are nil' do
+        it { expect(subject.options).to eq({}) }
+      end
+
+      context 'when custom options are provided' do
+        let(:options) { { a: 1, b: '2' } }
+
+        it { expect(subject.options).to eq(a: 1, b: '2') }
+      end
+    end
+
+    context 'with option :block_executable' do
+      let(:options) { {} }
+
+      subject { described_class.new(key, **options) }
+
+      context 'when option is nil' do
+        it { is_expected.to be_block_executable }
+      end
+
+      context 'when option is true' do
+        let(:options) { { block_executable: true } }
+
+        it { is_expected.to be_block_executable }
+      end
+
+      context 'when option is false' do
+        let(:options) { { block_executable: false } }
+
+        it { is_expected.not_to be_block_executable }
+      end
+    end
+
+    context 'with &block' do
+      subject { described_class.new key, **options, &block }
+
+      let(:options) { {} }
+      let(:block) do
+        lambda do |_|
+          @data = { thunder_birds: :are_go }
+        end
+      end
+
+      context 'when given a block' do
+        it { expect(subject.data).to eq(thunder_birds: :are_go) }
+
+        context 'with option :block_executable turned on' do
+          let(:options) { { block_executable: true } }
+
+          it { expect(subject.data).to eq(thunder_birds: :are_go) }
+        end
+
+        context 'with option :block_executable turned off' do
+          let(:options) { { block_executable: false } }
+
+          it { expect(subject.data).to eq({}) }
+        end
+      end
+    end
+  end
+
+  describe '#' do
     context 'with minimum params' do
       it {
         expect(subject).to have_attributes(
-          key: 'some name',
+          key: 'some_name',
           type: :entity,
           namespace: '',
           options: {},
@@ -102,10 +238,59 @@ RSpec.describe KDsl::Model::Document do
         it { expect(subject.options).to eq({}) }
       end
 
-      context 'when options are provided' do
+      context 'when custom options are provided' do
         let(:options) { { a: 1, b: '2' } }
 
         it { expect(subject.options).to eq(a: 1, b: '2') }
+      end
+    end
+
+    context 'with option :block_executable' do
+      let(:options) { {} }
+
+      subject { described_class.new(key, **options) }
+
+      context 'when option is nil' do
+        it { is_expected.to be_block_executable }
+      end
+
+      context 'when option is true' do
+        let(:options) { { block_executable: true } }
+
+        it { is_expected.to be_block_executable }
+      end
+
+      context 'when option is false' do
+        let(:options) { { block_executable: false } }
+
+        it { is_expected.not_to be_block_executable }
+      end
+    end
+
+    context 'with &block' do
+      subject { described_class.new key, **options, &block }
+
+      let(:options) { {} }
+      let(:block) do
+        lambda do |_|
+          @data = { thunder_birds: :are_go }
+        end
+      end
+
+      context 'when given a block' do
+        it { expect(subject.data).to eq(thunder_birds: :are_go) }
+
+        context 'with option :block_executable turned on' do
+          let(:options) { { block_executable: true } }
+
+          it { expect(subject.data).to eq(thunder_birds: :are_go) }
+        end
+
+        context 'with option :block_executable turned off' do
+          let(:options) { { block_executable: false } }
+
+          it { expect(subject.data).to eq({}) }
+        end
       end
     end
   end

@@ -4,7 +4,18 @@ require 'spec_helper'
 
 RSpec.describe KDsl::Manage::Project do
   let(:project) { described_class.new(config) }
-  let(:config) { nil }
+  let(:config) do
+    # KDsl::Manage::ProjectConfig.new do
+    #   base_dsl_path = File.join(Dir.getwd, 'spec', 'factories', 'dslsx')
+    # end
+    c = KDsl::Manage::ProjectConfig.new
+    c.base_dsl_path = File.join(Dir.getwd, 'spec', 'factories', 'dsls')
+    c
+  end
+  let(:document1) { KDsl::Model::Document.new :xmen }
+  let(:document2) { KDsl::Model::Document.new :xmen, :model }
+  let(:document3) { KDsl::Model::Document.new :xmen, :model, namespace: :child }
+  let(:document) { document1 }
 
   describe '#constructor' do
     context '.configuration' do
@@ -20,22 +31,75 @@ RSpec.describe KDsl::Manage::Project do
     end
   end
 
-  describe '#add_dsl_path' do
-    context 'with valid files' do
-      it "register multiple DSL's from single folder" do
-        expect(subject.dsls.values.length).to eq(0)
-        subject.add_dsl_path('common-auth/*.rb')
-        # expect(subject.dsls.values.length).to eq(2)
+  describe '#register_dsl' do
+    it 'project dsls starts of empty' do
+      expect(project.dsls.length).to eq 0
+    end
+
+    context 'with document' do
+      subject { project.register_dsl(document) }
+
+      let(:document) { document1 }
+
+      it 'registers dsl' do
+        expect(subject).to eq({
+                                key: 'xmen',
+                                type: 'entity',
+                                namespace: '',
+                                document: document1
+                              })
       end
     end
 
-    context 'with valid files in deep nested path' do
-      it "register multiple DSL's from single folder" do
-        expect(subject.dsls.values.length).to eq(0)
-        subject.add_dsl_path('**/*.rb')
-        # expect(subject.dsls.values.length).to eq(5)
+    context '.dsls' do
+      subject { project.dsls }
+
+      it 'add a document' do
+        project.register_dsl(document1)
+        expect(project.dsls.length).to eq 1
+      end
+
+      it 'add a document many times' do
+        project.register_dsl(document2)
+        project.register_dsl(document2)
+        project.register_dsl(document2)
+        expect(project.dsls.length).to eq 1
+      end
+
+      it 'add many documents' do
+        project.register_dsl(document1)
+        project.register_dsl(document2)
+        project.register_dsl(document3)
+        expect(project.dsls.length).to eq 3
       end
     end
+  end
+
+  describe '#add_dsl_path' do
+    subject { project }
+
+    context 'with valid non-dsl ruby files' do
+      it "register multiple DSL's from single folder" do
+        subject.add_dsl_path('ruby_files/*.rb')
+        expect(subject.dsls.values.length).to eq(0)
+      end
+    end
+
+    # context 'with valid dsl ruby files' do
+    #   fit "register multiple DSL's from single folder" do
+    #     expect(subject.dsls.values.length).to eq(0)
+    #     subject.add_dsl_path('simple_dsl/*.rb')
+    #     expect(subject.dsls.values.length).to eq(1)
+    #   end
+    # end
+
+    # context 'with valid files in deep nested path' do
+    #   it "register multiple DSL's from single folder" do
+    #     expect(subject.dsls.values.length).to eq(0)
+    #     subject.add_dsl_path('**/*.rb')
+    #     # expect(subject.dsls.values.length).to eq(5)
+    #   end
+    # end
   end
   # let(:base_dsl_path1) { File.join(Rails.root, 'spec', '_', 'klue-files') }
   # let(:base_dsl_path2) { Rails.root }

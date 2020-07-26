@@ -13,6 +13,7 @@ module KDsl
     #    the available DSL's that you can interact with.
     # 2. Import happens after registrationg and represents the instantiation
     #    of a DSL for use either on it's own or by other DSL's
+    # REFACTOR: Projects need names
     class Project
       # Project configuration
       attr_reader :config
@@ -40,13 +41,82 @@ module KDsl
         @dsl_paths = []
       end
 
+      def register_dsl(document)
+        ukey = document.unique_key
+
+        # REFACT: I need a guard to check on duplicate keys from different files
+        return dsls[ukey] if dsls.key?(ukey)
+
+        dsls[ukey] = {
+          key: document.key.to_s,
+          type: document.type.to_s,
+          namespace: document.namespace.to_s,
+          document: document
+        }
+      end
+
       def add_dsl_path(path)
-        path = KDsl::Util::FileHelper.expand_path(path, config.base_dsl_path)
+        path = KDsl::Util.file.expand_path(path, config.base_dsl_path)
 
         Dir[path].sort.each do |file|
           @dsl_paths << File.dirname(file) unless @dsl_paths.include? File.dirname(file)
-          # register_file(file, path_expansion: false)
+          register_file(file, path_expansion: false)
         end
+      end
+
+      def register_file(file, path_expansion: true)
+        file = KDsl::Util.file.expand_path(file, config.base_dsl_path) if path_expansion
+
+        # L.kv 'register_file.file', file
+
+        @current_state = :register_file
+        @current_register_file = file
+
+        content = File.read(file)
+
+        process_code(content)
+
+        @current_register_file = nil
+        @current_state = :dynamic
+      end
+
+      # REACT: This method may not belong to project, it should be in it's own class
+      def process_code(code, source_file = nil)
+        guard_source_file(source_file)
+
+        # L.kv 'process_code.file', file
+        @current_processing_file = source_file
+
+        # print_main_properties
+        # L.block code
+        begin
+          # Anything can potentially run, but generally one of the Klue.factory_methods
+          # should run such as Klue.structure or Klue.artifact
+          # When they run they can figure out for themselves what file called them by
+          # storing @current_processing_file into a document propert
+          # rubocop:disable Security/Eval
+          
+          # This code is not thread safe
+          # SET self as the current project so that we can register within in the document
+
+          eval(code)
+
+          # Clear self as the current project
+          # rubocop:enable Security/Eval
+        rescue KDsl::Error => e
+          puts "__FILE__: #{__FILE__}"
+          puts "__LINE__: #{__LINE__}"
+          L.error e.message
+          raise
+        rescue StandardError => e
+          L.kv '@current_processing_file', @current_processing_file
+          L.kv '@current_state', current_state
+          L.kv '@current_register_file', @current_register_file
+
+          L.exception(e)
+        end
+
+        @current_processing_file = nil
       end
 
       # def self.create(base_dsl_path, base_data_path: nil, base_definition_path: nil, base_template_path: nil, &block)
@@ -107,22 +177,6 @@ module KDsl
       #     L.exception(exception)          
       #   end
       #   @current_processing_file = nil
-      # end
-
-      # def register_file(file, path_expansion: true)
-      #   file = expand_path(file) if path_expansion
-
-      #   # L.kv 'register_file.file', file
-
-      #   @current_state = :register_file
-      #   @current_register_file = file
-
-      #   content = File.read(file)
-
-      #   process_code(:register_file, content)
-    
-      #   @current_register_file = nil
-      #   @current_state = :dynamic
       # end
 
       # def load_file(file, path_expansion: true)
@@ -246,6 +300,17 @@ module KDsl
       # end
 
       # private
+
+      def guard_source_file(file)
+        # if file.blank?
+        #   # L.info 'no source files'
+        # end
+
+        return unless !file.nil? && !file.starts_with?(*@dsl_paths)
+
+        L.kv 'file', file
+        raise KDsl::Error, 'Source file skipped, file is not on a registered path'
+      end
 
       # def default_dsl_data(**data)
       #   { 
