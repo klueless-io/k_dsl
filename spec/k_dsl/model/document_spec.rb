@@ -6,6 +6,8 @@ RSpec.describe KDsl::Model::Document do
   subject { described_class.new(key, &block) }
 
   let(:key) { 'some_name' }
+  let(:type) { :controller }
+  let(:namespace) { :spaceman }
   let(:block) { nil }
 
   class Pluralizer
@@ -48,80 +50,62 @@ RSpec.describe KDsl::Model::Document do
   #   # Klue.print
   # end
 
-  describe '#unique_key' do
-    context 'with nil key' do
-      subject { described_class.new(nil).unique_key }
+  describe '#constructor' do
+    context 'with key only' do
+      subject { described_class.new(key) }
 
-      # REFACTOR: I think nil keys should generate a GUID
-      #           or use the underlying file name so that
-      #           we don't have duplicate documents in memory
-      it { is_expected.to eq('_entity') }
-    end
-
-    context 'with key' do
-      subject { described_class.new(key).unique_key }
-
-      let(:namespace) { :spaceman }
-
-      context 'containing a space' do
-        let(:key) { 'some name' }
-        # REFACTOR: I think the space needs to be replaced by underscore, not sure yet
-        subject { described_class.new(key).unique_key }
-
-        it { expect(subject).to eq("some name_#{KDsl.config.default_document_type}") }
+      it 'key is set' do
+        expect(subject.key).to eq(key)
       end
-
-      it { is_expected.to eq('some_name_entity') }
-
-      context 'with namespace' do
-        subject { described_class.new(key, namespace: namespace).unique_key }
-
-        it { expect(subject).to eq("spaceman_some_name_#{KDsl.config.default_document_type}") }
+      it 'type has default value' do
+        expect(subject.type).to eq(KDsl.config.default_document_type)
       end
-
-      context 'with type' do
-        subject { described_class.new(key, type).unique_key }
-
-        context 'nil' do
-          let(:type) { nil }
-
-          it { expect(subject).to eq("some_name_#{KDsl.config.default_document_type}") }
-        end
-
-        context 'controller' do
-          let(:type) { :controller }
-
-          it { expect(subject).to eq('some_name_controller') }
-
-          context 'and with namespace' do
-            subject { described_class.new(key, type, namespace: namespace).unique_key }
-
-            it { expect(subject).to eq('spaceman_some_name_controller') }
-          end
-        end
+      it 'namespace is empty' do
+        expect(subject.namespace).to be_empty
+      end
+      it 'options are empty' do
+        expect(subject.options).to be_empty
       end
     end
 
-    context 'with namespace' do
-      subject { described_class.new key, namespace: namespace }
+    context 'with key, type' do
+      subject { described_class.new(key, type) }
 
-      context 'when nil' do
-        let(:namespace) { nil }
-
-        it { expect(subject.namespace).to eq('') }
+      it 'key is set' do
+        expect(subject.key).to eq(key)
       end
+      it 'type is set' do
+        expect(subject.type).to eq(type)
+      end
+      it 'namespace is empty' do
+        expect(subject.namespace).to be_empty
+      end
+      it 'options are empty' do
+        expect(subject.options).to be_empty
+      end
+    end
 
-      context 'when :some_namespace' do
-        let(:namespace) { :some_namespace }
+    context 'with key, type, namespace' do
+      subject { described_class.new(key, type, namespace: namespace) }
 
-        it { expect(subject.namespace).to eq('some_namespace') }
+      it 'key is set' do
+        expect(subject.key).to eq(key)
+      end
+      it 'type is set' do
+        expect(subject.type).to eq(type)
+      end
+      it 'namespace is set' do
+        expect(subject.namespace).to eq('spaceman')
+      end
+      it 'options have namespace' do
+        expect(subject.options).to eq namespace: :spaceman
       end
     end
 
     context 'with options' do
-      let(:options) { {} }
+      subject { described_class.new(key, type, **options ) }
 
-      subject { described_class.new key, **options }
+      let(:options) { {} }
 
       context 'when options are nil' do
         it { expect(subject.options).to eq({}) }
@@ -181,6 +165,26 @@ RSpec.describe KDsl::Model::Document do
           it { expect(subject.data).to eq({}) }
         end
       end
+    end
+  end
+
+  describe '.unique_key' do
+    context 'with key' do
+      subject { described_class.new(key).unique_key }
+
+      it { expect(subject).to eq("some_name_#{KDsl.config.default_document_type}") }
+    end
+
+    context 'with key and type' do
+      subject { described_class.new(key, type).unique_key }
+
+      it { expect(subject).to eq('some_name_controller') }
+    end
+
+    context 'with key, type and namespace' do
+      subject { described_class.new(key, type, namespace: namespace).unique_key }
+
+      it { expect(subject).to eq('spaceman_some_name_controller') }
     end
   end
 
