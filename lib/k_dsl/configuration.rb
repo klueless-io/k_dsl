@@ -21,6 +21,8 @@ module KDsl
     attr_accessor :default_settings_key
     attr_accessor :default_table_key
 
+    attr_accessor :active_project
+
     attr_accessor :decorators
 
     def initialize
@@ -31,6 +33,7 @@ module KDsl
       @document_class = KDsl::Model::Document
       @table_class = KDsl::Model::Table
       @settings_class = KDsl::Model::Settings
+      @active_project = nil
 
       @decorators = default_decorators
     end

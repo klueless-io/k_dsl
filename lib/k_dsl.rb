@@ -3,6 +3,8 @@
 require 'logger'
 
 require 'k_dsl'
+require 'k_dsl/dsl'
+require 'k_dsl/exceptions'
 require 'k_dsl/version'
 
 # Log helpers (move to own GEM)
@@ -13,6 +15,7 @@ require 'k_dsl/logger/log_util'
 # Memory management for DSLs
 require 'k_dsl/manage/project'
 require 'k_dsl/manage/project_config'
+require 'k_dsl/manage/project_management'
 require 'k_dsl/manage/register'
 
 # DSL document structures
@@ -28,7 +31,11 @@ require 'k_dsl/decorator/uppercase_decorator'
 # General configuration
 require 'k_dsl/configuration'
 
+# Manager
+require 'k_dsl/manager'
+
 # General utilities
+require 'k_dsl/util/dsl_helper'
 require 'k_dsl/util/file_helper'
 
 # Klue DSL
@@ -36,9 +43,6 @@ module KDsl
   class << self
     attr_accessor :logger
   end
-
-  class Error < StandardError; end
-  class InvalidTypeError < KDsl::Error; end
 end
 
 KDsl.logger = Logger.new(STDOUT)

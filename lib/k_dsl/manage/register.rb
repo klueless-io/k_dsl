@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module KDsl
-  module Manager
+  module Manage
     # Register all the file paths and DSL documents that are avialable.
     #
     # It is assumed there is a root path that DSL's live under,

@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 module KDsl
+  # File utilities
   module Util
-    # Simple File utilities
+    class << self
+      attr_accessor :file
+    end
+
+    # Helper methods attached to the namespace for working with Files
     class FileHelper
       def self.expand_path(filename, base_path)
         if pathname_absolute?(filename)
@@ -20,3 +25,5 @@ module KDsl
     end
   end
 end
+
+KDsl::Util.file = KDsl::Util::FileHelper
