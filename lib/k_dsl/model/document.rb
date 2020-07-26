@@ -38,12 +38,10 @@ module KDsl
           # L.exception exception
           raise
         end
-
-        # Klue.register_instance_or_default.save self
       end
 
       def unique_key
-        namespace.empty? ? "#{key}_#{type}" : "#{namespace}_#{key}_#{type}"
+        KDsl::Util.dsl.build_unique_key(key, namespace, type)
       end
 
       def settings(key = nil, **options, &block)
@@ -81,20 +79,23 @@ module KDsl
 
       # Move this out to the logger function when it has been refactor
       def debug(include_header = false)
-        if include_header
-          L.heading 'Document DSL'
-          L.kv 'key', key
-          L.kv 'type', type
-          L.kv 'namespace', namespace
+        debug_header if include_header
 
-          options&.keys&.each do |key|
-            L.kv key, options[key]
-          end
-
-          L.line
-        end
         # tp dsls.values, :k_key, :k_type, :state, :save_at, :last_at, :data, :last_data, :source, { :file => { :width => 150 } } 
         puts JSON.pretty_generate(data)
+      end
+
+      def debug_header
+        L.heading 'Document DSL'
+        L.kv 'key', key
+        L.kv 'type', type
+        L.kv 'namespace', namespace
+
+        options&.keys&.each do |key|
+          L.kv key, options[key]
+        end
+
+        L.line
       end
 
       private
