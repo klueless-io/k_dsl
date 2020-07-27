@@ -35,6 +35,7 @@ module KDsl
       def initialize(config = nil)
         @config = config || KDsl::Manage::ProjectConfig.new
 
+        # REFACT: Wrap DSL's up into it's own class
         @dsls = {}
         # @current_state = :dynamic
         # @current_register_file = nil
@@ -62,17 +63,25 @@ module KDsl
         @dsls[unique_key]
       end
 
+      def dsl_exist?(key, type = nil, namespace = nil)
+        dsl = get_dsl(key, type, namespace)
+
+        !dsl.nil?
+      end
+
+      # rubocop:disable Metrics/AbcSize
       def get_dsls_by_type(type = nil, namespace = nil)
         type ||= KDsl.config.default_document_type
         type = type.to_s
+        namespace = namespace.to_s
 
         if namespace.nil? || namespace.empty?
           @dsls.values.select { |dsl| dsl[:type] == type.to_s }
         else
-          namespace = namespace.to_s
           @dsls.values.select { |dsl| dsl[:namespace] == namespace && dsl[:type] == type }
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
       def add_dsl_path(path)
         path = KDsl::Util.file.expand_path(path, config.base_dsl_path)

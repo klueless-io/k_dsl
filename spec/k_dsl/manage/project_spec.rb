@@ -89,6 +89,22 @@ RSpec.describe KDsl::Manage::Project do
     it { expect(subject[:document].unique_key).to eq(document.unique_key) }
   end
 
+  describe 'dsl_exist?' do
+    before { project.register_dsl(document) }
+
+    context 'when key exists' do
+      subject { project.dsl_exist?(:xmen, :entity, '') }
+
+      it { is_expected.to eq(true) }
+    end
+
+    context 'when key does not exists' do
+      subject { project.dsl_exist?(:xmen, :entity, 'unknown_namespace') }
+
+      it { is_expected.to eq(false) }
+    end
+  end
+
   describe 'get_dsl_by_type' do
     before do
       project.register_dsl(document1)
@@ -122,7 +138,6 @@ RSpec.describe KDsl::Manage::Project do
           expect(subject).to all(include(namespace: 'child'))
         end
       end
-
     end
   end
 

@@ -3,9 +3,13 @@
 require 'logger'
 
 require 'k_dsl'
+
+# Internals (move manager here)
+require 'k_dsl/internals/processor'
+
+require 'k_dsl/version'
 require 'k_dsl/dsl'
 require 'k_dsl/exceptions'
-require 'k_dsl/version'
 
 # Log helpers (move to own GEM)
 require 'k_dsl/logger/log_formatter'
