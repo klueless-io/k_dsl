@@ -3,7 +3,7 @@
 class Ruby1
   attr_reader :some_prop
 
-  def initialzie
+  def initialize
     @some_prop = 'Value'
   end
 end

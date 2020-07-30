@@ -33,11 +33,10 @@ module KDsl
       # call through to register_with_project and if there is not project then it will just
       # keep going
       def register_with_project(document)
-        return :no_project if active_project.nil? 
+        return :no_project if active_project.nil?
 
         # return :register
         # return :existing
-
       end
     end
   end

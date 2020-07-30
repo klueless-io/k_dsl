@@ -22,12 +22,26 @@ module KDsl
       attr_reader :dsls
 
       # List of paths containing DSL's
+      # WARN  : This list does not keep the wild card pattern.
+      #         e.g. /*.rb or /**/*.rb 
+      #         It does expand the ** for situations where there
+      #         is a file in that child path, but because it is not
+      #         being stored we have some edge case failures during
+      #         file add, update and delete
+      # REFACT: This pattern should be stored so that it can be 
+      #         checked when a file is add, updated, deleted and that
+      #         file fits the pattern
       attr_reader :dsl_paths
+
+      # List of files that are visible to this project
+      # REFACT: May be available from dsls, need to check
+      # REFACT: Also there is no guarantee that the file is actually a DSL
+      attr_reader :dsl_files
 
       # There is currently a tight cupling between is boolean and DSL's so that they know whether they are being refrenced for registration or importation
       # The difference is that importation will execute their interal code block while registration will not.
-      # attr_reader :current_state
-      # attr_reader :current_register_file
+      attr_reader :current_state
+      attr_reader :current_register_file
 
       # what file is currently being processed
       # attr_reader :current_processing_file
@@ -35,10 +49,66 @@ module KDsl
       def initialize(config = nil)
         @config = config || KDsl::Manage::ProjectConfig.new
 
+        # REFACT: Wrap DSL's up into it's own class
         @dsls = {}
-        # @current_state = :dynamic
-        # @current_register_file = nil
         @dsl_paths = []
+        @dsl_files = []
+
+        @current_state = :dynamic
+        @current_register_file = nil
+      end
+
+      def dsl_exist?(key, type = nil, namespace = nil)
+        dsl = get_dsl(key, type, namespace)
+
+        !dsl.nil?
+      end
+
+      def get_dsl(key, type = nil, namespace = nil)
+        unique_key = KDsl::Util.dsl.build_unique_key(key, type, namespace)
+
+        @dsls[unique_key]
+      end
+
+      # rubocop:disable Metrics/AbcSize
+      def get_dsls_by_type(type = nil, namespace = nil)
+        type ||= KDsl.config.default_document_type
+        type = type.to_s
+        namespace = namespace.to_s
+
+        if namespace.nil? || namespace.empty?
+          @dsls.values.select { |dsl| dsl[:type] == type.to_s }
+        else
+          @dsls.values.select { |dsl| dsl[:namespace] == namespace && dsl[:type] == type }
+        end
+      end
+      # rubocop:enable Metrics/AbcSize
+
+      def register_path(path)
+        path = KDsl::Util.file.expand_path(path, config.base_dsl_path)
+
+        Dir[path].sort.each do |file|
+          @dsl_paths << File.dirname(file) unless @dsl_paths.include? File.dirname(file)
+          register_file(file, path_expansion: false)
+        end
+      end
+
+      def register_file(file, path_expansion: true)
+        file = KDsl::Util.file.expand_path(file, config.base_dsl_path) if path_expansion
+
+        @dsl_files << file unless @dsl_files.include? file
+
+        # L.kv 'register_file.file', file
+
+        current_state = :register_file
+        current_register_file = file
+
+        content = File.read(file)
+
+        process_code(content)
+
+        current_register_file = nil
+        current_state = :dynamic
       end
 
       def register_dsl(document)
@@ -56,55 +126,12 @@ module KDsl
         }
       end
 
-      def get_dsl(key, type = nil, namespace = nil)
-        unique_key = KDsl::Util.dsl.build_unique_key(key, type, namespace)
-
-        @dsls[unique_key]
-      end
-
-      def get_dsls_by_type(type = nil, namespace = nil)
-        type ||= KDsl.config.default_document_type
-        type = type.to_s
-
-        if namespace.nil? || namespace.empty?
-          @dsls.values.select { |dsl| dsl[:type] == type.to_s }
-        else
-          namespace = namespace.to_s
-          @dsls.values.select { |dsl| dsl[:namespace] == namespace && dsl[:type] == type }
-        end
-      end
-
-      def add_dsl_path(path)
-        path = KDsl::Util.file.expand_path(path, config.base_dsl_path)
-
-        Dir[path].sort.each do |file|
-          @dsl_paths << File.dirname(file) unless @dsl_paths.include? File.dirname(file)
-          register_file(file, path_expansion: false)
-        end
-      end
-
-      def register_file(file, path_expansion: true)
-        file = KDsl::Util.file.expand_path(file, config.base_dsl_path) if path_expansion
-
-        # L.kv 'register_file.file', file
-
-        @current_state = :register_file
-        @current_register_file = file
-
-        content = File.read(file)
-
-        process_code(content)
-
-        @current_register_file = nil
-        @current_state = :dynamic
-      end
-
       # REACT: This method may not belong to project, it should be in it's own class
       def process_code(code, source_file = nil)
         guard_source_file(source_file)
 
         # L.kv 'process_code.file', file
-        @current_processing_file = source_file
+        current_processing_file = source_file
 
         # print_main_properties
         # L.block code

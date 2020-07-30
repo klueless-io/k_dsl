@@ -2,7 +2,8 @@ AllCops:
   NewCops: enable
   DisplayCopNames: true
   ExtraDetails: true
-
+  Exclude:
+    - 'spec/factories/dsls/**/*'
 Metrics/BlockLength:
   Exclude:
     - "**/spec/*"

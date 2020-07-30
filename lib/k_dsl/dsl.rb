@@ -2,9 +2,21 @@
 
 require 'securerandom'
 
+# REFACT: Look at these patterns: 
+# https://github.com/guard/guard/blob/master/lib/guard.rb
 # DSL root factory methods
 module KDsl
   class << self
+    attr_reader :process
+
+    def setup
+      L.line
+      L.info 'Setup Klue DSL'
+      L.line
+
+      @process = Internals::Processor.new
+    end
+
     # I need to move the concept of document onto the project
     # IF KDsl.document is called then under the hood it should
     # instantiate a global project, but other projects are their
