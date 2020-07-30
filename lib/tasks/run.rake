@@ -11,21 +11,13 @@ namespace :k_dsl do
     file = args[:dsl_file]
 
     KDsl.setup
+    KDsl.project_manager.config do
+      project('microap1', '~/dev/gems/k_dsl/spec/factories/dsls') do
+        register_path('common-auth/**/*.rb')
+        register_path('microapp1/**/*.rb')
+      end
+    end
     KDsl.process.file(file)
 
-    # # THIS is now an App (or a projects)
-    # Klue.process(file) do
-
-    #   # THIS is now a manager
-    #   # Klue.register(File.join(Rails.root, '_')) do
-    #   #   L.block "Register for #{CURRENT_RUNNERS[CURRENT_RUNNER][:name]}"
-
-    #   #   register_path('microapp/_cmds/**/*.rb')
-
-    #   #   register_path('artifact/common-auth/**/*.rb')
-    #   #   register_path('blueprint/rails6/**/*.rb')
-    #   #   register_path('microapp/achievement-badge/**/*.rb')
-    #   # end
-    # end
   end
 end
