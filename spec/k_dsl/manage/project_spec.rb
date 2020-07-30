@@ -3,6 +3,14 @@
 require 'spec_helper'
 
 RSpec.describe KDsl::Manage::Project do
+  # puts File.dirname(File.dirname(File.absolute_path(__FILE__)))
+  # puts File.dirname __dir__
+  # puts File.join( File.dirname(__dir__), 'bin')
+
+  # spec = Gem::Specification.find_by_name("k_dsl").gem_dir
+  # puts spec.gem_dir
+
+  let(:gem_root) { Gem::Specification.find_by_name("k_dsl").gem_dir }
   let(:project) { described_class.new(config) }
   let(:config) do
     # KDsl::Manage::ProjectConfig.new do
@@ -32,6 +40,121 @@ RSpec.describe KDsl::Manage::Project do
     end
   end
 
+  describe '#register_path' do
+    describe '.dsl_paths' do
+      subject { project.dsl_paths }
+
+      before { allow(project).to receive(:register_file) }
+
+      context 'when one valid path' do
+        before { project.register_path('ruby_files/*.rb') }
+
+        it { is_expected.to eq [File.join(gem_root, 'spec/factories/dsls/ruby_files')] }
+      end
+
+      context 'when two parent paths' do
+        before do
+          project.register_path('common-auth/*.rb')
+          project.register_path('microapp1/*.rb')
+        end
+
+        it do
+          expect(subject).to eq [
+            File.join(gem_root, 'spec/factories/dsls/common-auth'),
+            File.join(gem_root, 'spec/factories/dsls/microapp1')
+            ]
+        end
+      end
+
+      context 'when deep nested paths' do
+        before do
+          project.register_path('microapp2/**/*.rb')
+        end
+
+        it do
+          expect(subject).to eq [
+            File.join(gem_root, 'spec/factories/dsls/microapp2/auth'),
+            File.join(gem_root, 'spec/factories/dsls/microapp2')
+            ]
+        end
+      end
+    end
+
+    describe '.dsl_files' do
+      subject { project.dsl_files }
+
+      before { allow(project).to receive(:process_code) }
+
+      context 'when path has files' do
+        before { project.register_path('ruby_files/*.rb') }
+
+        it do
+          expect(subject).to include(
+            File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'),
+            File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby2.rb')
+          )
+        end
+      end
+
+      context 'when multiple paths have files' do
+        before do
+          project.register_path('common-auth/*.rb')
+          project.register_path('microapp1/*.rb')
+        end
+
+        it do
+          expect(subject).to include(
+            File.join(gem_root, 'spec/factories/dsls/common-auth/admin_user.rb'),
+            File.join(gem_root, 'spec/factories/dsls/common-auth/basic_user.rb'),
+            File.join(gem_root, 'spec/factories/dsls/microapp1/domain.rb'),
+            File.join(gem_root, 'spec/factories/dsls/microapp1/microapp.rb'),
+            File.join(gem_root, 'spec/factories/dsls/microapp1/structure.rb')
+          )
+        end
+      end
+
+      context 'when deep nested paths have files' do
+        before do
+          project.register_path('microapp2/**/*.rb')
+        end
+
+        it do
+          expect(subject).to include(
+            File.join(gem_root, 'spec/factories/dsls/microapp2/auth/admin_user.rb'),
+            File.join(gem_root, 'spec/factories/dsls/microapp2/auth/basic_user.rb'),
+            File.join(gem_root, 'spec/factories/dsls/microapp2/domain.rb'),
+            File.join(gem_root, 'spec/factories/dsls/microapp2/microapp.rb'),
+            File.join(gem_root, 'spec/factories/dsls/microapp2/structure.rb')
+          )
+        end
+      end
+    end
+
+    context 'with valid non-dsl ruby files' do
+      it "register multiple DSL's from single folder" do
+        subject.register_path('ruby_files/*.rb')
+        expect(subject.dsls.values.length).to eq(0)
+        puts subject.dsl_paths
+      end
+    end
+  
+    # context 'with valid dsl ruby files' do
+    #   fit "register multiple DSL's from single folder" do
+    #     expect(subject.dsls.values.length).to eq(0)
+    #     subject.register_path('simple_dsl/*.rb')
+    #     expect(subject.dsls.values.length).to eq(1)
+    #   end
+    # end
+
+    # context 'with valid files in deep nested path' do
+    #   it "register multiple DSL's from single folder" do
+    #     expect(subject.dsls.values.length).to eq(0)
+    #     subject.register_path('**/*.rb')
+    #     # expect(subject.dsls.values.length).to eq(5)
+    #   end
+    # end
+  end
+
   describe '#register_dsl' do
     it 'project dsls starts of empty' do
       expect(project.dsls.length).to eq 0
@@ -53,7 +176,7 @@ RSpec.describe KDsl::Manage::Project do
       end
     end
 
-    context '.dsls' do
+    describe '.dsls' do
       subject { project.dsls }
 
       it 'add a document' do
@@ -141,32 +264,6 @@ RSpec.describe KDsl::Manage::Project do
     end
   end
 
-  describe '#add_dsl_path' do
-    subject { project }
-
-    context 'with valid non-dsl ruby files' do
-      it "register multiple DSL's from single folder" do
-        subject.add_dsl_path('ruby_files/*.rb')
-        expect(subject.dsls.values.length).to eq(0)
-      end
-    end
-
-    # context 'with valid dsl ruby files' do
-    #   fit "register multiple DSL's from single folder" do
-    #     expect(subject.dsls.values.length).to eq(0)
-    #     subject.add_dsl_path('simple_dsl/*.rb')
-    #     expect(subject.dsls.values.length).to eq(1)
-    #   end
-    # end
-
-    # context 'with valid files in deep nested path' do
-    #   it "register multiple DSL's from single folder" do
-    #     expect(subject.dsls.values.length).to eq(0)
-    #     subject.add_dsl_path('**/*.rb')
-    #     # expect(subject.dsls.values.length).to eq(5)
-    #   end
-    # end
-  end
   # let(:base_dsl_path1) { File.join(Rails.root, 'spec', '_', 'klue-files') }
   # let(:base_dsl_path2) { Rails.root }
 

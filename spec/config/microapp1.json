@@ -1,0 +1,8 @@
+{
+  "name": "microapp1",
+  "root": "~/dev/gems/k_dsl/spec/factories/dsls",
+  "register_paths": [
+    { "path": "microapp1/**/*.rb" },
+    { "path": "common-auth/**/*.rb" }
+  ]
+}
