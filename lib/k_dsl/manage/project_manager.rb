@@ -3,10 +3,8 @@
 # Provide access to the DSL Manager
 module KDsl
   module Manage
-    # Module method stores single instance manager which can handle multiple projects if needed
-    # REFACT: Posibally move this into the manage namespace
     # Manager is used to manage active projects and memory management
-    class ProjectManagement
+    class ProjectManager
       attr_accessor :projects
       attr_accessor :active_project
 

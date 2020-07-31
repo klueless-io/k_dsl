@@ -33,16 +33,22 @@ RSpec.describe KDsl::Manage::Project do
       it { is_expected.not_to be_nil }
     end
 
-    context '.dsl_paths' do
-      subject { project.dsl_paths }
+    context '.registered_paths' do
+      subject { project.registered_paths }
 
       it { is_expected.to be_empty }
+    end
+
+    context '.manager' do
+      subject { project.manager }
+
+      it { is_expected.not_to be_nil }
     end
   end
 
   describe '#register_path' do
-    describe '.dsl_paths' do
-      subject { project.dsl_paths }
+    describe '.registered_paths' do
+      subject { project.registered_paths }
 
       before { allow(project).to receive(:register_file) }
 
@@ -80,10 +86,10 @@ RSpec.describe KDsl::Manage::Project do
       end
     end
 
-    describe '.dsl_files' do
-      subject { project.dsl_files }
+    describe '.registered_files' do
+      subject { project.registered_files }
 
-      before { allow(project).to receive(:process_code) }
+      # before { allow(project).to receive(:process_code) }
 
       context 'when path has files' do
         before { project.register_path('ruby_files/*.rb') }
@@ -129,28 +135,48 @@ RSpec.describe KDsl::Manage::Project do
         end
       end
     end
+  end
 
-    context 'with valid non-dsl ruby files' do
-      it "register multiple DSL's from single folder" do
-        subject.register_path('ruby_files/*.rb')
-        expect(subject.dsls.values.length).to eq(0)
-        puts subject.dsl_paths
+  describe '#register_file' do
+    describe '.registered_files' do
+      subject { project.registered_files }
+
+      # before { allow(project).to receive(:process_code) }
+
+      context 'when using relative files' do
+        before { project.register_file('ruby_files/ruby1.rb') }
+        
+        it { is_expected.to include(File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb')) }
+      end
+
+      context 'when using absolute files' do
+        before { project.register_file(File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), path_expansion: false) }
+        
+        it { is_expected.to include(File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb')) }
+      end
+
+      context 'when file does not exist' do
+        before { project.register_file('bad_file_name.rb') }
+        
+        it { is_expected.to be_empty }
       end
     end
-  
-    # context 'with valid dsl ruby files' do
-    #   fit "register multiple DSL's from single folder" do
-    #     expect(subject.dsls.values.length).to eq(0)
-    #     subject.register_path('simple_dsl/*.rb')
-    #     expect(subject.dsls.values.length).to eq(1)
-    #   end
-    # end
 
-    # context 'with valid files in deep nested path' do
-    #   it "register multiple DSL's from single folder" do
-    #     expect(subject.dsls.values.length).to eq(0)
-    #     subject.register_path('**/*.rb')
-    #     # expect(subject.dsls.values.length).to eq(5)
+    # describe '.current_state' do
+    #   subject { project.current_state }
+
+    #   before { allow(project).to receive(:process_code) }
+
+    #   fcontext 'on register_file' do
+    #     before { project.register_file('ruby_files/ruby1.rb') }
+
+    #     it 'will transition through :register_file' do
+    #       project = spy('project')
+
+    #       expect(project).to have_received(:current_state=).with(:register_file)
+    #       expect(subject).to eq(:dynamic)
+    #       # expect(project).to receive(:current_state).with(:process_code)
+    #     end
     #   end
     # end
   end

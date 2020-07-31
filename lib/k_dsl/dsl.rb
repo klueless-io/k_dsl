@@ -7,14 +7,36 @@ require 'securerandom'
 # DSL root factory methods
 module KDsl
   class << self
+    LOG_NONE = :none
+    LOG_WARN = :warn
+    LOG_INFO = :info
+
     attr_reader :process
+    attr_reader :projects
 
-    def setup
-      L.line
-      L.info 'Setup Klue DSL'
-      L.line
+    # REFACT: Need to research and implement the correct patter for log levels
+    attr_reader :log_level
 
-      @process = Internals::Processor.new
+    def setup(log_level: LOG_NONE,
+              process: Internals::Processor.new,
+              projects: Manage::ProjectManager.new)
+
+      @log_level = log_level
+
+      if log_info?
+        L.line
+        L.info 'Setup Klue DSL'
+        L.line
+      end
+
+      @process = process
+      @projects = projects
+    end
+
+    def teardown
+      @log_level = nil
+      @process = nil
+      @projects = nil
     end
 
     # I need to move the concept of document onto the project
@@ -23,6 +45,18 @@ module KDsl
     # own namespaces that can be used to issolate for memory management
     def document(key = nil, type = nil, **options, &block)
       build_document(key, type, nil, **options, &block)
+    end
+
+    def log_warn?
+      log_level == :warn
+    end
+
+    def log_info?
+      log_level == :info
+    end
+
+    def log_none?
+      log_level == :none
     end
 
     private
