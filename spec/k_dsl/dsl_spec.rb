@@ -3,6 +3,79 @@
 require 'spec_helper'
 
 RSpec.describe KDsl do
+  before { KDsl.teardown }
+
+  # describe '#log_level' do
+  #   subject { described_class.projects }
+
+  #   it { is_expected.to be_nil }
+
+  #   context 'after setup' do
+  #     before { KDsl.setup }
+      
+  #     it { is_expected.not_to be_nil }
+  #   end
+  # end
+
+  describe '.projects' do
+    subject { described_class.projects }
+
+    it { is_expected.to be_nil }
+
+    context 'when setup' do
+      before { KDsl.setup }
+      
+      it { is_expected.not_to be_nil }
+      it { is_expected.to be_a(KDsl::Manage::ProjectManager) }
+    end
+  end
+
+  describe '.process' do
+    subject { described_class.process }
+
+    it { is_expected.to be_nil }
+
+    context 'when setup' do
+      before { KDsl.setup }
+      
+      it { is_expected.not_to be_nil }
+      it { is_expected.to be_a(KDsl::Internals::Processor) }
+    end
+  end
+
+  describe '.log_level' do
+    subject { described_class.log_level }
+
+    it { is_expected.to be_nil }
+
+    context 'when setup' do
+      before { KDsl.setup }
+      
+      it { is_expected.to eq(:none) }
+
+      context 'with log_level' do
+        subject { described_class }
+
+        before { KDsl.setup(log_level: log_level) }
+
+        context ':none' do
+          let(:log_level) { :none }
+          it { is_expected.to be_log_none }
+        end
+
+        context ':warn' do
+          let(:log_level) { :warn }
+          it { is_expected.to be_log_warn }
+        end
+
+        context ':info' do
+          let(:log_level) { :info }
+          it { is_expected.to be_log_info }
+        end
+      end
+    end
+  end
+
   describe '#document' do
     context 'with no arguments' do
       subject { described_class.document }

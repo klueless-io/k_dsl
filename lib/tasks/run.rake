@@ -11,13 +11,15 @@ namespace :k_dsl do
     file = args[:dsl_file]
 
     KDsl.setup
-    KDsl.project_manager.config do
-      project('microap1', '~/dev/gems/k_dsl/spec/factories/dsls') do
-        register_path('common-auth/**/*.rb')
-        register_path('microapp1/**/*.rb')
-      end
-    end
-    KDsl.process.file(file)
+
+    # KDsl.setup
+    # KDsl.project_manager.config do
+    #   project('microap1', '~/dev/gems/k_dsl/spec/factories/dsls') do
+    #     register_path('common-auth/**/*.rb')
+    #     register_path('microapp1/**/*.rb')
+    #   end
+    # end
+    # KDsl.process.file(file)
 
   end
 end

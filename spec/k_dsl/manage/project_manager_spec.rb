@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::Manage::ProjectManagement do
+RSpec.describe KDsl::Manage::ProjectManager do
   let(:manager) { described_class.new }
 
   describe '#manage' do
@@ -71,24 +71,24 @@ RSpec.describe KDsl::Manage::ProjectManagement do
     end
   end
 
-  describe '#register_with_project' do
-    subject { manager.register_with_project(document) }
+  # describe '#register_with_project' do
+  #   subject { manager.register_with_project(document) }
 
-    let(:document) { KDsl::Model::Document.new :xmen }
+  #   let(:document) { KDsl::Model::Document.new :xmen }
 
-    context 'when there is no active project' do
-      it { expect(subject).to eq(:no_project) }
-    end
+  #   context 'when there is no active project' do
+  #     it { expect(subject).to eq(:no_project) }
+  #   end
 
-    context 'when there is an active project' do
-      let(:project) { KDsl::Manage::Project.new }
+  #   context 'when there is an active project' do
+  #     let(:project) { KDsl::Manage::Project.new }
 
-      before { manager.activate_project(project) }
-      after { manager.deactivate_project(project) }
+  #     before { manager.activate_project(project) }
+  #     after { manager.deactivate_project(project) }
 
-      it { expect(subject).to eq(:no_project) }
-      context 'when there is no active project' do
-      end
-    end
-  end
+  #     it { expect(subject).to eq(:no_project) }
+  #     context 'when there is no active project' do
+  #     end
+  #   end
+  # end
 end

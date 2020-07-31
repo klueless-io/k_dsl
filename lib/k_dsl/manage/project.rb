@@ -18,6 +18,8 @@ module KDsl
       # Project configuration
       attr_reader :config
 
+      attr_reader :manager
+
       # List of DSL's instances
       attr_reader :dsls
 
@@ -31,12 +33,14 @@ module KDsl
       # REFACT: This pattern should be stored so that it can be 
       #         checked when a file is add, updated, deleted and that
       #         file fits the pattern
-      attr_reader :dsl_paths
+      # RENAME: registered_paths (as they may not be DSL's)
+      attr_reader :registered_paths
 
       # List of files that are visible to this project
       # REFACT: May be available from dsls, need to check
       # REFACT: Also there is no guarantee that the file is actually a DSL
-      attr_reader :dsl_files
+      # RENAME: registered_files (as they may not be DSL's)
+      attr_reader :registered_files
 
       # There is currently a tight cupling between is boolean and DSL's so that they know whether they are being refrenced for registration or importation
       # The difference is that importation will execute their interal code block while registration will not.
@@ -48,14 +52,15 @@ module KDsl
 
       def initialize(config = nil)
         @config = config || KDsl::Manage::ProjectConfig.new
+        @manager = KDsl.manager
 
         # REFACT: Wrap DSL's up into it's own class
         @dsls = {}
-        @dsl_paths = []
-        @dsl_files = []
+        @registered_paths = []
+        @registered_files = []
 
-        @current_state = :dynamic
-        @current_register_file = nil
+        # @current_state = :dynamic
+        # @current_register_file = nil
       end
 
       def dsl_exist?(key, type = nil, namespace = nil)
@@ -88,7 +93,7 @@ module KDsl
         path = KDsl::Util.file.expand_path(path, config.base_dsl_path)
 
         Dir[path].sort.each do |file|
-          @dsl_paths << File.dirname(file) unless @dsl_paths.include? File.dirname(file)
+          @registered_paths << File.dirname(file) unless @registered_paths.include? File.dirname(file)
           register_file(file, path_expansion: false)
         end
       end
@@ -96,19 +101,29 @@ module KDsl
       def register_file(file, path_expansion: true)
         file = KDsl::Util.file.expand_path(file, config.base_dsl_path) if path_expansion
 
-        @dsl_files << file unless @dsl_files.include? file
+        return unless File.exist?(file)
+
+        @registered_files << file unless @registered_files.include? file
+
+        # This is way too much couling going on
+        # process_code(File.read(file), file)
 
         # L.kv 'register_file.file', file
 
-        current_state = :register_file
-        current_register_file = file
+        # current_state = :register_file
+        # current_register_file = file
 
-        content = File.read(file)
+        # L.kv 'current_state', current_state
+        # L.kv 'current_register_file', current_register_file
 
-        process_code(content)
+        # content = File.read(file)
 
-        current_register_file = nil
-        current_state = :dynamic
+        # process_code(content)
+
+        # current_register_file = nil
+        # current_state = :dynamic
+        # L.kv 'current_state', current_state
+        # L.kv 'current_register_file', current_register_file
       end
 
       def register_dsl(document)
@@ -195,7 +210,7 @@ module KDsl
       #     # L.info 'no source files'
       #   end
 
-      #   if source_file.present? && !source_file.starts_with?(*@dsl_paths)
+      #   if source_file.present? && !source_file.starts_with?(*@registered_paths)
       #     L.kv 'source_file', source_file
       #     raise Klue::Dsl::DslError, 'source file skipped, file is not on a registered path'
       #   end
@@ -352,7 +367,7 @@ module KDsl
         #   # L.info 'no source files'
         # end
 
-        return unless !file.nil? && !file.starts_with?(*@dsl_paths)
+        return unless !file.nil? && !file.starts_with?(*@registered_paths)
 
         L.kv 'file', file
         raise KDsl::Error, 'Source file skipped, file is not on a registered path'
