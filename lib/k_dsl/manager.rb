@@ -8,4 +8,4 @@ module KDsl
   end
 end
 
-KDsl.manager = KDsl::Manage::ProjectManagement.new
+KDsl.manager = KDsl::Manage::ProjectManager.new
