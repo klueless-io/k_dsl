@@ -83,6 +83,17 @@ RSpec.describe KDsl::Model::Settings do
         the 'quick'
       end
     end
+    # after do
+    #   subject.instance_eval do
+    #     undef :unknown_attribute if respond_to? :unknown_attribute
+    #     undef :unknown_attribute= if respond_to? :unknown_attribute=
+    #   end
+
+    #   # described_class.class_eval do
+    #   #   remove_method :unknown_attribute if respond_to? :unknown_attribute
+    #   #   remove_method :unknown_attribute= if respond_to? :unknown_attribute=
+    #   # end
+    # end
     describe 'respond_to?' do
       context 'when attribute is used' do
         it 'will respond to getter' do
@@ -93,12 +104,12 @@ RSpec.describe KDsl::Model::Settings do
         end
       end
 
-      context 'when attribute is unknown' do
+      context 'when attribute is unknown1' do
         it 'will not respond to getter' do
-          expect(subject).not_to respond_to(:unknown_attribute)
+          expect(subject).not_to respond_to(:unknown1_attribute)
         end
         it 'will not respond to setter' do
-          expect(subject).not_to respond_to(:unknown_attribute=)
+          expect(subject).not_to respond_to(:unknown1_attribute=)
         end
       end
     end
@@ -110,9 +121,9 @@ RSpec.describe KDsl::Model::Settings do
         end
       end
 
-      context 'when attribute is unknown' do
+      context 'when attribute is unknown2' do
         it 'will return nil' do
-          expect(subject.unknown_attribute).to be_nil
+          expect(subject.unknown2_attribute).to be_nil
         end
       end
     end
@@ -128,8 +139,8 @@ RSpec.describe KDsl::Model::Settings do
 
         context 'when attribute is unknown' do
           it 'will set the new attribute' do
-            subject.unknown_attribute = 'no so unknown now'
-            expect(subject.unknown_attribute).to eq('no so unknown now')
+            subject.unknown3_attribute = 'no so unknown now'
+            expect(subject.unknown3_attribute).to eq('no so unknown now')
           end
         end
       end
@@ -143,8 +154,8 @@ RSpec.describe KDsl::Model::Settings do
 
         context 'when attribute is unknown' do
           it 'will set the new attribute' do
-            subject.unknown_attribute('no so unknown now')
-            expect(subject.unknown_attribute).to eq('no so unknown now')
+            # subject.unknown_attribute('no so unknown now')
+            # expect(subject.unknown_attribute).to eq('no so unknown now')
           end
         end
       end

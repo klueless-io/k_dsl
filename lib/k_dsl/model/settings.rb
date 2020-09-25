@@ -46,24 +46,31 @@ module KDsl
 
       # Refactor this
       def respond_to_missing?(name, *_args, &_block)
+        # puts 'respond_to_missing?'
+        # puts "respond_to_missing: #{name}"
         n = name.to_s
         n = n[0..-2] if n.end_with?('=')
-        my_data.key?(n.to_s)
+        my_data.key?(n.to_s) || super
       end
 
       def method_missing(name, *missing_method_args, &_block)
+        # puts "method_missing: #{name}"
         raise KDsl::Error, 'Multiple setting values is not supported' if missing_method_args.length > 1
-
-        add_getter_or_setter_method(name)
+        
+        add_getter_or_param_method(name)
         add_setter_method(name)
-
-        send("#{name}=", missing_method_args[0])
-
+                
+        send(name, missing_method_args[0]) if missing_method_args.length === 1 #name.end_with?('=')
+        
         super unless self.class.method_defined?(name)
       end
 
-      def add_getter_or_setter_method(name)
+      # Handles Getter method and method with single paramater
+      # object.my_name
+      # object.my_name('david')
+      def add_getter_or_param_method(name)
         self.class.class_eval do
+          name = name.to_s.gsub(/\=$/, '')
           define_method(name) do |*args|
             raise KDsl::Error, 'Multiple setting values is not supported' if args.length > 1
 
@@ -76,8 +83,11 @@ module KDsl
         end
       end
 
+      # Handles Setter method
+      # object.my_name = 'david'
       def add_setter_method(name)
         self.class.class_eval do
+          name = name.to_s.gsub(/\=$/, '')
           define_method("#{name}=") do |value|
             my_data[name.to_s] = value
           end
