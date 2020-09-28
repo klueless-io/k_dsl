@@ -5,6 +5,20 @@ require 'spec_helper'
 RSpec.describe KDsl::Manage::ProjectConfig do
   let(:config) { described_class.new }
 
+  describe '.base_path' do
+    subject { config.base_path }
+
+    context 'with default value' do
+      it { is_expected.to eq(Dir.getwd) }
+    end
+
+    context 'when set' do
+      before { config.base_path = '/some_folder' }
+
+      it { is_expected.to eq('/some_folder') }
+    end
+  end
+
   describe '.base_dsl_path' do
     subject { config.base_dsl_path }
 
@@ -26,7 +40,7 @@ RSpec.describe KDsl::Manage::ProjectConfig do
       it { is_expected.to eq(File.join(Dir.getwd, '.data')) }
 
       context 'when base_dsl_path is altered' do
-        before { config.base_dsl_path = '/some_folder' }
+        before { config.base_path = '/some_folder' }
 
         it { is_expected.to eq('/some_folder/.data') }
       end
@@ -46,7 +60,7 @@ RSpec.describe KDsl::Manage::ProjectConfig do
       it { is_expected.to eq(File.join(Dir.getwd, '.definition')) }
 
       context 'when base_dsl_path is altered' do
-        before { config.base_dsl_path = '/some_folder' }
+        before { config.base_path = '/some_folder' }
 
         it { is_expected.to eq('/some_folder/.definition') }
       end
@@ -66,7 +80,7 @@ RSpec.describe KDsl::Manage::ProjectConfig do
       it { is_expected.to eq(File.join(Dir.getwd, '.template')) }
 
       context 'when base_dsl_path is altered' do
-        before { config.base_dsl_path = '/some_folder' }
+        before { config.base_path = '/some_folder' }
 
         it { is_expected.to eq('/some_folder/.template') }
       end
@@ -86,7 +100,7 @@ RSpec.describe KDsl::Manage::ProjectConfig do
       it { is_expected.to eq(File.join(Dir.getwd, '.app_template')) }
 
       context 'when base_dsl_path is altered' do
-        before { config.base_dsl_path = '/some_folder' }
+        before { config.base_path = '/some_folder' }
 
         it { is_expected.to eq('/some_folder/.app_template') }
       end

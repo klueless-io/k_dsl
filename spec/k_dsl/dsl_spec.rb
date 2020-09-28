@@ -6,7 +6,7 @@ RSpec.describe KDsl do
   before { KDsl.teardown }
 
   # describe '#log_level' do
-  #   subject { described_class.projects }
+  #   subject { described_class.project_manager }
 
   #   it { is_expected.to be_nil }
 
@@ -17,8 +17,8 @@ RSpec.describe KDsl do
   #   end
   # end
 
-  describe '.projects' do
-    subject { described_class.projects }
+  describe '.project_manager' do
+    subject { described_class.project_manager }
 
     it { is_expected.to be_nil }
 

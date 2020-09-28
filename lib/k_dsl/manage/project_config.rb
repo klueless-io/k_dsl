@@ -7,6 +7,10 @@ module KDsl
     # You may want to have multiple managers and so it is useful to
     # store the configuation in an object that can be passed. 
     class ProjectConfig
+      # Base path for project resources (defaults to current working directory)
+      # Usually set to centralized path that is reused across projects
+      attr_accessor :base_path
+
       # Base path for your DSL's (defaults to current working directory)
       attr_accessor :base_dsl_path
 
@@ -23,6 +27,7 @@ module KDsl
       attr_writer :base_app_template_path
 
       def initialize
+        @base_path = Dir.getwd
         @base_dsl_path = Dir.getwd
 
         yield self if block_given?
@@ -30,6 +35,7 @@ module KDsl
 
       def to_h
         {
+          base_path: base_path,
           base_dsl_path: base_dsl_path,
           base_data_path: base_data_path,
           base_definition_path: base_definition_path,
@@ -40,7 +46,7 @@ module KDsl
 
       def base_data_path
         if @base_data_path.nil?
-          File.join(base_dsl_path, '.data')
+          File.join(base_path, '.data')
         else
           @base_data_path
         end
@@ -48,7 +54,7 @@ module KDsl
 
       def base_definition_path
         if @base_definition_path.nil?
-          File.join(base_dsl_path, '.definition')
+          File.join(base_path, '.definition')
         else
           @base_definition_path
         end
@@ -56,7 +62,7 @@ module KDsl
 
       def base_template_path
         if @base_template_path.nil?
-          File.join(base_dsl_path, '.template')
+          File.join(base_path, '.template')
         else
           @base_template_path
         end
@@ -64,7 +70,7 @@ module KDsl
 
       def base_app_template_path
         if @base_app_template_path.nil?
-          File.join(base_dsl_path, '.app_template')
+          File.join(base_path, '.app_template')
         else
           @base_app_template_path
         end
