@@ -16,4 +16,8 @@ group :development, :test do
   gem 'rake-compiler'
   gem 'rspec', '~> 3.0'
   gem 'rubocop'
+  gem 'guard-rake'
+
+  # Debugging code needs to be decoupled from k_dsl
+  gem 'table_print'
 end

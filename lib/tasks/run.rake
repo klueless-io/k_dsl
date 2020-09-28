@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+require 'pry'
+
+BASE_PATH = '~/dev/kweb/klue-less/_'
 
 namespace :k_dsl do
   desc 'Execute the KLUE DSL'
@@ -10,11 +13,39 @@ namespace :k_dsl do
 
     file = args[:dsl_file]
 
-    KDsl.setup
+    KDsl.setup(log_level: KDsl::LOG_INFO)
+
+    config_command = KDsl::Manage::ProjectConfig.new do |config|
+      config.base_path = BASE_PATH
+      config.base_dsl_path = config.base_path
+    end
+
+    project_command = KDsl::Manage::Project.new('quick_commands', config_command)
+    project_command.register_path('microapp/_cmds/**/*.rb')
+
+    config_microapp1 = KDsl::Manage::ProjectConfig.new do |config|
+      config.base_path = BASE_PATH
+      config.base_dsl_path = '~/dev/kgems/k_dsl/spec/factories/dsls'
+    end
+
+    project_microapp1 = KDsl::Manage::Project.new('microapp1', config_microapp1) do
+      register_path('common-auth/**/*.rb')
+      register_path('microapp1/**/*.rb')
+    end
+
+    manager = KDsl.project_manager
+    manager.add_project(project_command)
+    manager.add_project(project_microapp1)
+
+    manager.debug()
+    manager.debug(format: :detail)
+
+    # 
+    # L.json config1.to_h
 
     # KDsl.setup
     # KDsl.project_manager.config do
-    #   project('microap1', '~/dev/gems/k_dsl/spec/factories/dsls') do
+    #   project('microapp1', '~/dev/gems/k_dsl/spec/factories/dsls') do
     #     register_path('common-auth/**/*.rb')
     #     register_path('microapp1/**/*.rb')
     #   end

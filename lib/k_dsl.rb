@@ -15,6 +15,7 @@ require 'k_dsl/exceptions'
 require 'k_dsl/logger/log_formatter'
 require 'k_dsl/logger/log_helper'
 require 'k_dsl/logger/log_util'
+require 'table_print' # Debugging code needs to be decoupled from k_dsl
 
 # Memory management for DSLs
 require 'k_dsl/manage/project'
