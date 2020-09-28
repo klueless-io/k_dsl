@@ -15,10 +15,14 @@ module KDsl
     #    of a DSL for use either on it's own or by other DSL's
     # REFACTOR: Projects need names
     class Project
+      # Project name
+      attr_reader :name
+
       # Project configuration
       attr_reader :config
 
-      attr_reader :manager
+      # Reference to manager that holds all projects
+      attr_accessor :manager
 
       # List of DSL's instances
       attr_reader :dsls
@@ -50,14 +54,24 @@ module KDsl
       # what file is currently being processed
       # attr_reader :current_processing_file
 
-      def initialize(config = nil)
+      def initialize(name, config = nil, &block)
+        raise KDsl::Error, 'Provide a project name' unless name.is_a?(String) || name.is_a?(Symbol)
+
+        @name = name
         @config = config || KDsl::Manage::ProjectConfig.new
-        @manager = KDsl.manager
 
         # REFACT: Wrap DSL's up into it's own class
         @dsls = {}
         @registered_paths = []
         @registered_files = []
+
+        begin
+          instance_eval(&block) if block_given?
+        rescue => exception
+          L.heading "Invalid code block in project during initialization: #{name}"
+          L.exception exception
+          raise
+        end
 
         # @current_state = :dynamic
         # @current_register_file = nil
@@ -90,6 +104,7 @@ module KDsl
       # rubocop:enable Metrics/AbcSize
 
       def register_path(path)
+        # puts  "register path: #{path} "
         path = KDsl::Util.file.expand_path(path, config.base_dsl_path)
 
         Dir[path].sort.each do |file|
@@ -178,6 +193,38 @@ module KDsl
         end
 
         @current_processing_file = nil
+      end
+
+      def managed?
+        !self.manager.nil?
+      end
+
+      def debug(format: :tabular)
+        data = registered_paths.map do |rp|
+          OpenStruct.new(
+            path: rp,
+            files: registered_files.select { |f| f.start_with?(rp) }.map { |f| OpenStruct.new(file: f, relative_file: f.delete_prefix(rp)) }
+          )
+        end
+
+        if format == :tabular
+          tp data,
+            { :path => { width: 100, display_name: 'DSL Path' } },
+            { 'files.relative_file' => { width: 100, display_name: 'DSL File' } }
+        else
+          # projects.each do |project|
+          #   L.subheading(project.name)
+          #   L.kv 'Base Path', project.config.base_path
+          #   L.kv 'DSL Path', project.config.base_dsl_path
+          #   L.kv 'Data_Path', project.config.base_data_path
+          #   L.kv 'Definition Path', project.config.base_definition_path
+          #   L.kv 'Template Path', project.config.base_template_path
+          #   L.kv 'AppTemplate Path', project.config.base_app_template_path
+          # end
+        end
+        
+        # L.kv '# of Projects', projects.length
+
       end
 
       # def self.create(base_dsl_path, base_data_path: nil, base_definition_path: nil, base_template_path: nil, &block)

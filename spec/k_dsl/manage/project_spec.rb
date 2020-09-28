@@ -11,14 +11,12 @@ RSpec.describe KDsl::Manage::Project do
   # puts spec.gem_dir
 
   let(:gem_root) { Gem::Specification.find_by_name("k_dsl").gem_dir }
-  let(:project) { described_class.new(config) }
+  let(:project) { described_class.new(name, config) }
+  let(:name) { 'app_name' }
   let(:config) do
-    # KDsl::Manage::ProjectConfig.new do
-    #   base_dsl_path = File.join(Dir.getwd, 'spec', 'factories', 'dslsx')
-    # end
-    c = KDsl::Manage::ProjectConfig.new
-    c.base_dsl_path = File.join(Dir.getwd, 'spec', 'factories', 'dsls')
-    c
+    KDsl::Manage::ProjectConfig.new do |c|
+      c.base_dsl_path = File.join(Dir.getwd, 'spec', 'factories', 'dsls')
+    end
   end
   let(:document1) { KDsl::Model::Document.new :xmen }
   let(:document2) { KDsl::Model::Document.new :xmen, :model }
@@ -27,23 +25,50 @@ RSpec.describe KDsl::Manage::Project do
   let(:document) { document1 }
 
   describe '#constructor' do
-    context '.configuration' do
+    describe '.name' do
+      subject { project.name }
+
+      it { is_expected.to eq(name) }
+    end
+
+    describe '.config' do
       subject { project.config }
 
       it { is_expected.not_to be_nil }
     end
 
-    context '.registered_paths' do
+    describe '.registered_paths' do
       subject { project.registered_paths }
 
       it { is_expected.to be_empty }
     end
 
-    context '.manager' do
+    describe '.manager' do
       subject { project.manager }
 
-      it { is_expected.not_to be_nil }
+      it { is_expected.to be_nil }
     end
+
+    describe '.managed?' do
+      subject { project.managed? }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context '&block' do
+      describe '#register_path' do
+        let(:project) do
+          described_class.new(name, config) do
+            register_path('ruby_files/*.rb')
+          end
+        end
+        describe '.registered_paths' do
+          subject { project.registered_paths }
+    
+          it { is_expected.not_to be_empty }
+        end
+      end
+    end  
   end
 
   describe '#register_path' do

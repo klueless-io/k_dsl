@@ -6,20 +6,21 @@ require 'securerandom'
 # https://github.com/guard/guard/blob/master/lib/guard.rb
 # DSL root factory methods
 module KDsl
+  LOG_NONE = :none
+  LOG_WARN = :warn
+  LOG_INFO = :info
+
   class << self
-    LOG_NONE = :none
-    LOG_WARN = :warn
-    LOG_INFO = :info
 
     attr_reader :process
-    attr_reader :projects
+    attr_reader :project_manager
 
-    # REFACT: Need to research and implement the correct patter for log levels
+    # REFACT: Need to research and implement the correct pattern for log levels
     attr_reader :log_level
 
     def setup(log_level: LOG_NONE,
               process: Internals::Processor.new,
-              projects: Manage::ProjectManager.new)
+              project_manager: Manage::ProjectManager.new)
 
       @log_level = log_level
 
@@ -30,18 +31,20 @@ module KDsl
       end
 
       @process = process
-      @projects = projects
+      @project_manager = project_manager
     end
 
     def teardown
       @log_level = nil
       @process = nil
-      @projects = nil
+      @project_manager = nil
     end
+
+    # def add_project(name, )
 
     # I need to move the concept of document onto the project
     # IF KDsl.document is called then under the hood it should
-    # instantiate a global project, but other projects are their
+    # instantiate a global project, but other project_manager have their
     # own namespaces that can be used to issolate for memory management
     def document(key = nil, type = nil, **options, &block)
       build_document(key, type, nil, **options, &block)
