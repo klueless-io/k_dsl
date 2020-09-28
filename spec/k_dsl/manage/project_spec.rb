@@ -37,8 +37,8 @@ RSpec.describe KDsl::Manage::Project do
       it { is_expected.not_to be_nil }
     end
 
-    describe '.registered_paths' do
-      subject { project.registered_paths }
+    describe '.watch_paths' do
+      subject { project.watch_paths }
 
       it { is_expected.to be_empty }
     end
@@ -54,39 +54,32 @@ RSpec.describe KDsl::Manage::Project do
 
       it { is_expected.to be_falsey }
     end
-
-    context '&block' do
-      describe '#register_path' do
-        let(:project) do
-          described_class.new(name, config) do
-            register_path('ruby_files/*.rb')
-          end
-        end
-        describe '.registered_paths' do
-          subject { project.registered_paths }
-    
-          it { is_expected.not_to be_empty }
-        end
-      end
-    end  
   end
 
-  describe '#register_path' do
-    describe '.registered_paths' do
-      subject { project.registered_paths }
-
-      before { allow(project).to receive(:register_file) }
+  describe '#watch_path' do
+    describe '.watch_paths' do
+      subject { project.watch_paths }
 
       context 'when one valid path' do
-        before { project.register_path('ruby_files/*.rb') }
+        before { project.watch_path('ruby_files/*.rb') }
 
         it { is_expected.to eq [File.join(gem_root, 'spec/factories/dsls/ruby_files')] }
       end
 
+      context 'when configured via &block' do
+        let(:project) do
+          described_class.new(name, config) do
+            watch_path('ruby_files/*.rb')
+          end
+        end
+
+        it { is_expected.not_to be_empty }
+      end  
+  
       context 'when two parent paths' do
         before do
-          project.register_path('common-auth/*.rb')
-          project.register_path('microapp1/*.rb')
+          project.watch_path('common-auth/*.rb')
+          project.watch_path('microapp1/*.rb')
         end
 
         it do
@@ -99,7 +92,7 @@ RSpec.describe KDsl::Manage::Project do
 
       context 'when deep nested paths' do
         before do
-          project.register_path('microapp2/**/*.rb')
+          project.watch_path('microapp2/**/*.rb')
         end
 
         it do
@@ -117,7 +110,7 @@ RSpec.describe KDsl::Manage::Project do
       # before { allow(project).to receive(:process_code) }
 
       context 'when path has files' do
-        before { project.register_path('ruby_files/*.rb') }
+        before { project.watch_path('ruby_files/*.rb') }
 
         it do
           expect(subject).to include(
@@ -129,8 +122,8 @@ RSpec.describe KDsl::Manage::Project do
 
       context 'when multiple paths have files' do
         before do
-          project.register_path('common-auth/*.rb')
-          project.register_path('microapp1/*.rb')
+          project.watch_path('common-auth/*.rb')
+          project.watch_path('microapp1/*.rb')
         end
 
         it do
@@ -146,7 +139,7 @@ RSpec.describe KDsl::Manage::Project do
 
       context 'when deep nested paths have files' do
         before do
-          project.register_path('microapp2/**/*.rb')
+          project.watch_path('microapp2/**/*.rb')
         end
 
         it do
@@ -945,7 +938,7 @@ RSpec.describe KDsl::Manage::Project do
   #   it 'register file then load file then dynamic content' do
     
   #     expect(subject.dsls.values.length).to eq(0)
-  #     subject.register_path('common-auth/*.rb')
+  #     subject.watch_path('common-auth/*.rb')
   #     expect(subject.dsls.values.length).to eq(2)
 
   #     # Klue.print
@@ -1022,8 +1015,8 @@ RSpec.describe KDsl::Manage::Project do
 
   # REGISTER_DSL = <<-RUBY
   #   Klue.register File.join(Rails.root, 'spec', '_', 'klue-files') do
-  #     register_path('common-auth/**/*.rb')
-  #     register_path('micro-app/**/*.rb')
+  #     watch_path('common-auth/**/*.rb')
+  #     watch_path('micro-app/**/*.rb')
   #   end
   # RUBY
 
@@ -1035,8 +1028,8 @@ RSpec.describe KDsl::Manage::Project do
 
   #   it 'as DSL in code' do
   #     Klue.register(File.join(Rails.root, 'spec', '_', 'klue-files')) do
-  #       register_path('common-auth/**/*.rb')
-  #       register_path('micro-app/**/*.rb')
+  #       watch_path('common-auth/**/*.rb')
+  #       watch_path('micro-app/**/*.rb')
   #     end
   #   end
 
