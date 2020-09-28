@@ -21,7 +21,7 @@ namespace :k_dsl do
     end
 
     project_command = KDsl::Manage::Project.new('quick_commands', config_command)
-    project_command.register_path('microapp/_cmds/**/*.rb')
+    project_command.watch_path('microapp/_cmds/**/*.rb')
 
     config_microapp1 = KDsl::Manage::ProjectConfig.new do |config|
       config.base_path = BASE_PATH
@@ -29,16 +29,20 @@ namespace :k_dsl do
     end
 
     project_microapp1 = KDsl::Manage::Project.new('microapp1', config_microapp1) do
-      register_path('common-auth/**/*.rb')
-      register_path('microapp1/**/*.rb')
+      # watch_path('common-auth/**/*.rb')
+      watch_path('microapp1/**/*.rb')
     end
 
     manager = KDsl.project_manager
-    manager.add_project(project_command)
+    # manager.add_project(project_command)
     manager.add_project(project_microapp1)
 
     manager.debug()
     manager.debug(format: :detail)
+
+    # project_command.register
+
+
 
     # 
     # L.json config1.to_h
@@ -46,8 +50,8 @@ namespace :k_dsl do
     # KDsl.setup
     # KDsl.project_manager.config do
     #   project('microapp1', '~/dev/gems/k_dsl/spec/factories/dsls') do
-    #     register_path('common-auth/**/*.rb')
-    #     register_path('microapp1/**/*.rb')
+    #     watch_path('common-auth/**/*.rb')
+    #     watch_path('microapp1/**/*.rb')
     #   end
     # end
     # KDsl.process.file(file)

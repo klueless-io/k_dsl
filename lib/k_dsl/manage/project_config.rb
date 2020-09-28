@@ -26,11 +26,18 @@ module KDsl
       # Application specific override for templates (need to find a hidden location for this)
       attr_writer :base_app_template_path
 
-      def initialize
+      def initialize(&block)
         @base_path = Dir.getwd
         @base_dsl_path = Dir.getwd
 
-        yield self if block_given?
+        begin
+          instance_eval(&block) if block_given?
+        rescue => exception
+          L.heading "Invalid code block in project config"
+          L.exception exception
+          raise
+        end
+        # yield self if block_given?
       end
 
       def to_h

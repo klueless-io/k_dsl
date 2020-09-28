@@ -37,8 +37,7 @@ module KDsl
       # REFACT: This pattern should be stored so that it can be 
       #         checked when a file is add, updated, deleted and that
       #         file fits the pattern
-      # RENAME: registered_paths (as they may not be DSL's)
-      attr_reader :registered_paths
+      attr_reader :watch_paths
 
       # List of files that are visible to this project
       # REFACT: May be available from dsls, need to check
@@ -62,7 +61,7 @@ module KDsl
 
         # REFACT: Wrap DSL's up into it's own class
         @dsls = {}
-        @registered_paths = []
+        @watch_paths = []
         @registered_files = []
 
         begin
@@ -103,12 +102,15 @@ module KDsl
       end
       # rubocop:enable Metrics/AbcSize
 
-      def register_path(path)
-        # puts  "register path: #{path} "
+      # Register any files found in the absolute path or path relative to base_dsl_path
+      #
+      # Files are generally DSL's but support for other types (PORO, Ruby, JSON, CSV) will come
+      def watch_path(path)
+        # puts  "watch path: #{path} "
         path = KDsl::Util.file.expand_path(path, config.base_dsl_path)
 
         Dir[path].sort.each do |file|
-          @registered_paths << File.dirname(file) unless @registered_paths.include? File.dirname(file)
+          @watch_paths << File.dirname(file) unless @watch_paths.include? File.dirname(file)
           register_file(file, path_expansion: false)
         end
       end
@@ -200,7 +202,7 @@ module KDsl
       end
 
       def debug(format: :tabular)
-        data = registered_paths.map do |rp|
+        data = watch_paths.map do |rp|
           OpenStruct.new(
             path: rp,
             files: registered_files.select { |f| f.start_with?(rp) }.map { |f| OpenStruct.new(file: f, relative_file: f.delete_prefix(rp)) }
@@ -257,7 +259,7 @@ module KDsl
       #     # L.info 'no source files'
       #   end
 
-      #   if source_file.present? && !source_file.starts_with?(*@registered_paths)
+      #   if source_file.present? && !source_file.starts_with?(*@watch_paths)
       #     L.kv 'source_file', source_file
       #     raise Klue::Dsl::DslError, 'source file skipped, file is not on a registered path'
       #   end
@@ -414,7 +416,7 @@ module KDsl
         #   # L.info 'no source files'
         # end
 
-        return unless !file.nil? && !file.starts_with?(*@registered_paths)
+        return unless !file.nil? && !file.starts_with?(*@watch_paths)
 
         L.kv 'file', file
         raise KDsl::Error, 'Source file skipped, file is not on a registered path'
