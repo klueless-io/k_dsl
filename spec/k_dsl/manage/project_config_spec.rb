@@ -17,6 +17,24 @@ RSpec.describe KDsl::Manage::ProjectConfig do
 
       it { is_expected.to eq('/some_folder') }
     end
+    context 'when set via &block' do
+      let(:config) do
+        described_class.new do
+          self.base_path = '/some_folder'
+        end
+      end
+
+      it { is_expected.to eq('/some_folder') }
+    end
+    context 'when set via &block with variable' do
+      let(:config) do
+        described_class.new do |c|
+          c.base_path = '/some_folder'
+        end
+      end
+
+      it { is_expected.to eq('/some_folder') }
+    end
   end
 
   describe '.base_dsl_path' do
@@ -39,7 +57,7 @@ RSpec.describe KDsl::Manage::ProjectConfig do
     context 'with default value' do
       it { is_expected.to eq(File.join(Dir.getwd, '.data')) }
 
-      context 'when base_dsl_path is altered' do
+      context 'when base_path is altered' do
         before { config.base_path = '/some_folder' }
 
         it { is_expected.to eq('/some_folder/.data') }
@@ -59,7 +77,7 @@ RSpec.describe KDsl::Manage::ProjectConfig do
     context 'with default value' do
       it { is_expected.to eq(File.join(Dir.getwd, '.definition')) }
 
-      context 'when base_dsl_path is altered' do
+      context 'when base_path is altered' do
         before { config.base_path = '/some_folder' }
 
         it { is_expected.to eq('/some_folder/.definition') }
@@ -79,7 +97,7 @@ RSpec.describe KDsl::Manage::ProjectConfig do
     context 'with default value' do
       it { is_expected.to eq(File.join(Dir.getwd, '.template')) }
 
-      context 'when base_dsl_path is altered' do
+      context 'when base_path is altered' do
         before { config.base_path = '/some_folder' }
 
         it { is_expected.to eq('/some_folder/.template') }
@@ -99,7 +117,7 @@ RSpec.describe KDsl::Manage::ProjectConfig do
     context 'with default value' do
       it { is_expected.to eq(File.join(Dir.getwd, '.app_template')) }
 
-      context 'when base_dsl_path is altered' do
+      context 'when base_path is altered' do
         before { config.base_path = '/some_folder' }
 
         it { is_expected.to eq('/some_folder/.app_template') }

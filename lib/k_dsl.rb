@@ -22,6 +22,7 @@ require 'k_dsl/manage/project'
 require 'k_dsl/manage/project_config'
 require 'k_dsl/manage/project_manager'
 require 'k_dsl/manage/register'
+require 'k_dsl/manage/resource'
 
 # DSL document structures
 require 'k_dsl/model/document'
