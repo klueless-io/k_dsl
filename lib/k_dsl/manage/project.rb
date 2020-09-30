@@ -39,11 +39,11 @@ module KDsl
       #         file fits the pattern
       attr_reader :watch_paths
 
-      # List of files that are visible to this project
+      # List of resource files that are visible to this project
       # REFACT: May be available from dsls, need to check
       # REFACT: Also there is no guarantee that the file is actually a DSL
-      # RENAME: registered_files (as they may not be DSL's)
-      attr_reader :registered_files
+      # RENAME: registered_resources (as they may not be DSL's)
+      attr_reader :registered_resources
 
       # There is currently a tight cupling between is boolean and DSL's so that they know whether they are being refrenced for registration or importation
       # The difference is that importation will execute their interal code block while registration will not.
@@ -62,7 +62,7 @@ module KDsl
         # REFACT: Wrap DSL's up into it's own class
         @dsls = {}
         @watch_paths = []
-        @registered_files = []
+        @registered_resources = []
 
         begin
           instance_eval(&block) if block_given?
@@ -110,37 +110,21 @@ module KDsl
         path = KDsl::Util.file.expand_path(path, config.base_dsl_path)
 
         Dir[path].sort.each do |file|
-          @watch_paths << File.dirname(file) unless @watch_paths.include? File.dirname(file)
-          register_file(file, path_expansion: false)
+          watch_path = File.dirname(file)
+          @watch_paths << watch_path unless @watch_paths.include? watch_path
+
+          register_file_resource(file, watch_path: watch_path, path_expansion: false)
         end
       end
 
-      def register_file(file, path_expansion: true)
+      def register_file_resource(file, watch_path: nil, path_expansion: true)
         file = KDsl::Util.file.expand_path(file, config.base_dsl_path) if path_expansion
 
         return unless File.exist?(file)
 
-        @registered_files << file unless @registered_files.include? file
+        resource = KDsl::Resources::Resource.instance(file: file, watch_path: watch_path, source: KDsl::Resources::Resource::SOURCE_FILE)
 
-        # This is way too much couling going on
-        # process_code(File.read(file), file)
-
-        # L.kv 'register_file.file', file
-
-        # current_state = :register_file
-        # current_register_file = file
-
-        # L.kv 'current_state', current_state
-        # L.kv 'current_register_file', current_register_file
-
-        # content = File.read(file)
-
-        # process_code(content)
-
-        # current_register_file = nil
-        # current_state = :dynamic
-        # L.kv 'current_state', current_state
-        # L.kv 'current_register_file', current_register_file
+        @registered_resources << resource unless @registered_resources.include? resource
       end
 
       def register_dsl(document)
@@ -202,10 +186,14 @@ module KDsl
       end
 
       def debug(format: :tabular)
-        data = watch_paths.map do |rp|
+        data = watch_paths.map do |path|
           OpenStruct.new(
-            path: rp,
-            files: registered_files.select { |f| f.start_with?(rp) }.map { |f| OpenStruct.new(file: f, relative_file: f.delete_prefix(rp)) }
+            path: path,
+            files: registered_resources.select do |resource|
+              resource.filepath.start_with?(path)
+            end.map do |resource|
+              OpenStruct.new(file: resource.filepath, relative_file: resource.filepath.delete_prefix(path))
+            end
           )
         end
 
