@@ -17,12 +17,19 @@ require 'k_dsl/logger/log_helper'
 require 'k_dsl/logger/log_util'
 require 'table_print' # Debugging code needs to be decoupled from k_dsl
 
-# Memory management for DSLs
+# Project management for DSLs and other resources
 require 'k_dsl/manage/project'
 require 'k_dsl/manage/project_config'
 require 'k_dsl/manage/project_manager'
 require 'k_dsl/manage/register'
-require 'k_dsl/manage/resource'
+
+# Resources
+require 'k_dsl/resources/resource'
+require 'k_dsl/resources/csv_resource'
+require 'k_dsl/resources/dsl_resource'
+require 'k_dsl/resources/json_resource'
+require 'k_dsl/resources/ruby_resource'
+require 'k_dsl/resources/unknown_resource'
 
 # DSL document structures
 require 'k_dsl/model/document'

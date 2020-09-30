@@ -34,13 +34,13 @@ namespace :k_dsl do
     end
 
     manager = KDsl.project_manager
-    # manager.add_project(project_command)
-    manager.add_project(project_microapp1)
+    manager.add_project(project_command)
+    # manager.add_project(project_microapp1)
 
     manager.debug()
     manager.debug(format: :detail)
 
-    # project_command.register
+    project_command.start
 
 
 

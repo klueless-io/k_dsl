@@ -104,18 +104,18 @@ RSpec.describe KDsl::Manage::Project do
       end
     end
 
-    describe '.registered_files' do
-      subject { project.registered_files }
+    describe '.registered_resources' do
+      subject { project.registered_resources }
 
       # before { allow(project).to receive(:process_code) }
 
-      context 'when path has files' do
+      context 'when simple ruby files' do
         before { project.watch_path('ruby_files/*.rb') }
 
         it do
           expect(subject).to include(
-            File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'),
-            File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby2.rb')
+            an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), type: 'ruby'),
+            an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby2.rb'), type: 'ruby')
           )
         end
       end
@@ -128,11 +128,11 @@ RSpec.describe KDsl::Manage::Project do
 
         it do
           expect(subject).to include(
-            File.join(gem_root, 'spec/factories/dsls/common-auth/admin_user.rb'),
-            File.join(gem_root, 'spec/factories/dsls/common-auth/basic_user.rb'),
-            File.join(gem_root, 'spec/factories/dsls/microapp1/domain.rb'),
-            File.join(gem_root, 'spec/factories/dsls/microapp1/microapp.rb'),
-            File.join(gem_root, 'spec/factories/dsls/microapp1/structure.rb')
+            an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/common-auth/admin_user.rb'), type: 'ruby'),
+            an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/common-auth/basic_user.rb'), type: 'ruby'),
+            an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp1/domain.rb'), type: 'ruby'),
+            an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp1/microapp.rb'), type: 'ruby'),
+            an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp1/structure.rb'), type: 'ruby')
           )
         end
       end
@@ -144,37 +144,37 @@ RSpec.describe KDsl::Manage::Project do
 
         it do
           expect(subject).to include(
-            File.join(gem_root, 'spec/factories/dsls/microapp2/auth/admin_user.rb'),
-            File.join(gem_root, 'spec/factories/dsls/microapp2/auth/basic_user.rb'),
-            File.join(gem_root, 'spec/factories/dsls/microapp2/domain.rb'),
-            File.join(gem_root, 'spec/factories/dsls/microapp2/microapp.rb'),
-            File.join(gem_root, 'spec/factories/dsls/microapp2/structure.rb')
+            an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/auth/admin_user.rb'), type: 'ruby'),
+            an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/auth/basic_user.rb'), type: 'ruby'),
+            an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/domain.rb'), type: 'ruby'),
+            an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/microapp.rb'), type: 'ruby'),
+            an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/structure.rb'), type: 'ruby')
           )
         end
       end
     end
   end
 
-  describe '#register_file' do
-    describe '.registered_files' do
-      subject { project.registered_files }
+  describe '#register_file_resource' do
+    describe '.registered_resources' do
+      subject { project.registered_resources }
 
       # before { allow(project).to receive(:process_code) }
 
       context 'when using relative files' do
-        before { project.register_file('ruby_files/ruby1.rb') }
+        before { project.register_file_resource('ruby_files/ruby1.rb') }
         
-        it { is_expected.to include(File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb')) }
+        it { is_expected.to include( an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), type: 'ruby')) }
       end
 
       context 'when using absolute files' do
-        before { project.register_file(File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), path_expansion: false) }
+        before { project.register_file_resource(File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), path_expansion: false) }
         
-        it { is_expected.to include(File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb')) }
+        it { is_expected.to include( an_object_having_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), type: 'ruby')) }
       end
 
       context 'when file does not exist' do
-        before { project.register_file('bad_file_name.rb') }
+        before { project.register_file_resource('bad_file_name.rb') }
         
         it { is_expected.to be_empty }
       end
@@ -185,13 +185,13 @@ RSpec.describe KDsl::Manage::Project do
 
     #   before { allow(project).to receive(:process_code) }
 
-    #   fcontext 'on register_file' do
-    #     before { project.register_file('ruby_files/ruby1.rb') }
+    #   context 'on register_file_resource' do
+    #     before { project.register_file_resource('ruby_files/ruby1.rb') }
 
-    #     it 'will transition through :register_file' do
+    #     it 'will transition through :register_file_resource' do
     #       project = spy('project')
 
-    #       expect(project).to have_received(:current_state=).with(:register_file)
+    #       expect(project).to have_received(:current_state=).with(:register_file_resource)
     #       expect(subject).to eq(:dynamic)
     #       # expect(project).to receive(:current_state).with(:process_code)
     #     end
@@ -416,7 +416,7 @@ RSpec.describe KDsl::Manage::Project do
       
   #     it { expect(with_min_param_registered_dsl.dsls).to eq({}) }
   #     it { expect(with_min_param_registered_dsl.current_state).to eq(:dynamic) }
-  #     it { expect(with_min_param_registered_dsl.current_register_file).to be_nil }
+  #     it { expect(with_min_param_registered_dsl.current_register_file_resource).to be_nil }
   #   end
 
   #   context 'with custom data folder' do
@@ -583,7 +583,7 @@ RSpec.describe KDsl::Manage::Project do
 
   #   context 'when dsl is registered' do
   #     it 'with name and default type' do
-  #       subject.register_file(admin_user_file)
+  #       subject.register_file_resource(admin_user_file)
 
   #       dsl = subject.get_dsl('admin_user')
 
@@ -702,7 +702,7 @@ RSpec.describe KDsl::Manage::Project do
 
   #   context 'when dsl is registered' do
   #     it 'with name and default type' do
-  #       subject.register_file(admin_user_file)
+  #       subject.register_file_resource(admin_user_file)
   #       # Klue.print
 
   #       expect(subject.get_dsl(:admin_user, nil, :entity)[:state]).to eq(:registered)
@@ -771,17 +771,17 @@ RSpec.describe KDsl::Manage::Project do
   #     # Klue.print
   #   }
 
-  #   describe 'register_file' do
+  #   describe 'register_file_resource' do
   #     context 'raise error on bad k_key' do
   #       it "k_key must be string or symbol" do
-  #         expect { subject.register_file(bad_k_key) }.to raise_error(Klue::Dsl::DslError, 'k_key must be a string or symbol')
+  #         expect { subject.register_file_resource(bad_k_key) }.to raise_error(Klue::Dsl::DslError, 'k_key must be a string or symbol')
   #       end
   #     end
 
   #     context 'with k_key as string' do
   #       it 'should register file' do
   #         expect(subject.dsls.values.length).to eq(0)
-  #         subject.register_file(admin_user_file)
+  #         subject.register_file_resource(admin_user_file)
   #         expect(subject.dsls.values.length).to eq(1)
 
   #         expect(subject.dsls.values.first).to include(
@@ -798,7 +798,7 @@ RSpec.describe KDsl::Manage::Project do
   #     context 'with k_key as symbol' do
   #       it 'should register file' do
   #         expect(subject.dsls.values.length).to eq(0)
-  #         subject.register_file(basic_user_file)
+  #         subject.register_file_resource(basic_user_file)
   #         expect(subject.dsls.values.length).to eq(1)
   #         expect(subject.dsls.values.first).to include(
   #           k_key: :basic_user, 
@@ -814,23 +814,23 @@ RSpec.describe KDsl::Manage::Project do
   #     context 'multiple file register' do
   #       it 'should register multiple files with same k_type and different k_key' do
   #         expect(subject.dsls.values.length).to eq(0)
-  #         subject.register_file(admin_user_file)
-  #         subject.register_file(basic_user_file)
+  #         subject.register_file_resource(admin_user_file)
+  #         subject.register_file_resource(basic_user_file)
   #         expect(subject.dsls.values.length).to eq(2)
   #       end
 
   #       it 'should register multiple files with diffent k_type and same k_key' do
   #         expect(subject.dsls.values.length).to eq(0)
-  #         subject.register_file(admin_user_file)
-  #         subject.register_file(basic_user_file)
-  #         subject.register_file(admin_user_as_domain_file)
+  #         subject.register_file_resource(admin_user_file)
+  #         subject.register_file_resource(basic_user_file)
+  #         subject.register_file_resource(admin_user_as_domain_file)
   #         expect(subject.dsls.values.length).to eq(3)
   #       end
 
   #       it 'should fail to register when duplicate k_type / k_key encountered' do
   #         expect(subject.dsls.values.length).to eq(0)
-  #         subject.register_file(admin_user_file)
-  #         expect { subject.register_file(admin_user_already_registered_file) }.to raise_error(Klue::Dsl::DslError, "Duplicate DSL key found admin_user_entity in different files")
+  #         subject.register_file_resource(admin_user_file)
+  #         expect { subject.register_file_resource(admin_user_already_registered_file) }.to raise_error(Klue::Dsl::DslError, "Duplicate DSL key found admin_user_entity in different files")
   #         expect(subject.dsls.values.length).to eq(1)
   #       end
 
