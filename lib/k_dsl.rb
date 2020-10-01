@@ -48,6 +48,7 @@ require 'k_dsl/configuration'
 require 'k_dsl/manager'
 
 # General utilities
+require 'k_dsl/util/data_helper'
 require 'k_dsl/util/dsl_helper'
 require 'k_dsl/util/file_helper'
 

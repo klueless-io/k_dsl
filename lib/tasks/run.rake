@@ -23,27 +23,36 @@ namespace :k_dsl do
     project_command = KDsl::Manage::Project.new('quick_commands', config_command)
     project_command.watch_path('microapp/_cmds/**/*.rb')
 
-    config_microapp1 = KDsl::Manage::ProjectConfig.new do |config|
+    config_microapp = KDsl::Manage::ProjectConfig.new do |config|
       config.base_path = BASE_PATH
       config.base_dsl_path = '~/dev/kgems/k_dsl/spec/factories/dsls'
     end
 
-    project_microapp1 = KDsl::Manage::Project.new('microapp1', config_microapp1) do
-      # watch_path('common-auth/**/*.rb')
+    project_microapp1 = KDsl::Manage::Project.new('microapp1', config_microapp) do
+      watch_path('common-auth/**/*.rb')
       watch_path('microapp1/**/*.rb')
+    end
+
+    project_microapp2 = KDsl::Manage::Project.new('microapp2', config_microapp) do
+      watch_path('microapp2/**/*.rb')
+    end
+
+    project_microapp3 = KDsl::Manage::Project.new('microapp3', config_microapp) do
+      watch_path('microapp3/**/*.*')
     end
 
     manager = KDsl.project_manager
     manager.add_project(project_command)
-    # manager.add_project(project_microapp1)
-
+    manager.add_project(project_microapp1)
+    manager.add_project(project_microapp2)
+    manager.add_project(project_microapp3)
+    
     manager.debug()
     manager.debug(format: :detail)
 
-    project_command.start
+    KDsl.process
 
-
-
+    # project_command.start
     # 
     # L.json config1.to_h
 

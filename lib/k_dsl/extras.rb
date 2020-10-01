@@ -106,20 +106,6 @@ module KDsl
       # data
     end
 
-    def self.to_struct(data)
-      # if data.is_a?(Hash)
-      #   return OpenStruct.new(data.map { |k,v| [k, to_struct(v)] }.to_h )
-
-      # elsif data.is_a?(Array)
-      #   return data.map { |o| to_struct(o) }
-
-      # else
-      #   # Assumed to be a primititve value
-      #   return data
-        
-      # end
-    end
-
     def meta_data()
       @meta_data.clone
     end

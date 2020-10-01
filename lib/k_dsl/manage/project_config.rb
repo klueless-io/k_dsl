@@ -12,6 +12,7 @@ module KDsl
       attr_accessor :base_path
 
       # Base path for your DSL's (defaults to current working directory)
+      # TODO: rename to base_resource_path
       attr_accessor :base_dsl_path
 
       # Bases path where data is written to
