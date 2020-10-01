@@ -23,6 +23,19 @@ module KDsl
           return data
         end
       end
+
+      def self.struct_to_hash(data)
+        data.each_pair.with_object({}) do |(key, value), hash|
+          if value.is_a?(OpenStruct)
+            hash[key] = struct_to_hash(value)
+          elsif value.is_a?(Array)
+            values = value.map { |v| struct_to_hash(v) }
+            hash[key] = values
+          else
+            hash[key] = value
+          end
+        end
+      end
     end
   end
 end

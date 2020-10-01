@@ -1,3 +1,22 @@
 {
-  "name": "David"
+  "name": "David",
+  "age": 32,
+  "contact": {
+    "phone": "0424 111 222",
+    "address": {
+      "street": "32 Main St",
+      "suburb": "Sydney"
+    },
+    "email": "david@david.com"
+  },
+  "skills": [
+    {
+      "name": "javascript",
+      "proficiency": "ok"
+    },
+    {
+      "name": "ruby",
+      "proficiency": "good"
+    }
+  ]
 }
