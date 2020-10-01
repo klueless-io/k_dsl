@@ -5,7 +5,14 @@ require 'spec_helper'
 RSpec.describe KDsl::Resources::Resource do
   subject { resource }
 
-  let(:resource) { described_class.instance(file: file, watch_path: watch_path) }
+  let(:resource) { described_class.instance(project: project, file: file, watch_path: watch_path) }
+  let(:project) { KDsl::Manage::Project.new('sample_app') }
+  let(:file) { 'a.txt' }
+  # let(:config) do
+  #   KDsl::Manage::ProjectConfig.new do |c|
+  #     c.base_dsl_path = File.join(Dir.getwd, 'spec', 'factories', 'dsls')
+  #   end
+  # end
 
   let(:gem_root) { Gem::Specification.find_by_name("k_dsl").gem_dir }
   # let(:watch_path) { gem_root }
@@ -14,10 +21,11 @@ RSpec.describe KDsl::Resources::Resource do
   let(:ruby_dsl_file) { File.join(gem_root, 'spec/factories/dsls/simple_dsl/some_dsl.rb') }
 
   describe '#constructor' do
+    it 'is linked to a project' do
+      expect(subject.project).not_to be_nil
+    end
     context 'when file provided' do
       context 'with any old file' do
-        let(:file) { 'a.txt' }
-
         it { is_expected.to have_attributes(file: file, type: described_class::TYPE_UNKNOWN, source: described_class::SOURCE_FILE) }
       end
 

@@ -25,13 +25,12 @@ module KDsl
       @log_level = log_level
 
       if log_info?
-        L.line
-        L.info 'Setup Klue DSL'
-        L.line
+        L.heading 'Setup Klue DSL'
       end
 
       @process = process
       @project_manager = project_manager
+      @project_manager.processor = process
     end
 
     def teardown
