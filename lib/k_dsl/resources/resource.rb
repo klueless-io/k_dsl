@@ -22,6 +22,8 @@ module KDsl
       TYPE_RUBY = 'ruby'
       TYPE_RUBY_DSL = 'dsl'
 
+      attr_reader :project
+
       # Source of the content
       #
       # :file, :uri, :dynamic
@@ -31,45 +33,82 @@ module KDsl
       attr_accessor :type
 
       # Full file path
+      #
+      # example: /Users/davidcruwys/dev/kgems/k_dsl/spec/factories/dsls/common-auth/admin_user.rb
       attr_reader :file
 
       # If the file is watched, what was it's base watch path
       #
       # Currently only used for informational/debugging purpose
+      #
+      # example: /Users/davidcruwys/dev/kgems/k_dsl/spec/factories/dsls/common-auth
       attr_reader :watch_path
 
       # Content of resource, use read content to load this property
       attr_reader :content
 
-      def initialize(source: nil, file: nil, watch_path: nil, content: nil)
+      def initialize(project: nil, source: nil, file: nil, watch_path: nil, content: nil)
+        @project = project
         @source = source
         @file = file
         @watch_path = watch_path
         @content = content
       end
 
-      def self.instance(source: nil, file: nil, watch_path: nil)
-        raise Klue::Dsl::DslError 'Unknown source' unless [SOURCE_FILE].include? source
+      def self.instance(project:, source: KDsl::Resources::Resource::SOURCE_FILE, file: nil, watch_path: nil)
+        raise ::KDsl::Error, 'Unknown source' unless [SOURCE_FILE].include? source
 
-        extension = File.extname(file).downcase
         content = source === SOURCE_FILE && File.exist?(file) ? File.read(file) : nil
 
-        case extension
-        when '.rb'
-          # Very primitive DSL check, needs improvement
-          return DslResource.new(source: source, file: file, watch_path: watch_path, content: content) if content.include?('KDsl::')
-          return RubyResource.new(source: source, file: file, watch_path: watch_path, content: content)
-        when '.csv'
-          return CsvResource.new(source: source, file: file, watch_path: watch_path, content: content)
-        when '.json'
-          return JsonResource.new(source: source, file: file, watch_path: watch_path, content: content)
+        klass = resource_class(source, file, content)
+
+        klass.new(
+            project: project,
+            source: source,
+            file: file,
+            watch_path: watch_path,
+            content: content)
+      end
+
+      def self.resource_class(source, file, content)
+        if source === SOURCE_FILE
+          extension = File.extname(file).downcase
+
+          case extension
+          when '.rb'
+            return content&.include?('KDsl::') ? DslResource : RubyResource
+          when '.csv'
+            return CsvResource
+          when '.json'
+            return JsonResource
+          end
         end
 
-        return UnknownResource.new(source: source, file: file, watch_path: watch_path, content: content)
+        return UnknownResource
       end
 
       def exist?
         source === SOURCE_FILE && File.exist?(file)
+      end
+
+      # example:  ~/dev/kgems/k_dsl/spec/factories/dsls
+      def relative_watch_path
+        @relative_watch_path ||= watch_path.delete_prefix(base_resource_path_expanded)
+      end
+
+      # example:  ~/dev/kgems/k_dsl/spec/factories/dsls
+      def filename
+        @filename ||= File.basename(file)
+      end
+
+      # example:  ~/dev/kgems/k_dsl/spec/factories/dsls
+      def base_resource_path
+        project.config.base_dsl_path
+      end
+
+      # example:  /Users/david/dev/kgems/k_dsl/spec/factories/dsls
+      def base_resource_path_expanded
+        @base_resource_path ||=  File.expand_path(project.config.base_dsl_path)
       end
     end
   end

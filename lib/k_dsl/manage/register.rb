@@ -2,25 +2,8 @@
 
 module KDsl
   module Manage
-    # Register all the file paths and DSL documents that are avialable.
-    #
-    # It is assumed there is a root path that DSL's live under,
-    # but you can register from outside this root path using
-    # fully qualified file names.
-    #
-    # Different concepts that relate to register
-    # 1. Registrations is used to pre-register DSL's and generally represents
-    #    the available DSL's that you can interact with.
-    # 2. Import happens after registrationg and represents the instantiation
-    #    of a DSL for use either on it's own or by other DSL's
     class Register
       # @@instance = nil
-
-      attr_reader :base_dsl_path                # Default root path for your DSL's
-      attr_reader :base_data_path               # Default path where data is written to
-      attr_reader :base_definition_path         # Path to Templated DSLs. These are the basis for new DSL's
-      attr_reader :base_template_path           # Default path for view templates
-      attr_reader :base_app_template_path       # Application specific override for templates (need to find a hidden location for this)
 
       attr_reader :dsls                         # List of DSL's instances
 
@@ -36,37 +19,6 @@ module KDsl
 
       # def initialize(base_dsl_path, base_data_path = nil, base_definition_path = nil, base_template_path = nil, base_app_template_path = nil)
       #   @base_dsl_path = base_dsl_path.is_a?(Pathname) ? base_dsl_path.to_s : base_dsl_path
-        
-      #   if base_data_path.nil?
-      #     @base_data_path = File.join(base_dsl_path, '.data')  
-      #   else
-      #     @base_data_path = base_data_path.is_a?(Pathname) ? base_data_path.to_s : base_data_path
-      #   end
-
-      #   if base_definition_path.nil?
-      #     @base_definition_path = File.join(base_dsl_path, '.definition')  
-      #   else
-      #     @base_definition_path = base_definition_path.is_a?(Pathname) ? base_definition_path.to_s : base_definition_path
-      #   end
-
-      #   if base_template_path.nil?
-      #     @base_template_path = File.join(base_dsl_path, '.template')  
-      #   else
-      #     @base_template_path = base_template_path.is_a?(Pathname) ? base_template_path.to_s : base_template_path
-      #   end
-
-      #   if base_app_template_path.nil?
-      #     @base_app_template_path = File.join(base_dsl_path, '.template_app')  
-      #   else
-      #     @base_app_template_path = base_app_template_path.is_a?(Pathname) ? base_app_template_path.to_s : base_app_template_path
-      #   end
-
-      #   # L.heading 'in initialize'
-      #   # L.kv 'base_dsl_path'          , @base_dsl_path 
-      #   # L.kv 'base_data_path'         , @base_data_path 
-      #   # L.kv 'base_definition_path'   , @base_definition_path
-      #   # L.kv 'base_template_path'     , @base_template_path
-      #   # L.kv 'base_app_template_path' , @base_app_template_path
         
       #   @dsls = {}
       #   @current_state = :dynamic

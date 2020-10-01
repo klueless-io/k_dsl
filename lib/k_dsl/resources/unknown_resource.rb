@@ -6,8 +6,8 @@ module KDsl
     #
     # Alter detect_type if you need specific representation of this content
     class UnknownResource < Resource
-      def initialize(source:, file:, watch_path: nil, content: nil)
-        super(source: source, file: file, watch_path: watch_path, content: content)
+      def initialize(project:, source:, file:, watch_path: nil, content: nil)
+        super(project: project, source: source, file: file, watch_path: watch_path, content: content)
 
         self.type = KDsl::Resources::Resource::TYPE_UNKNOWN
       end

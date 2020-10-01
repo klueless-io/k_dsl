@@ -13,7 +13,6 @@ module KDsl
     #    the available DSL's that you can interact with.
     # 2. Import happens after registrationg and represents the instantiation
     #    of a DSL for use either on it's own or by other DSL's
-    # REFACTOR: Projects need names
     class Project
       # Project name
       attr_reader :name
@@ -21,8 +20,11 @@ module KDsl
       # Project configuration
       attr_reader :config
 
-      # Reference to manager that holds all projects
+      # Reference to manager that manages all projects
       attr_accessor :manager
+
+      # Reference to processor that processes files, e.g. DSL's
+      attr_accessor :processor
 
       # List of DSL's instances
       attr_reader :dsls
@@ -47,8 +49,8 @@ module KDsl
 
       # There is currently a tight cupling between is boolean and DSL's so that they know whether they are being refrenced for registration or importation
       # The difference is that importation will execute their interal code block while registration will not.
-      attr_reader :current_state
-      attr_reader :current_register_file
+      # attr_reader :current_state
+      # attr_reader :current_register_file
 
       # what file is currently being processed
       # attr_reader :current_processing_file
@@ -117,12 +119,32 @@ module KDsl
         end
       end
 
+      # Work through each resource and load into memory so that we can access
+      # the data in the resource
+      def load_resources
+        @registered_resources.each do |resource|
+          resource.load
+        end
+      end
+
+      # Register a resource in @reegeistered_resources from a file
+      #
+      # Primary resource that is registered will be a Klue DSL
+      # Other resources that can be supported include
+      # data files:
+      #   CSV, JSON, YAML
+      # ruby code
+      #   Classes etc..
       def register_file_resource(file, watch_path: nil, path_expansion: true)
         file = KDsl::Util.file.expand_path(file, config.base_dsl_path) if path_expansion
 
         return unless File.exist?(file)
 
-        resource = KDsl::Resources::Resource.instance(file: file, watch_path: watch_path, source: KDsl::Resources::Resource::SOURCE_FILE)
+        resource = KDsl::Resources::Resource.instance(
+          project: self,
+          file: file,
+          watch_path: watch_path,
+          source: KDsl::Resources::Resource::SOURCE_FILE)
 
         @registered_resources << resource unless @registered_resources.include? resource
       end
@@ -190,17 +212,23 @@ module KDsl
           OpenStruct.new(
             path: path,
             files: registered_resources.select do |resource|
-              resource.filepath.start_with?(path)
+              resource.file.start_with?(path)
             end.map do |resource|
-              OpenStruct.new(file: resource.filepath, relative_file: resource.filepath.delete_prefix(path))
+              OpenStruct.new(file: resource.file, relative_file: resource.file.delete_prefix(path))
             end
           )
         end
 
         if format == :tabular
-          tp data,
-            { :path => { width: 100, display_name: 'DSL Path' } },
-            { 'files.relative_file' => { width: 100, display_name: 'DSL File' } }
+          tp registered_resources,
+          :source,
+          :type,
+          { :base_resource_path => { width: 100, display_name: 'Resource Path' } },
+          { :relative_watch_path => { width: 100, display_name: 'Watch Path' } },
+          # { :watch_path => { width: 100, display_name: 'Watch Path' } },
+          # { :file => { width: 100, display_name: 'File' } },
+          # { :filename => { width: 100, display_name: 'Filename' } },
+          { filename: {width: 150, display_method: lambda { |r| "\u001b]8;;file://#{r.file}\u0007#{r.filename}\u001b]8;;\u0007" } } }
         else
           # projects.each do |project|
           #   L.subheading(project.name)
@@ -212,8 +240,6 @@ module KDsl
           #   L.kv 'AppTemplate Path', project.config.base_app_template_path
           # end
         end
-        
-        # L.kv '# of Projects', projects.length
 
       end
 
