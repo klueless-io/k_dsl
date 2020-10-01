@@ -37,20 +37,25 @@ namespace :k_dsl do
       watch_path('microapp2/**/*.rb')
     end
 
-    project_microapp3 = KDsl::Manage::Project.new('microapp3', config_microapp) do
-      watch_path('microapp3/**/*.*')
+    project_sample = KDsl::Manage::Project.new('sample', config_microapp) do
+      watch_path('data_files/**/*.*')
+      watch_path('ruby_files/**/*.rb')
+      watch_path('simple_dsl/**/*.rb')
     end
 
     manager = KDsl.project_manager
-    manager.add_project(project_command)
-    manager.add_project(project_microapp1)
-    manager.add_project(project_microapp2)
-    manager.add_project(project_microapp3)
+
+    # manager.add_project(project_command)
+    # manager.add_project(project_microapp1)
+    # manager.add_project(project_microapp2)
+    manager.add_project(project_sample)
     
     manager.debug()
     manager.debug(format: :detail)
 
-    KDsl.process
+    # manager.watch 
+
+    # KDsl.process
 
     # project_command.start
     # 

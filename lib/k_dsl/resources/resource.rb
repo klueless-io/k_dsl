@@ -8,6 +8,14 @@ module KDsl
     # other types of files such as (PORO, Ruby, JSON, CSV) and be able to use
     # them easily.
     class Resource
+      # If data is loaded into the resource, then it will usually take the form of a Hash 
+      attr_reader :raw_data
+
+      # Provides an OpenStruct wrapper around the raw data
+      attr_reader :data
+
+      # Store an exeption that may exist
+      attr_reader :error
 
       # Currently supports read from file, but will support read from HTTP in the future
       SOURCE_FILE = 'file'
@@ -87,6 +95,10 @@ module KDsl
         return UnknownResource
       end
 
+      def load
+        L.warn "Do not know how to load #{type} resources"
+      end
+  
       def exist?
         source === SOURCE_FILE && File.exist?(file)
       end

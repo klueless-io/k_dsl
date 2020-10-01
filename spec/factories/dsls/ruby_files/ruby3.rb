@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-module KDsl
-  VERSION = '0.0.31'
+class Ruby3
+  bad_ruby_method
 end

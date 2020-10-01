@@ -9,6 +9,14 @@ module KDsl
 
         self.type = KDsl::Resources::Resource::TYPE_RUBY
       end
+
+      def load
+        Object.class_eval content
+      rescue => exeption
+        @error = exeption
+
+        L.exception @error
+      end
     end
   end
 end
