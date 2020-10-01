@@ -124,6 +124,21 @@ class LogUtil
     @logger.info(JSON.pretty_generate(data))
   end
 
+  def open_struct(data, indent = '')
+    data.each_pair do |key, value|
+      if value.is_a?(OpenStruct)
+        L.kv "#{indent}#{key}:", ''
+        indent = "#{indent}  "
+        open_struct(value, indent)
+      elsif value.is_a?(Array)
+        tp value, value.first.to_h.keys if value.length > 0
+      else
+        L.kv "#{indent}#{key}", value
+      end
+    end
+  end
+  alias ostruct open_struct
+
   def exception(e)
     line
 

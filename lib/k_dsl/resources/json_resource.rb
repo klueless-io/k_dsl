@@ -13,14 +13,12 @@ module KDsl
       end
 
       def load
-        @data = JSON.parse
-        CSV.parse(content, headers: true, header_converters: :symbol).each do |row|
-          @data << OpenStruct.new(row.to_h)
-        end
+        @data = KDsl::Util.data.to_struct(JSON.parse(content))
       end
 
       def debug
-        tp data, data.first.to_h.keys
+        L.json(KDsl::Util.data.struct_to_hash(data))
+        L.ostruct(data)
       end
     end
   end
