@@ -107,7 +107,7 @@ module KDsl
       # Register any files found in the absolute path or path relative to base_dsl_path
       #
       # Files are generally DSL's but support for other types (PORO, Ruby, JSON, CSV) will come
-      def watch_path(path)
+      def watch_path(path, ignore: nil)
         # puts  "watch path: #{path} "
         path = KDsl::Util.file.expand_path(path, config.base_dsl_path)
 
@@ -115,7 +115,7 @@ module KDsl
           watch_path = File.dirname(file)
           @watch_paths << watch_path unless @watch_paths.include? watch_path
 
-          register_file_resource(file, watch_path: watch_path, path_expansion: false)
+          register_file_resource(file, watch_path: watch_path, path_expansion: false, ignore: ignore)
         end
       end
 
@@ -135,9 +135,10 @@ module KDsl
       #   CSV, JSON, YAML
       # ruby code
       #   Classes etc..
-      def register_file_resource(file, watch_path: nil, path_expansion: true)
+      def register_file_resource(file, watch_path: nil, path_expansion: true, ignore: nil)
         file = KDsl::Util.file.expand_path(file, config.base_dsl_path) if path_expansion
 
+        return if ignore && file.match(ignore)
         return unless File.exist?(file)
 
         resource = KDsl::Resources::Resource.instance(
@@ -223,12 +224,14 @@ module KDsl
           tp registered_resources,
           :source,
           :type,
-          { :base_resource_path => { width: 100, display_name: 'Resource Path' } },
-          { :relative_watch_path => { width: 100, display_name: 'Watch Path' } },
+          { raw_data: { width: 40, display_name: 'Data' } },
+          { error: { width: 40, display_method: lambda { |r| r.error && r.error.message ? 'Error' : '' } } },
+          { base_resource_path: { width: 100, display_name: 'Resource Path' } },
+          { relative_watch_path: { width: 100, display_name: 'Watch Path' } },
           # { :watch_path => { width: 100, display_name: 'Watch Path' } },
           # { :file => { width: 100, display_name: 'File' } },
           # { :filename => { width: 100, display_name: 'Filename' } },
-          { filename: {width: 150, display_method: lambda { |r| "\u001b]8;;file://#{r.file}\u0007#{r.filename}\u001b]8;;\u0007" } } }
+          { filename: { width: 150, display_method: lambda { |r| "\u001b]8;;file://#{r.file}\u0007#{r.filename}\u001b]8;;\u0007" } } }
         else
           # projects.each do |project|
           #   L.subheading(project.name)

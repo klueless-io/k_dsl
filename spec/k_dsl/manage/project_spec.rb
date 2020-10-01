@@ -113,15 +113,27 @@ RSpec.describe KDsl::Manage::Project do
     describe '.registered_resources' do
       subject { project.registered_resources }
 
-      # before { allow(project).to receive(:process_code) }
-
       context 'when simple ruby files' do
         before { project.watch_path('ruby_files/*.rb') }
 
         it do
           expect(subject).to include(
             have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby2.rb'), type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby3.rb'), type: 'ruby')
+          )
+        end
+      end
+      context 'when ingore pattern is used' do
+        before { project.watch_path('ruby_files/*.rb', ignore: /ruby3.rb$/) }
+
+        it do
+          expect(subject).to include(
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), type: 'ruby'),
             have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby2.rb'), type: 'ruby')
+          )
+          expect(subject).not_to include(
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby3.rb'), type: 'ruby')
           )
         end
       end

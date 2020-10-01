@@ -32,9 +32,9 @@ RSpec.describe KDsl::Resources::CsvResource do
       it { is_expected.to include( have_attributes( name: 'David', title: 'Developer', days_employed: '402')) }
       it { is_expected.to include( have_attributes( name: 'Bob', title: 'Project Manager', days_employed: '289')) }
 
-      # it do
-      #   resource.debug
-      # end
+      it do
+        resource.debug
+      end
     end
   end
 end
