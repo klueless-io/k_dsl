@@ -23,6 +23,9 @@ require 'k_dsl/manage/project_config'
 require 'k_dsl/manage/project_manager'
 require 'k_dsl/manage/register'
 
+# Artifact
+require 'k_dsl/artifacts/artifact'
+
 # Resources
 require 'k_dsl/resources/resource'
 require 'k_dsl/resources/csv_resource'

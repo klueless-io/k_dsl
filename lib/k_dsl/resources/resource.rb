@@ -55,12 +55,30 @@ module KDsl
       # Content of resource, use read content to load this property
       attr_reader :content
 
+      # NOTE: I have an idea that multiple artifacts could be derived from a resource
+      # EXAMPLE: You may define two Klue.structures inside of a single DSL file
+      # This means that artifact should be in it's own class and either linked as a 
+      # single instance or as an array.
+
+      # Namespace (optional), this allows the seperation of artifacts same name but different contexts
+      attr_reader :artifact_namespace
+
+      # Key provides a lookup name for this entity
+      attr_reader :artifact_key
+
+      # Type of artifact
+      attr_reader :artifact_type
+
+      # State of the artifact, registered, loaded
+      attr_reader :state
+
       def initialize(project: nil, source: nil, file: nil, watch_path: nil, content: nil)
         @project = project
         @source = source
         @file = file
         @watch_path = watch_path
         @content = content
+        @state
       end
 
       def self.instance(project:, source: KDsl::Resources::Resource::SOURCE_FILE, file: nil, watch_path: nil)

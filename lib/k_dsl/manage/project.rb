@@ -222,8 +222,12 @@ module KDsl
 
         if format == :tabular
           tp registered_resources,
+          # { artifact_namespace: { width: 20, display_name: 'Namespace' } },
+          # { artifact_key: { width: 20, display_name: 'Key' } },
+          # { artifact_type: { width: 20, display_name: 'Type' } },
+          :state,
           :source,
-          :type,
+          { type: { display_name: 'R-Type' } },
           { raw_data: { width: 40, display_name: 'Data' } },
           { error: { width: 40, display_method: lambda { |r| r.error && r.error.message ? 'Error' : '' } } },
           { base_resource_path: { width: 100, display_name: 'Resource Path' } },
