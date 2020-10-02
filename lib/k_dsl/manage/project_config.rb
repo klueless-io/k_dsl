@@ -16,9 +16,11 @@ module KDsl
       attr_accessor :base_dsl_path
 
       # Bases path where data is written to
+      # Refactor (DataPath to CachePath)
       attr_writer :base_data_path
 
       # Path to Templated DSLs. These are the basis for new DSL's
+      # Refactor (DefinitionPath to DslTemplatePath)
       attr_writer :base_definition_path
 
       # Default path for view templates
