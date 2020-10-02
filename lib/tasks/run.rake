@@ -39,7 +39,7 @@ namespace :k_dsl do
 
     project_sample = KDsl::Manage::Project.new('sample', config_microapp) do
       watch_path('data_files/**/*.*')
-      watch_path('ruby_files/**/*.rb')
+      watch_path('ruby_files/**/*.rb', ignore: /ruby3.rb$/)
       watch_path('simple_dsl/**/*.rb')
     end
 
@@ -50,7 +50,8 @@ namespace :k_dsl do
     # manager.add_project(project_microapp2)
     manager.add_project(project_sample)
     
-    manager.debug()
+    # manager.debug()
+    20.times { puts '' }
     manager.debug(format: :detail)
 
     # manager.watch 
