@@ -19,6 +19,7 @@ module KDsl
       def initialize(key, *args, **options, &block)
         initialize_attributes(key, *args, **options)
 
+        # Maybe able to remove this coupling and do it in the factory method
         KDsl.manager.register_with_project(self)
 
         # # L.kv 'CURRENT STATE', Klue::Dsl::RegisterDsl.get_instance.current_state
@@ -69,6 +70,11 @@ module KDsl
       #   KDsl::Builder::Shotstack.new(@data, key, &block)
       # end
 
+      # Spe
+      def set_data(data)
+        @data = data
+      end
+
       def data
         @data.clone
       end
@@ -110,7 +116,10 @@ module KDsl
 
         @namespace = @namespace.to_s
         @block_executable = options[:block_executable].nil? ? true : options[:block_executable]
-        @data = {}
+
+        # Most documents live within a hash, some tabular documents such as
+        # CSV will use an []
+        set_data({})
       end
 
       def settings_instance(data, key, **options, &block)

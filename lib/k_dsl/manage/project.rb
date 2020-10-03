@@ -208,25 +208,11 @@ module KDsl
         !self.manager.nil?
       end
 
-      def debug(format: :tabular)
-        data = watch_paths.map do |path|
-          OpenStruct.new(
-            path: path,
-            files: registered_resources.select do |resource|
-              resource.file.start_with?(path)
-            end.map do |resource|
-              OpenStruct.new(file: resource.file, relative_file: resource.file.delete_prefix(path))
-            end
-          )
-        end
-
-        if format == :tabular
+      def debug(format: :resource)
+        if format == :resource
           tp registered_resources,
-          # { artifact_namespace: { width: 20, display_name: 'Namespace' } },
-          # { artifact_key: { width: 20, display_name: 'Key' } },
-          # { artifact_type: { width: 20, display_name: 'Type' } },
-          :state,
-          :source,
+          # :state,
+          { source: { } },
           { type: { display_name: 'R-Type' } },
           { raw_data: { width: 40, display_name: 'Data' } },
           { error: { width: 40, display_method: lambda { |r| r.error && r.error.message ? 'Error' : '' } } },
@@ -236,6 +222,24 @@ module KDsl
           # { :file => { width: 100, display_name: 'File' } },
           # { :filename => { width: 100, display_name: 'Filename' } },
           { filename: { width: 150, display_method: lambda { |r| "\u001b]8;;file://#{r.file}\u0007#{r.filename}\u001b]8;;\u0007" } } }
+        elsif format == :resource_document
+          resource_documents = registered_resources.flat_map { |r| r.documents.map { |d| KDsl::Resources::ResourceDocument.new(r, d) } }
+
+          tp resource_documents,
+            { namespace: { width: 20, display_name: 'Namespace' } },
+            { key: { width: 20, display_name: 'Key' } },
+            { type: { width: 20, display_name: 'Type' } },
+            # :state,
+            { source: { } },
+            { resource_type: { display_name: 'R-Type' } },
+            { raw_data: { width: 40, display_name: 'Data' } },
+            { error: { width: 40, display_method: lambda { |r| r.error && r.error.message ? 'Error' : '' } } },
+            { base_resource_path: { width: 100, display_name: 'Resource Path' } },
+            { relative_watch_path: { width: 100, display_name: 'Watch Path' } },
+            # { :watch_path => { width: 100, display_name: 'Watch Path' } },
+            # { :file => { width: 100, display_name: 'File' } },
+            # { :filename => { width: 100, display_name: 'Filename' } },
+            { filename: { width: 150, display_method: lambda { |r| "\u001b]8;;file://#{r.file}\u0007#{r.filename}\u001b]8;;\u0007" } } }
         else
           # projects.each do |project|
           #   L.subheading(project.name)

@@ -20,28 +20,39 @@ RSpec.describe KDsl::Resources::JsonResource do
     it { is_expected.to have_attributes(file: file, type: described_class::TYPE_JSON) }
   end
 
-  describe '.data' do
-    subject { resource.data }
+  describe '.documents' do
+    subject { resource.documents }
 
-    it { is_expected.to be_nil }
+    it { is_expected.to be_empty }
 
     context '#load' do
       before { resource.load }
 
       it { is_expected.not_to be_nil }
-      it do
-        expect(subject).to have_attributes(
-          name: 'David',
-          age: 32,
-          contact: have_attributes(
-            phone: '0424 111 222',
-            email: 'david@david.com',
-            address: have_attributes(street: '32 Main St', suburb: 'Sydney')),
-          skills: include(
-            have_attributes( name: 'javascript', proficiency: 'ok'),
-            have_attributes( name: 'ruby', proficiency: 'good')
-          )
+
+      it 'has one document with data' do
+        expect(subject.length).to eq 1
+        expect(subject.first.data).to include(
+          'name' => 'David',
+          'age' => 32,
+          'contact' => {
+            'phone' => '0424 111 222',
+            'email' => 'david@david.com',
+            'address' => { 'street' => '32 Main St', 'suburb' => 'Sydney' }
+          },
+          'skills' => [
+            { 'name' => 'javascript', 'proficiency' => 'ok' },
+            { 'name' => 'ruby', 'proficiency' => 'good' }
+          ]
         )
+      end
+
+      it 'has key' do
+        expect(subject.first.key).to eq('sample.json')
+      end
+
+      it 'has type' do
+        expect(subject.first.type).to eq('json')
       end
 
       it do
