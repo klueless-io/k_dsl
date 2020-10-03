@@ -10,13 +10,15 @@ module KDsl
         self.type = KDsl::Resources::Resource::TYPE_JSON
       end
 
+      # Where is register in all this?
       def load
         @raw_data = JSON.parse(content)
-        @data = KDsl::Util.data.to_struct(@raw_data)
+        add_document(filename, type, '', @raw_data)
+        # @data = KDsl::Util.data.to_struct(@raw_data)
       end
 
       def debug
-        L.ostruct(data)
+        L.ostruct(KDsl::Util.data.to_struct(documents.first.data))
       end
     end
   end

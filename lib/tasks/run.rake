@@ -52,7 +52,7 @@ namespace :k_dsl do
     
     # manager.debug()
     20.times { puts '' }
-    manager.debug(format: :detail)
+    manager.debug(format: :detail, project_formats: [:resource, :resource_document])
 
     # manager.watch 
 

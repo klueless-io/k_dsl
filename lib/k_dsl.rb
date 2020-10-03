@@ -28,6 +28,7 @@ require 'k_dsl/artifacts/artifact'
 
 # Resources
 require 'k_dsl/resources/resource'
+require 'k_dsl/resources/resource_document'
 require 'k_dsl/resources/csv_resource'
 require 'k_dsl/resources/dsl_resource'
 require 'k_dsl/resources/json_resource'
