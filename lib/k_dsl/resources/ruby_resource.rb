@@ -12,6 +12,8 @@ module KDsl
 
       def load
         Object.class_eval content
+
+        add_document('ruby1', 'ruby', '', {})
       rescue => exeption
         @error = exeption
 

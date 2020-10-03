@@ -24,9 +24,20 @@ RSpec.describe KDsl::Resources::Resource do
     it 'is linked to a project' do
       expect(subject.project).not_to be_nil
     end
+
+    it 'does not start with an artifact' do
+      expect(subject.artifact).to be_nil
+    end
+
     context 'when file provided' do
       context 'with any old file' do
-        it { is_expected.to have_attributes(file: file, type: described_class::TYPE_UNKNOWN, source: described_class::SOURCE_FILE) }
+        it do
+          is_expected.to have_attributes(
+          file: file,
+          type: described_class::TYPE_UNKNOWN,
+          source: described_class::SOURCE_FILE,
+          documents: [])
+        end
       end
 
       context 'with ruby file' do

@@ -11,6 +11,14 @@ module KDsl
       # If data is loaded into the resource, then it will usually take the form of a Hash 
       attr_reader :raw_data
 
+      # class Computer
+      #   extend Forwardable
+      #   def_delegators :@memory, :read, :write
+      #   def initialize
+      #     @memory = Memory.new
+      #   end
+      # end
+
       # Provides an OpenStruct wrapper around the raw data
       attr_reader :data
 
@@ -60,17 +68,20 @@ module KDsl
       # This means that artifact should be in it's own class and either linked as a 
       # single instance or as an array.
 
-      # Namespace (optional), this allows the seperation of artifacts same name but different contexts
-      attr_reader :artifact_namespace
+      attr_reader :documents
+      attr_reader :artifact
 
-      # Key provides a lookup name for this entity
-      attr_reader :artifact_key
+      # # Namespace (optional), this allows the seperation of artifacts same name but different contexts
+      # attr_reader :artifact_namespace
 
-      # Type of artifact
-      attr_reader :artifact_type
+      # # Key provides a lookup name for this entity
+      # attr_reader :artifact_key
 
-      # State of the artifact, registered, loaded
-      attr_reader :state
+      # # Type of artifact
+      # attr_reader :artifact_type
+
+      # # State of the artifact, registered, loaded
+      # attr_reader :state
 
       def initialize(project: nil, source: nil, file: nil, watch_path: nil, content: nil)
         @project = project
@@ -78,7 +89,7 @@ module KDsl
         @file = file
         @watch_path = watch_path
         @content = content
-        @state
+        @documents = []
       end
 
       def self.instance(project:, source: KDsl::Resources::Resource::SOURCE_FILE, file: nil, watch_path: nil)
@@ -111,6 +122,16 @@ module KDsl
         end
 
         return UnknownResource
+      end
+
+      def add_document(key, type, namespace, data)
+        document = KDsl::Model::Document.new(key, type, namespace: namespace )
+        document.set_data(data)
+        documents << document
+      end
+
+      def register
+        L.warn "Do not know how to register #{type} resources"
       end
 
       def load
