@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
-puts 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx1'
 KDsl.document :my_name do
+
+  settings do
+    a '1'
+    b 2
+  end
 end

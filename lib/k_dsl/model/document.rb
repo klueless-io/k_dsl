@@ -6,6 +6,7 @@ module KDsl
     #
     # Made up of 0 or more setting groups and table groups
     class Document
+      attr_accessor :resource
       attr_reader :key
       attr_reader :type
       attr_reader :namespace
@@ -24,28 +25,41 @@ module KDsl
         #         Document and DslDocument
         #         
 
-        # Maybe able to remove this coupling and do it in the factory method
-        KDsl.manager.register_with_project(self)
+        # KDsl.manager.register_with_project(self)
         # REFACT: Decouple this out of the document class so that the Document Class can
         # live in it's own GEM
+        # Maybe able to remove this coupling and do it in the factory method
         KDsl.resource.add_document(self) if KDsl.resource
 
         # # L.kv 'CURRENT STATE', Klue::Dsl::RegisterDsl.get_instance.current_state
         return unless block_given?
         return unless block_executable?
 
-        #   # L.kv 'AM I EVER IN', 'Artifact.new &Block'
+        # L.kv 'AM I EVER IN', 'Artifact.new &Block'
         #   # L.block block.source
 
         # TODO: raise_error Unit Test
         begin
           instance_eval(&block)
-        rescue KDsl::DslError => e
+        rescue KDsl::Error => e
           puts "Invalid code block in document_dsl during registration: #{key}"
           puts e.message
           # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
           # L.exception exception
           raise
+        end
+      end
+
+      def import(key, type = KDsl.config.default_document_type, namespace = nil)
+        project = resource&.project
+
+        if project
+          data = project.get_data(key, type, namespace)
+          result = KDsl::Util.data.to_struct(data)
+  
+          result
+        else
+          Log.warn 'Import Skipped: Document is not linked to a project'
         end
       end
 

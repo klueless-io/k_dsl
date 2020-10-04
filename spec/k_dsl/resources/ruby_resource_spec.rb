@@ -27,6 +27,8 @@ RSpec.describe KDsl::Resources::RubyResource do
 
   describe '#load - ruby code' do
     context 'before load' do
+      # REFACT: FlakyTest, Ruby1 sometimes exists depending on order of the test suite
+      #         Need to use a dynamic random name instead of Ruby1
       it { expect { Ruby1.new }.to raise_error NameError }
     end
 
