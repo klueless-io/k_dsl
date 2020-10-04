@@ -11,16 +11,12 @@ module KDsl
         self.type = KDsl::Resources::Resource::TYPE_CSV
       end
 
-      def register
-
-      end
-
       def load
         @raw_data = []
         CSV.parse(content, headers: true, header_converters: :symbol).each do |row|
           @raw_data << row.to_h
         end
-        add_document(filename, type, '', @raw_data)
+        add_new_document(infer_document_key, type, '', @raw_data)
 
         # @data = KDsl::Util.data.to_struct(@raw_data)
       end

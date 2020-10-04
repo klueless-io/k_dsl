@@ -17,8 +17,11 @@ RSpec.describe KDsl::Resources::Resource do
   let(:gem_root) { Gem::Specification.find_by_name("k_dsl").gem_dir }
   # let(:watch_path) { gem_root }
   let(:watch_path) { nil }
+  let(:csv_file) { File.join(gem_root, 'spec/factories/dsls/data_files/sample.csv') }
+  let(:json_file) { File.join(gem_root, 'spec/factories/dsls/data_files/sample.json') }
   let(:ruby_file) { File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb') }
-  let(:ruby_dsl_file) { File.join(gem_root, 'spec/factories/dsls/simple_dsl/some_dsl.rb') }
+  let(:ruby_one_dsl_file) { File.join(gem_root, 'spec/factories/dsls/simple_dsl/one_dsl.rb') }
+  let(:ruby_two_dsl_file) { File.join(gem_root, 'spec/factories/dsls/simple_dsl/two_dsl.rb') }
 
   describe '#constructor' do
     it 'is linked to a project' do
@@ -46,7 +49,7 @@ RSpec.describe KDsl::Resources::Resource do
         it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY) }
   
         context 'with Klueless ruby DSL' do
-          let(:file) { ruby_dsl_file }
+          let(:file) { ruby_one_dsl_file }
   
           it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY_DSL) }
         end
@@ -64,25 +67,63 @@ RSpec.describe KDsl::Resources::Resource do
         it { is_expected.to have_attributes(file: file, type: described_class::TYPE_CSV) }
       end
     end
-
-    # context 'when watch_path:' do
-    #   context 'is supplied' do
-    #     let(:file) { ruby_dsl_file }
-
-    #     it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY_DSL, watch_path: watch_path) }
-    #   end
-    # end
   end
+  
+  describe '#load' do
+    before { resource.load }
 
-  # describe '#load_content' do
-  #   before { resource.load_content }
+    context 'csv' do
+      let(:file) { csv_file }
 
-  #   let(:file) { ruby_dsl_file }
+      context '.documents' do
+        subject { resource.documents }
+  
+        it { is_expected.not_to be_empty }
+      end
+    end
 
-  #   context '.content' do
-  #     subject { resource.content }
+    context 'json' do
+      let(:file) { json_file }
 
-  #     it { is_expected.not_to be_nil }      
-  #   end
-  # end
+      context '.documents' do
+        subject { resource.documents }
+  
+        it { is_expected.not_to be_empty }
+        it { expect(subject.length).to eq 1 }
+      end
+    end
+
+    context 'ruby' do
+      let(:file) { ruby_file }
+
+      context '.documents' do
+        subject { resource.documents }
+  
+        it { is_expected.not_to be_empty }
+        it { expect(subject.length).to eq 1 }
+      end
+    end
+
+    context 'ruby_one_dsl' do
+      let(:file) { ruby_one_dsl_file }
+
+      context '.documents' do
+        subject { resource.documents }
+  
+        it { is_expected.not_to be_empty }
+        it { expect(subject.length).to eq 1 }
+      end
+    end
+
+    context 'ruby_two_dsl' do
+      let(:file) { ruby_two_dsl_file }
+
+      context '.documents' do
+        subject { resource.documents }
+  
+        it { is_expected.not_to be_empty }
+        it { expect(subject.length).to eq 2 }
+      end
+    end
+  end
 end

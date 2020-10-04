@@ -19,8 +19,16 @@ module KDsl
       def initialize(key, *args, **options, &block)
         initialize_attributes(key, *args, **options)
 
+        # REFACT: Split out as
+        #         Data and Document
+        #         Document and DslDocument
+        #         
+
         # Maybe able to remove this coupling and do it in the factory method
         KDsl.manager.register_with_project(self)
+        # REFACT: Decouple this out of the document class so that the Document Class can
+        # live in it's own GEM
+        KDsl.resource.add_document(self) if KDsl.resource
 
         # # L.kv 'CURRENT STATE', Klue::Dsl::RegisterDsl.get_instance.current_state
         return unless block_given?
