@@ -19,7 +19,7 @@ module KDsl
 
         L.exception @error
       ensure
-        add_new_document(infer_document_key, type, '', @raw_data)
+        add_new_document(data: @raw_data)
       end
     end
   end
