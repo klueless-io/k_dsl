@@ -9,6 +9,19 @@ module KDsl
 
         self.type = KDsl::Resources::Resource::TYPE_RUBY_DSL
       end
+
+      def load
+        KDsl.resource = self
+        Object.class_eval content
+      rescue => exeption
+        # Report the error but still add the document so that you can see
+        # it in the ResourceDocument list, it will be marked as Error
+        @error = exeption
+  
+        L.exception @error
+      ensure
+        KDsl.resource = nil
+      end
     end
   end
 end

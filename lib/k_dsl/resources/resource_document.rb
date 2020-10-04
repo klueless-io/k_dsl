@@ -6,6 +6,7 @@ module KDsl
     class ResourceDocument
       extend Forwardable
 
+      attr_reader :status
       attr_reader :resource
       attr_reader :document
 
@@ -29,6 +30,7 @@ module KDsl
       def_delegator :document, :options
 
       def initialize(resource, document)
+        @status = :registered
         @resource = resource
         @document = document
       end

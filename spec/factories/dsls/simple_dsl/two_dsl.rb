@@ -1,4 +1,12 @@
-# # frozen_string_literal: true
+# frozen_string_literal: true
+
+puts 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxA'
+KDsl.document :my_name1 do
+end
+
+puts 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxB'
+KDsl.document :my_name2 do
+end
 
 # puts 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 # KDsl::Model::Document.new :my_name do

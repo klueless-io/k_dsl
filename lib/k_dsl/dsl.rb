@@ -12,7 +12,12 @@ module KDsl
 
   class << self
 
+    # Instance of the currently focused resource so that documents can attach themselves
+    attr_accessor :resource
+
     attr_reader :process
+
+    # Instance of a project manager that can manage multiple projects
     attr_reader :project_manager
 
     # REFACT: Need to research and implement the correct pattern for log levels
@@ -28,6 +33,7 @@ module KDsl
         L.heading 'Setup Klue DSL'
       end
 
+      @resource = nil
       @process = process
       @project_manager = project_manager
       @project_manager.processor = process
@@ -35,6 +41,7 @@ module KDsl
 
     def teardown
       @log_level = nil
+      @resource = nil
       @process = nil
       @project_manager = nil
     end
@@ -46,6 +53,7 @@ module KDsl
     # instantiate a global project, but other project_manager have their
     # own namespaces that can be used to issolate for memory management
     def document(key = nil, type = nil, **options, &block)
+      L.kv 'current resource', resource if resource
       build_document(key, type, nil, **options, &block)
     end
 

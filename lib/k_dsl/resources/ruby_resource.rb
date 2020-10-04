@@ -12,12 +12,14 @@ module KDsl
 
       def load
         Object.class_eval content
-
-        add_document('ruby1', 'ruby', '', {})
       rescue => exeption
+        # Report the error but still add the document so that you can see
+        # it in the ResourceDocument list, it will be marked as Error
         @error = exeption
 
         L.exception @error
+      ensure
+        add_new_document(infer_document_key, type, '', @raw_data)
       end
     end
   end
