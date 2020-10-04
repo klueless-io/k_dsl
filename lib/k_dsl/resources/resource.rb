@@ -29,6 +29,7 @@ module KDsl
       TYPE_JSON = 'json'
       TYPE_RUBY = 'ruby'
       TYPE_RUBY_DSL = 'dsl'
+      TYPE_YAML = 'yaml'
 
       attr_reader :project
 
@@ -102,13 +103,15 @@ module KDsl
             return CsvResource
           when '.json'
             return JsonResource
+          when '.yaml'
+            return YamlResource
           end
         end
 
         return UnknownResource
       end
 
-      def add_new_document(key, type, namespace, data = nil)
+      def add_new_document(key: infer_document_key, type: infer_document_type, namespace: infer_document_namespace, data: nil)
         document = KDsl::Model::Document.new(key, type, namespace: namespace)
         document.set_data(data) if data
 
@@ -163,7 +166,27 @@ module KDsl
             File.basename(filename, File.extname(filename))
           end
         else
-          'undetermined'
+          'unknown'
+        end
+      end
+
+      def infer_document_namespace
+        ''
+      end
+
+      def infer_document_type
+        if filename
+          ext = File.extname(filename)
+          case ext
+          when '.json', '.csv', '.yaml'
+            ext.delete('.')
+          when '.rb'
+            'ruby'
+          else
+            'unknown'
+          end
+        else
+          'unknown'
         end
       end
     end

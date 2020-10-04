@@ -13,7 +13,7 @@ module KDsl
       # Where is register in all this?
       def load
         @raw_data = JSON.parse(content)
-        add_new_document(infer_document_key, type, '', @raw_data)
+        add_new_document(data: @raw_data)
         # @data = KDsl::Util.data.to_struct(@raw_data)
       end
 

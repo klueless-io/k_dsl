@@ -34,6 +34,7 @@ require 'k_dsl/resources/dsl_resource'
 require 'k_dsl/resources/json_resource'
 require 'k_dsl/resources/ruby_resource'
 require 'k_dsl/resources/unknown_resource'
+require 'k_dsl/resources/yaml_resource'
 
 # DSL document structures
 require 'k_dsl/model/document'
