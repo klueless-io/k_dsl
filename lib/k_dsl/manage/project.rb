@@ -127,6 +127,24 @@ module KDsl
         end
       end
 
+      def get_data(key, type = :entity, namespace = nil)
+        dsl = get_dsl(key, type, namespace)
+
+        raise "Could not get data for missing DSL: #{KDsl::Util.dsl.build_unique_key(key, type, namespace)}" if dsl.nil?
+
+        dsl[:document].data
+        # load_data_from_dsl(dsl)
+      end
+
+      # def load_data_from_dsl(dsl)
+      #   # # Need to load this file
+      #   # if dsl[:state] == :registered
+      #   #   load_file(dsl[:file])
+      #   # end
+
+      #   dsl[:document].data
+      # end
+
       # Register a resource in @reegeistered_resources from a file
       #
       # Primary resource that is registered will be a Klue DSL
@@ -360,47 +378,6 @@ module KDsl
       #   dsl
       # end
 
-      # def build_unique_key(key, namespace = nil, type = :entity)
-      #   namespace.blank? ? "#{key}_#{type}" : "#{namespace}_#{key}_#{type}" 
-      # end
-
-      # def dsl_exist?(key, namespace = nil, type = :entity)
-      #   dsl = get_dsl(key, namespace, type)
-
-      #   !dsl.nil?
-      # end
-
-      # def get_dsl(key, namespace = nil, type = :entity)
-      #   unique_key = build_unique_key(key, namespace, type)
-
-      #   @dsls[unique_key]
-      # end
-
-      # def get_dsls_by_type(k_type = :entity, namespace = nil)
-      #   if namespace.nil?
-      #     @dsls.values.select { |dsl| dsl[:k_type] == k_type }
-      #   else
-      #     @dsls.values.select { |dsl| dsl[:namespace] == namespace && dsl[:k_type] == k_type }
-      #   end
-      # end
-
-      # def get_data(key, namespace = nil, type = :entity)
-      #   dsl = get_dsl(key, namespace, type)
-
-      #   raise "Could not get data for missing DSL: #{build_unique_key(key, namespace, type)}" if dsl.nil?
-
-      #   load_data_from_dsl(dsl)
-      # end
-
-      # def load_data_from_dsl(dsl)
-      #   # Need to load this file
-      #   if dsl[:state] == :registered
-      #     load_file(dsl[:file])
-      #   end
-
-      #   dsl[:data]
-      # end
-            
       # def get_relative_folder(fullpath)
       #   absolute_path = Pathname.new(fullpath)
       #   project_root  = Pathname.new(base_dsl_path)
@@ -463,7 +440,7 @@ module KDsl
       #   }.merge(data)
       # end
 
-      # def save_register_file(unique_key, key, namespace, type)
+      # def save_register_file(unique_key, key, type, namespace)
       #   k = @dsls[unique_key]
     
       #   if k.present? && k[:file].present? && k[:file] != @current_register_file
@@ -508,7 +485,7 @@ module KDsl
       #   end
       # end
 
-      # def save_load_file(unique_key, key, namespace, type, dsl)
+      # def save_load_file(unique_key, key, type, namespace, dsl)
       #   k = @dsls[unique_key]
 
       #   if k.nil?
@@ -534,7 +511,7 @@ module KDsl
       #   end
       # end
 
-      # def save_dynamic(unique_key, key, namespace, type, dsl)
+      # def save_dynamic(unique_key, key, type, namespace, dsl)
       #   k = @dsls[unique_key]
 
       #   if k.nil?

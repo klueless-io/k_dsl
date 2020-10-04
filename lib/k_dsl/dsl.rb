@@ -53,7 +53,7 @@ module KDsl
     # instantiate a global project, but other project_manager have their
     # own namespaces that can be used to issolate for memory management
     def document(key = nil, type = nil, **options, &block)
-      L.kv 'current resource', resource if resource
+      # L.kv 'current resource', resource if resource
       build_document(key, type, nil, **options, &block)
     end
 

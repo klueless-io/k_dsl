@@ -51,7 +51,7 @@ namespace :k_dsl do
     manager.add_project(project_sample)
     
     # manager.debug()
-    20.times { puts '' }
+    15.times { puts '' }
     manager.debug(format: :detail, project_formats: [:resource, :resource_document])
 
     # manager.watch 

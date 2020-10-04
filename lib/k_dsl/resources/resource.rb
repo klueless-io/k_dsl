@@ -119,6 +119,8 @@ module KDsl
       end
 
       def add_document(document)
+        project.register_dsl(document)
+        document.resource = self
         documents << document
       end
 
