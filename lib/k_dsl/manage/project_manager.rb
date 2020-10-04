@@ -40,12 +40,12 @@ module KDsl
       # If I can find a way to decouple then I will, but for now, a new document will
       # call through to register_with_project and if there is no project then it will just
       # keep going
-      def register_with_project(document)
-        return :no_project if active_project.nil?
+      # def register_with_project(document)
+      #   return :no_project if active_project.nil?
 
-        # return :register
-        # return :existing
-      end
+      #   # return :register
+      #   # return :existing
+      # end
 
       def debug(format: :tabular, project_formats: [:resource])
         # tp projects

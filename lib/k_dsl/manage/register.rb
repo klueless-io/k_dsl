@@ -170,13 +170,13 @@ module KDsl
       # end
 
       # def dsl_exist?(key, namespace = nil, type = :entity)
-      #   dsl = get_dsl(key, namespace, type)
+      #   dsl = get_dsl(key, type, namespace)
 
       #   !dsl.nil?
       # end
 
       # def get_dsl(key, namespace = nil, type = :entity)
-      #   unique_key = build_unique_key(key, namespace, type)
+      #   unique_key = build_unique_key(key, type, namespace)
 
       #   @dsls[unique_key]
       # end
@@ -190,9 +190,9 @@ module KDsl
       # end
 
       # def get_data(key, namespace = nil, type = :entity)
-      #   dsl = get_dsl(key, namespace, type)
+      #   dsl = get_dsl(key, type, namespace)
 
-      #   raise "Could not get data for missing DSL: #{build_unique_key(key, namespace, type)}" if dsl.nil?
+      #   raise "Could not get data for missing DSL: #{build_unique_key(key, type, namespace)}" if dsl.nil?
 
       #   load_data_from_dsl(dsl)
       # end
@@ -271,7 +271,7 @@ module KDsl
       #   }.merge(data)
       # end
 
-      # def save_register_file(unique_key, key, namespace, type)
+      # def save_register_file(unique_key, key, type, namespace)
       #   k = @dsls[unique_key]
     
       #   if k.present? && k[:file].present? && k[:file] != @current_register_file
@@ -316,7 +316,7 @@ module KDsl
       #   end
       # end
 
-      # def save_load_file(unique_key, key, namespace, type, dsl)
+      # def save_load_file(unique_key, key, type, namespace, dsl)
       #   k = @dsls[unique_key]
 
       #   if k.nil?
@@ -342,7 +342,7 @@ module KDsl
       #   end
       # end
 
-      # def save_dynamic(unique_key, key, namespace, type, dsl)
+      # def save_dynamic(unique_key, key, type, namespace, dsl)
       #   k = @dsls[unique_key]
 
       #   if k.nil?

@@ -135,7 +135,7 @@ module KDsl
     end
 
     def dsl_relative_path
-      # dsl = Klue.register_instance.get_dsl(k_key, namespace, type)
+      # dsl = Klue.register_instance.get_dsl(k_key, type, namespace)
 
       # raise Klue::Dsl::DslNotFoundError, 'DSL not found, run registration' if dsl.nil?
 
