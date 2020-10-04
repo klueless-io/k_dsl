@@ -13,8 +13,11 @@ module KDsl
       end
 
       def load
-        @raw_data = nil
-        add_new_document(filename, type, '', @raw_data)
+        add_new_document
+      end
+
+      def debug
+        L.warn 'unknown document'
       end
     end
   end
