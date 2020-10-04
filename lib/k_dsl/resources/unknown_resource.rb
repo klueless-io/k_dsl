@@ -11,6 +11,11 @@ module KDsl
 
         self.type = KDsl::Resources::Resource::TYPE_UNKNOWN
       end
+
+      def load
+        @raw_data = nil
+        add_new_document(filename, type, '', @raw_data)
+      end
     end
   end
 end
