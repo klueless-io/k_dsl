@@ -12,12 +12,6 @@ RSpec.describe KDsl::Manage::ProjectManager do
     it { is_expected.to be_empty }
   end
 
-  describe '.processor' do
-    subject { manager.processor }
-
-    it { is_expected.to be_nil }
-  end
-
   describe '.active_project' do
     subject { manager.active_project }
 

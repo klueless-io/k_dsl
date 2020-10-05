@@ -1,59 +1,58 @@
-# frozen_string_literal: true
+# # frozen_string_literal: true
 
-# Module method stores single instance processor which can handle multiple incoming requests
-module KDsl
-  module Internals
-    # Processor is used to process incoming files
-    class Processor
-      def file(file)
-        L.kv 'Process', file
+# # Module method stores single instance processor which can handle multiple incoming requests
+# module KDsl
+#   module Internals
+#     # Processor is used to process incoming files
+#     class Processor
+#       # def file(file)
+#       #   L.kv 'Process', file
 
-        L.kv 'Process DSL', file
+#       #   L.kv 'Process DSL', file
 
-        content = File.read(file)
+#       #   content = File.read(file)
 
-        ruby_code(content, file, &block)
+#       #   ruby_code(content, file, &block)
 
-        Klue.print
-      end
+#       #   Klue.print
+#       # end
 
-      def code(ruby_code, source_file = nil)
-        # if Klue.register_instance.nil?
+#       # def code(ruby_code, source_file = nil)
+#         # if Klue.register_instance.nil?
 
-        #   if block_given?
-        #     L.kv 'Register', 'started'
+#         #   if block_given?
+#         #     L.kv 'Register', 'started'
               
-        #     block.call
+#         #     block.call
 
-        #     L.kv 'Register', 'finished'
-        #   end
+#         #     L.kv 'Register', 'finished'
+#         #   end
 
-        # end
+#         # end
 
-        # begin
-        #   Klue.register_instance_or_default.process_code(:klue, ruby_code, source_file)
-        # rescue Klue::Dsl::DslNotFoundError, Klue::Dsl::DslNotFileRelatedError => dsl_error
-        #   L.info dsl_error.message
+#         # begin
+#         #   Klue.register_instance_or_default.process_code(:klue, ruby_code, source_file)
+#         # rescue Klue::Dsl::DslNotFoundError, Klue::Dsl::DslNotFileRelatedError => dsl_error
+#         #   L.info dsl_error.message
 
-        #   if block_given?
-        #     L.kv 'Re-Register', 'started'
+#         #   if block_given?
+#         #     L.kv 'Re-Register', 'started'
               
-        #     Klue.reset
+#         #     Klue.reset
             
-        #     block.call
+#         #     block.call
 
-        #     L.kv 'Re-Register', 'finished'
-        #   end
-        # rescue => exception
-        #   # Klue.debug
-        #   L.line
-        #   L.kv 'Klue - Error', exception.message      
-        #   L.line
-        #   # L.kv 'error', exception.backtrace
-        # end
+#         #     L.kv 'Re-Register', 'finished'
+#         #   end
+#         # rescue => exception
+#         #   # Klue.debug
+#         #   L.line
+#         #   L.kv 'Klue - Error', exception.message      
+#         #   L.line
+#         #   # L.kv 'error', exception.backtrace
+#         # end
 
-      end
-      
-    end
-  end
-end
+#       # end
+#     end
+#   end
+# end
