@@ -13,7 +13,7 @@ module KDsl
   class << self
 
     # Instance of the currently focused resource so that documents can attach themselves
-    attr_accessor :resource
+    attr_accessor :target_resource
 
     attr_reader :process
 
@@ -23,9 +23,7 @@ module KDsl
     # REFACT: Need to research and implement the correct pattern for log levels
     attr_reader :log_level
 
-    def setup(log_level: LOG_NONE,
-              process: Internals::Processor.new,
-              project_manager: Manage::ProjectManager.new)
+    def setup(log_level: LOG_NONE, project_manager: Manage::ProjectManager.new)
 
       @log_level = log_level
 
@@ -36,7 +34,6 @@ module KDsl
       @resource = nil
       @process = process
       @project_manager = project_manager
-      @project_manager.processor = process
     end
 
     def teardown

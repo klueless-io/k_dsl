@@ -29,7 +29,7 @@ module KDsl
         # REFACT: Decouple this out of the document class so that the Document Class can
         # live in it's own GEM
         # Maybe able to remove this coupling and do it in the factory method
-        KDsl.resource.add_document(self) if KDsl.resource
+        KDsl.target_resource.add_document(self) if KDsl.target_resource
 
         # # L.kv 'CURRENT STATE', Klue::Dsl::RegisterDsl.get_instance.current_state
         return unless block_given?

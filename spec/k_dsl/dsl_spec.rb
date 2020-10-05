@@ -30,16 +30,16 @@ RSpec.describe KDsl do
     end
   end
 
-  describe '.process' do
-    subject { described_class.process }
+  describe '.target_resource' do
+    subject { described_class.target_resource }
 
     it { is_expected.to be_nil }
 
-    context 'when setup' do
-      before { KDsl.setup }
+    context 'when registering a resource' do
+      # before { KDsl.setup }
       
-      it { is_expected.not_to be_nil }
-      it { is_expected.to be_a(KDsl::Internals::Processor) }
+      # it { is_expected.not_to be_nil }
+      # it { is_expected.to be_a(KDsl::Manage::ProjectManager) }
     end
   end
 
