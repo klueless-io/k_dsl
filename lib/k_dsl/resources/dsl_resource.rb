@@ -11,7 +11,7 @@ module KDsl
       end
 
       def load
-        KDsl.resource = self
+        KDsl.target_resource = self
         Object.class_eval content
       rescue => exeption
         # Report the error but still add the document so that you can see
@@ -20,7 +20,7 @@ module KDsl
   
         L.exception @error
       ensure
-        KDsl.resource = nil
+        KDsl.target_resource = nil
       end
     end
   end

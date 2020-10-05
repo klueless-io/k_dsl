@@ -5,7 +5,6 @@ module KDsl
   module Manage
     # Manager is used to manage active projects and memory management
     class ProjectManager
-      attr_accessor :processor
       attr_accessor :projects
       attr_accessor :active_project
 
