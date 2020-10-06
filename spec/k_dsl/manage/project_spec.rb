@@ -110,8 +110,8 @@ RSpec.describe KDsl::Manage::Project do
       end
     end
 
-    describe '.registered_resources' do
-      subject { project.registered_resources }
+    describe '.resources' do
+      subject { project.resources }
 
       context 'when simple ruby files' do
         before { project.watch_path('ruby_files/*.rb') }
@@ -174,8 +174,8 @@ RSpec.describe KDsl::Manage::Project do
   end
 
   describe '#register_file_resource' do
-    describe '.registered_resources' do
-      subject { project.registered_resources }
+    describe '.resources' do
+      subject { project.resources }
 
       # before { allow(project).to receive(:process_code) }
 

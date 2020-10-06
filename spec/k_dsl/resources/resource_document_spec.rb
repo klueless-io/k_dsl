@@ -29,7 +29,7 @@ RSpec.describe KDsl::Resources::ResourceDocument do
     end
 
     it 'is status registered' do
-      expect(subject.status).to eq(:registered)
+      expect(subject.status).to eq(:initialized)
     end
   end  
 end

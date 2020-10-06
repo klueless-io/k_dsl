@@ -49,6 +49,7 @@ namespace :k_dsl do
     # manager.add_project(project_microapp1)
     # manager.add_project(project_microapp2)
     manager.add_project(project_sample)
+    manager.load_resources
     
     15.times { puts '' }
     manager.debug(format: :detail, project_formats: [:resource, :resource_document])
