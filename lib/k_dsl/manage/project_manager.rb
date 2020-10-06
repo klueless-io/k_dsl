@@ -18,10 +18,14 @@ module KDsl
         raise KDsl::Error, 'Project class is ivalid' unless project.is_a?(KDsl::Manage::Project)
 
         project.manager = self
-        project.load_resources
+        project.register_resources
 
         @projects |= [project]
-     end
+      end
+
+      def load_resources
+        projects.each(&:load_resources)
+      end
 
       def activate_project(project)
         add_project(project)

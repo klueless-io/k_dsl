@@ -14,7 +14,6 @@ module KDsl
 
       def register
         @document = add_document(new_document)
-        project.add_resource_document(self, @document)
       end
 
       def load

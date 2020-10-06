@@ -161,13 +161,28 @@ RSpec.describe KDsl::Resources::RubyResource do
         end
       end
 
-        # xcontext '#load' do
-        #   before { resource.load }
-    
-        #   it 'has one document with data' do
-        #     expect(subject.first.data).to eq({})
-        #   end
-        # end
+      context '#load' do
+        before { resource.load }
+  
+        describe 'resource.documents' do
+          subject { resource.documents }
+  
+          it { is_expected.not_to be_empty }
+  
+          context 'document[0]' do
+            subject { resource.documents[0] }
+  
+            it 'has unique_key' do
+              expect(subject.data).to eq({
+                'settings' => {
+                  'a' => "1",
+                  'b' => 2
+                }
+              })
+            end
+          end
+        end
+      end
     end
   end
 

@@ -52,7 +52,6 @@ module KDsl
 
       if KDsl.target_resource
         KDsl.target_resource.add_document(document)
-        KDsl.target_resource.project.add_resource_document(KDsl.target_resource, document)
       end
 
       document
