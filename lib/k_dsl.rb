@@ -4,9 +4,6 @@ require 'logger'
 
 require 'k_dsl'
 
-# Internals (move manager here)
-require 'k_dsl/internals/processor'
-
 require 'k_dsl/version'
 require 'k_dsl/dsl'
 require 'k_dsl/exceptions'
@@ -30,7 +27,6 @@ require 'k_dsl/artifacts/artifact'
 require 'k_dsl/resources/resource'
 require 'k_dsl/resources/resource_document'
 require 'k_dsl/resources/csv_resource'
-require 'k_dsl/resources/dsl_resource'
 require 'k_dsl/resources/json_resource'
 require 'k_dsl/resources/ruby_resource'
 require 'k_dsl/resources/unknown_resource'

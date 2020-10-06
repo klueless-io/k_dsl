@@ -6,23 +6,26 @@ module KDsl
     # CSV Resource represents a CSV data structure in the project
     class CsvResource < Resource
       def initialize(project:, source:, file:, watch_path: nil, content: nil)
-        super(project: project, source: source, file: file, watch_path: watch_path, content: content)
+        super(project: project, source: source, file: file, watch_path: watch_path)#, content: content)
 
         self.type = KDsl::Resources::Resource::TYPE_CSV
       end
 
-      def load
-        @raw_data = []
-        CSV.parse(content, headers: true, header_converters: :symbol).each do |row|
-          @raw_data << row.to_h
-        end
-        add_new_document(data: @raw_data)
+      def register
+        @document = add_document(new_document)
+        project.add_resource_document(self, @document)
+      end
 
-        # @data = KDsl::Util.data.to_struct(@raw_data)
+      def load
+        data = []
+        CSV.parse(content, headers: true, header_converters: :symbol).each do |row|
+          data << row.to_h
+        end
+        @document.set_data(data)
       end
 
       def debug
-        tp documents.first.data, documents.first.data.first.to_h.keys
+        tp @document.data, @document.data.first.to_h.keys
       end
     end
   end

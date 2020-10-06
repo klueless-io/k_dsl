@@ -20,30 +20,25 @@ module KDsl
       def initialize(key, *args, **options, &block)
         initialize_attributes(key, *args, **options)
 
+        @block = block if block_given?
         # REFACT: Split out as
         #         Data and Document
         #         Document and DslDocument
-        #         
+      end
 
-        # KDsl.manager.register_with_project(self)
-        # REFACT: Decouple this out of the document class so that the Document Class can
-        # live in it's own GEM
-        # Maybe able to remove this coupling and do it in the factory method
-        KDsl.target_resource.add_document(self) if KDsl.target_resource
-
-        # # L.kv 'CURRENT STATE', Klue::Dsl::RegisterDsl.get_instance.current_state
-        return unless block_given?
-        return unless block_executable?
-
-        # L.kv 'AM I EVER IN', 'Artifact.new &Block'
-        #   # L.block block.source
-
-        # TODO: raise_error Unit Test
+      def execute_block
+        return if @block.nil?
         begin
-          instance_eval(&block)
+          instance_eval(&@block)
         rescue KDsl::Error => e
-          puts "Invalid code block in document_dsl during registration: #{key}"
+          puts "Invalid code block in document during registration: #{key}"
           puts e.message
+          # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
+          # L.exception exception
+          raise
+        rescue StandardError => exception
+          puts "Invalid code block in document during registration: #{key}"
+          puts exception.message
           # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
           # L.exception exception
           raise
@@ -64,7 +59,7 @@ module KDsl
       end
 
       def unique_key
-        KDsl::Util.dsl.build_unique_key(key, type, namespace)
+        @unique_key ||= KDsl::Util.dsl.build_unique_key(key, type, namespace)
       end
 
       def settings(key = nil, **options, &block)
@@ -101,10 +96,6 @@ module KDsl
         @data.clone
       end
 
-      def block_executable?
-        @block_executable
-      end
-
       # Move this out to the logger function when it has been refactor
       def debug(include_header = false)
         debug_header if include_header
@@ -119,7 +110,7 @@ module KDsl
         L.kv 'type', type
         L.kv 'namespace', namespace
 
-        options&.keys&.each do |key|
+        options&.keys.reject { |k| k == :namespace }&.each do |key|
           L.kv key, options[key]
         end
 
@@ -137,7 +128,6 @@ module KDsl
         @namespace = options[:namespace] || ''
 
         @namespace = @namespace.to_s
-        @block_executable = options[:block_executable].nil? ? true : options[:block_executable]
 
         # Most documents live within a hash, some tabular documents such as
         # CSV will use an []

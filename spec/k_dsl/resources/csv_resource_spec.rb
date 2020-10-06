@@ -20,20 +20,23 @@ RSpec.describe KDsl::Resources::CsvResource do
     it { is_expected.to have_attributes(file: file, type: described_class::TYPE_CSV) }
   end
 
-  describe '.documents' do
-    subject { resource.documents }
+  describe 'project.resource_documents' do
+    subject { project.resource_documents }
 
     it { is_expected.to be_empty }
 
-    context '#load' do
-      before { resource.load }
+    context '#register' do
+      before do
+        resource.load_content
+        resource.register
+      end
 
       it { is_expected.not_to be_empty }
 
       it 'has one document with data' do
         expect(subject.length).to eq 1
-        expect(subject.first.data).to include( { name: 'David', title: 'Developer', days_employed: '402' } )
-        expect(subject.first.data).to include( { name: 'Bob', title: 'Project Manager', days_employed: '289' } )
+        expect(subject.first.data).to eq({})
+        # subject.first.document.debug(true)
       end
 
       it 'has key' do
@@ -44,8 +47,17 @@ RSpec.describe KDsl::Resources::CsvResource do
         expect(subject.first.type).to eq('csv')
       end
 
-      it do
-        resource.debug
+      context '#load' do
+        before { resource.load }
+  
+        it 'has one document with data' do
+          expect(subject.first.data).to include( { name: 'David', title: 'Developer', days_employed: '402' } )
+          expect(subject.first.data).to include( { name: 'Bob', title: 'Project Manager', days_employed: '289' } )
+        end
+  
+        # it do
+        #   resource.debug
+        # end
       end
     end
   end

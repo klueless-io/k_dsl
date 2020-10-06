@@ -8,11 +8,6 @@ RSpec.describe KDsl::Resources::Resource do
   let(:resource) { described_class.instance(project: project, file: file, watch_path: watch_path) }
   let(:project) { KDsl::Manage::Project.new('sample_app') }
   let(:file) { 'a.txt' }
-  # let(:config) do
-  #   KDsl::Manage::ProjectConfig.new do |c|
-  #     c.base_dsl_path = File.join(Dir.getwd, 'spec', 'factories', 'dsls')
-  #   end
-  # end
 
   let(:gem_root) { Gem::Specification.find_by_name("k_dsl").gem_dir }
   # let(:watch_path) { gem_root }
@@ -50,8 +45,8 @@ RSpec.describe KDsl::Resources::Resource do
   
         context 'with Klueless ruby DSL' do
           let(:file) { ruby_one_dsl_file }
-  
-          it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY_DSL) }
+
+          it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY) }
         end
       end
   
@@ -70,14 +65,18 @@ RSpec.describe KDsl::Resources::Resource do
   end
   
   describe '#load' do
-    before { resource.load }
+    before do
+      resource.load_content
+      resource.register
+      resource.load
+    end
 
     context 'csv' do
       let(:file) { csv_file }
 
       context '.documents' do
         subject { resource.documents }
-  
+
         it { is_expected.not_to be_empty }
       end
     end

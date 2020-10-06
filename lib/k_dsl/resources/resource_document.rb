@@ -10,8 +10,6 @@ module KDsl
       attr_reader :resource
       attr_reader :document
 
-      def_delegator :@resource, :raw_data
-      def_delegator :@resource, :data
       def_delegator :@resource, :error
       def_delegator :@resource, :project
       def_delegator :@resource, :source
@@ -24,10 +22,13 @@ module KDsl
       def_delegator :@resource, :base_resource_path
       def_delegator :@resource, :base_resource_path_expanded
 
+      def_delegator :document, :unique_key
       def_delegator :document, :key
       def_delegator :document, :type
       def_delegator :document, :namespace
       def_delegator :document, :options
+
+      def_delegator :@document, :data
 
       def initialize(resource, document)
         @status = :registered

@@ -50,25 +50,10 @@ namespace :k_dsl do
     # manager.add_project(project_microapp2)
     manager.add_project(project_sample)
     
-    # manager.debug()
     15.times { puts '' }
     manager.debug(format: :detail, project_formats: [:resource, :resource_document])
 
     # manager.watch 
-
-    # KDsl.process
-
-    # project_command.start
-    # 
-    # L.json config1.to_h
-
-    # KDsl.setup
-    # KDsl.project_manager.config do
-    #   project('microapp1', '~/dev/gems/k_dsl/spec/factories/dsls') do
-    #     watch_path('common-auth/**/*.rb')
-    #     watch_path('microapp1/**/*.rb')
-    #   end
-    # end
     # KDsl.process.file(file)
 
   end

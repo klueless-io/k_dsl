@@ -20,31 +20,23 @@ RSpec.describe KDsl::Resources::JsonResource do
     it { is_expected.to have_attributes(file: file, type: described_class::TYPE_JSON) }
   end
 
-  describe '.documents' do
-    subject { resource.documents }
+  describe 'project.resource_documents' do
+    subject { project.resource_documents }
 
     it { is_expected.to be_empty }
 
-    context '#load' do
-      before { resource.load }
+    context '#register' do
+      before do
+        resource.load_content
+        resource.register
+      end
 
-      it { is_expected.not_to be_nil }
+      it { is_expected.not_to be_empty }
 
       it 'has one document with data' do
         expect(subject.length).to eq 1
-        expect(subject.first.data).to include(
-          'name' => 'David',
-          'age' => 32,
-          'contact' => {
-            'phone' => '0424 111 222',
-            'email' => 'david@david.com',
-            'address' => { 'street' => '32 Main St', 'suburb' => 'Sydney' }
-          },
-          'skills' => [
-            { 'name' => 'javascript', 'proficiency' => 'ok' },
-            { 'name' => 'ruby', 'proficiency' => 'good' }
-          ]
-        )
+        expect(subject.first.data).to eq({})
+        # subject.first.document.debug(true)
       end
 
       it 'has key' do
@@ -55,9 +47,33 @@ RSpec.describe KDsl::Resources::JsonResource do
         expect(subject.first.type).to eq('json')
       end
 
-      it do
-        resource.debug
+      context '#load' do
+        before { resource.load }
+
+        it { is_expected.not_to be_nil }
+
+        it 'has one document with data' do
+          expect(subject.length).to eq 1
+          expect(subject.first.data).to include(
+            'name' => 'David',
+            'age' => 32,
+            'contact' => {
+              'phone' => '0424 111 222',
+              'email' => 'david@david.com',
+              'address' => { 'street' => '32 Main St', 'suburb' => 'Sydney' }
+            },
+            'skills' => [
+              { 'name' => 'javascript', 'proficiency' => 'ok' },
+              { 'name' => 'ruby', 'proficiency' => 'good' }
+            ]
+          )
+        end
+
+        # it do
+        #   resource.debug
+        # end
       end
+
     end
   end
 end
