@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::Resources::ResourceDocument do
+RSpec.describe KDsl::ResourceDocuments::ResourceDocument do
   subject { resource_document }
 
   let(:resource_document) { described_class.new(resource, resource.documents.first) }
