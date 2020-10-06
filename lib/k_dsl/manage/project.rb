@@ -47,6 +47,8 @@ module KDsl
       # RENAME: registered_resources (as they may not be DSL's)
       attr_reader :registered_resources
 
+      attr_reader :resource_documents
+
       # There is currently a tight cupling between is boolean and DSL's so that they know whether they are being refrenced for registration or importation
       # The difference is that importation will execute their interal code block while registration will not.
       # attr_reader :current_state
@@ -65,6 +67,7 @@ module KDsl
         @dsls = {}
         @watch_paths = []
         @registered_resources = []
+        @resource_documents = []
 
         begin
           instance_eval(&block) if block_given?
@@ -76,6 +79,21 @@ module KDsl
 
         # @current_state = :dynamic
         # @current_register_file = nil
+      end
+
+      def add_resource_document(resource, document)
+        resource_documents << KDsl::Resources::ResourceDocument.new(resource, document)
+      end
+
+      def register_documents(resource)
+        status = KDsl.status
+        KDsl.status = :registering
+        KDsl.target_resource = resource
+
+        resource.load_content
+        resource.register
+
+        KDsl.status = status
       end
 
       def dsl_exist?(key, type = nil, namespace = nil)
@@ -123,7 +141,8 @@ module KDsl
       # the data in the resource
       def load_resources
         @registered_resources.each do |resource|
-          resource.load
+          register_documents(resource)
+          # resource.load
         end
       end
 
@@ -241,9 +260,10 @@ module KDsl
           # { :filename => { width: 100, display_name: 'Filename' } },
           { filename: { width: 150, display_method: lambda { |r| "\u001b]8;;file://#{r.file}\u0007#{r.filename}\u001b]8;;\u0007" } } }
         elsif format == :resource_document
-          resource_documents = registered_resources.flat_map { |r| r.documents.map { |d| KDsl::Resources::ResourceDocument.new(r, d) } }
+          # resource_documents = registered_resources.flat_map { |r| r.documents.map { |d| KDsl::Resources::ResourceDocument.new(r, d) } }
 
           tp resource_documents,
+            :status,
             { namespace: { width: 20, display_name: 'Namespace' } },
             { key: { width: 20, display_name: 'Key' } },
             { type: { width: 20, display_name: 'Type' } },
