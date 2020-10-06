@@ -16,60 +16,195 @@ RSpec.describe KDsl::Resources::RubyResource do
   let(:gem_root) { Gem::Specification.find_by_name("k_dsl").gem_dir }
 
   let(:file1) { File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb') }
-  let(:file2) { File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby2.rb') }
   let(:file3) { File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby3.rb') }
-  let(:file4) { File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby4.rb') }
-  let(:file) { file1 }
 
-  describe '#instance' do
+  let(:dsl_file1) { File.join(gem_root, 'spec/factories/dsls/simple_dsl/one_dsl.rb') }
+  let(:dsl_file2) { File.join(gem_root, 'spec/factories/dsls/simple_dsl/two_dsl.rb') }
+
+  context 'when using a simple ruby file' do
+    let(:file) { file1 }
+
+    before { resource.load_content }
+
     it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY) }
-  end
-
-  describe '#load - ruby code' do
-    context 'before load' do
-      # REFACT: FlakyTest, Ruby1 sometimes exists depending on order of the test suite
-      #         Need to use a dynamic random name instead of Ruby1
+    
+    context 'before register' do
       it { expect { Ruby1.new }.to raise_error NameError }
-    end
 
-    context 'after load' do
-      let(:file) { file2 }
+      describe 'project.resource_documents' do
+        subject { project.resource_documents }
 
-      before { resource.load }
-      it { expect(Ruby2.new).not_to be_nil }
-      it { expect(Ruby2.new.some_prop).to eq('Other Value') }
-    end
+        it { is_expected.to be_empty }
+      end      
 
-    context 'invalid ruby code' do
-      subject { resource.error }
-      let(:file) { file3 }
+      context '#register' do
+        before { resource.register }
 
-      before { resource.load }
+        it { expect(Ruby1.new).not_to be_nil }
+        it { expect(Ruby1.new.some_prop).to eq('Value') }
+        it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY) }
 
-      it { expect(subject).to be_a(NameError) }
-      it { expect(subject.message).to eq("undefined local variable or method `bad_ruby_method' for Ruby3:Class") }
+        describe 'project.resource_documents' do
+          subject { project.resource_documents }
+
+          it { is_expected.not_to be_empty }
+
+          it 'has one document' do
+            expect(subject.length).to eq 1
+            expect(subject.first.data).to eq({})
+          end
+
+          it 'has key' do
+            expect(subject.first.key).to eq('ruby1')
+          end
+
+          it 'has type' do
+            expect(subject.first.type).to eq('ruby')
+          end
+
+          context '#load' do
+            before { resource.load }
+      
+            it 'has one document with data' do
+              expect(subject.first.data).to eq({})
+            end
+          end
+        end      
+      end
     end
   end
 
-  describe '.documents' do
-    subject { resource.documents }
+  context 'when using ruby file with syntex error' do
+    let(:file) { file3 }
 
-    it { is_expected.to be_empty }
+    before { resource.load_content }
 
-    context '#load' do
-      let(:file) { file4 }
+    it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY) }
+    
+    context 'before register' do
+      describe 'project.resource_documents' do
+        subject { project.resource_documents }
 
-      before { resource.load }
+        it { is_expected.to be_empty }
+      end      
 
-      it { is_expected.not_to be_nil }
+      context '#register' do
+        before { resource.register }
 
-      it 'has key' do
-        expect(subject.first.key).to eq('ruby4')
+        describe 'project.resource_documents' do
+          subject { project.resource_documents }
+
+          it 'has one document' do
+            expect(subject.length).to eq 1
+            expect(subject.first.data).to eq({})
+            # subject.first.document.debug(true)
+          end
+
+          it 'has key' do
+            expect(subject.first.key).to eq('ruby3')
+          end
+
+          it 'has type' do
+            expect(subject.first.type).to eq('ruby')
+          end
+
+          context '#load' do
+            before { resource.load }
+      
+            it 'has one document with data' do
+              expect(subject.first.data).to eq({})
+            end
+          end
+        end
+ 
+      end
+    end
+  end
+
+  context 'when using ruby file with one DSL' do
+    let(:file) { dsl_file1 }
+
+    before { resource.load_content }
+
+    it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY) }
+    
+    context '#register' do
+      before { resource.register }
+
+      it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY_DSL) }
+
+      describe 'project.resource_documents' do
+        subject { project.resource_documents }
+
+        it { is_expected.not_to be_empty }
+
+        it 'has one document' do
+          expect(subject.length).to eq 1
+        end
       end
 
-      it 'has type' do
-        expect(subject.first.type).to eq('ruby')
+      describe 'resource.documents' do
+        subject { resource.documents }
+
+        it { is_expected.not_to be_empty }
+
+        it 'has one document' do
+          expect(subject.length).to eq 1
+        end
+
+        context 'document[0]' do
+          subject { resource.documents[0] }
+
+          it 'has unique_key' do
+            expect(subject.unique_key).to eq('my_name_entity')
+          end
+        end
       end
+
+        # xcontext '#load' do
+        #   before { resource.load }
+    
+        #   it 'has one document with data' do
+        #     expect(subject.first.data).to eq({})
+        #   end
+        # end
+    end
+  end
+
+  context 'when using ruby file with two DSLs' do
+    let(:file) { dsl_file2 }
+
+    before { resource.load_content }
+
+    it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY) }
+    
+    context '#register' do
+      before { resource.register }
+
+      it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY_DSL) }
+
+      describe 'project.resource_documents' do
+        subject { project.resource_documents }
+
+        it { is_expected.not_to be_empty }
+
+        it 'has one document' do
+          expect(subject.length).to eq 2
+          expect(subject.first.data).to eq({})
+        end
+
+        it 'has unique_key' do
+          expect(subject.first.unique_key).to eq('my_name1_entity')
+        end
+
+        xcontext '#load' do
+          before { resource.load }
+    
+          it 'has one document with data' do
+            expect(subject.first.data).to eq({})
+          end
+        end
+      end      
     end
   end
 end

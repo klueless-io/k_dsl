@@ -13,7 +13,7 @@ class LogHelper
   end
 
   def self.kv(key, value, key_width = 30)
-    "#{green(key.ljust(key_width))}: #{value}"
+    "#{green(key.to_s.ljust(key_width))}: #{value}"
   end
 
   def self.progress(pos = nil, section = nil)

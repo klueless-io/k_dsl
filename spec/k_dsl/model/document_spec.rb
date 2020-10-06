@@ -42,14 +42,6 @@ RSpec.describe KDsl::Model::Document do
     end
   end
 
-  # before(:example) do
-  #   Klue.reset
-  #   Klue.register(Rails.root)
-  # end
-  # after(:example) do
-  #   # Klue.print
-  # end
-
   describe '#constructor' do
     context 'with key only' do
       subject { described_class.new(key) }
@@ -118,28 +110,6 @@ RSpec.describe KDsl::Model::Document do
       end
     end
 
-    context 'with option :block_executable' do
-      let(:options) { {} }
-
-      subject { described_class.new(key, **options) }
-
-      context 'when option is nil' do
-        it { is_expected.to be_block_executable }
-      end
-
-      context 'when option is true' do
-        let(:options) { { block_executable: true } }
-
-        it { is_expected.to be_block_executable }
-      end
-
-      context 'when option is false' do
-        let(:options) { { block_executable: false } }
-
-        it { is_expected.not_to be_block_executable }
-      end
-    end
-
     context 'with &block' do
       subject { described_class.new key, **options, &block }
 
@@ -151,18 +121,11 @@ RSpec.describe KDsl::Model::Document do
       end
 
       context 'when given a block' do
-        it { expect(subject.data).to eq(thunder_birds: :are_go) }
+        it { expect(subject.data).to eq({}) }
 
-        context 'with option :block_executable turned on' do
-          let(:options) { { block_executable: true } }
-
+        context 'after execute_block' do
+          before { subject.execute_block }            
           it { expect(subject.data).to eq(thunder_birds: :are_go) }
-        end
-
-        context 'with option :block_executable turned off' do
-          let(:options) { { block_executable: false } }
-
-          it { expect(subject.data).to eq({}) }
         end
       end
     end
@@ -249,28 +212,6 @@ RSpec.describe KDsl::Model::Document do
       end
     end
 
-    context 'with option :block_executable' do
-      let(:options) { {} }
-
-      subject { described_class.new(key, **options) }
-
-      context 'when option is nil' do
-        it { is_expected.to be_block_executable }
-      end
-
-      context 'when option is true' do
-        let(:options) { { block_executable: true } }
-
-        it { is_expected.to be_block_executable }
-      end
-
-      context 'when option is false' do
-        let(:options) { { block_executable: false } }
-
-        it { is_expected.not_to be_block_executable }
-      end
-    end
-
     context 'with &block' do
       subject { described_class.new key, **options, &block }
 
@@ -281,26 +222,20 @@ RSpec.describe KDsl::Model::Document do
         end
       end
 
-      context 'when given a block' do
+      it { expect(subject.data).to eq({}) }
+
+      context 'after execute_block' do
+        before { subject.execute_block }            
+
         it { expect(subject.data).to eq(thunder_birds: :are_go) }
-
-        context 'with option :block_executable turned on' do
-          let(:options) { { block_executable: true } }
-
-          it { expect(subject.data).to eq(thunder_birds: :are_go) }
-        end
-
-        context 'with option :block_executable turned off' do
-          let(:options) { { block_executable: false } }
-
-          it { expect(subject.data).to eq({}) }
-        end
       end
     end
   end
 
   describe 'configure settings' do
     subject { described_class.new(key, &block) }
+
+    before { subject.execute_block }
 
     context 'setting groups' do
       context 'with default name' do
@@ -413,8 +348,12 @@ RSpec.describe KDsl::Model::Document do
     end
   end
 
-  describe 'config table' do
+  describe 'configure table' do
     subject(:dsl) { described_class.new(key, &block) }
+
+    before do
+      dsl.execute_block
+    end
 
     context 'table groups' do
       context 'with default key' do

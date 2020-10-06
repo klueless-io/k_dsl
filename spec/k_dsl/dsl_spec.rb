@@ -3,6 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe KDsl do
+
   before { KDsl.teardown }
 
   # describe '#log_level' do
