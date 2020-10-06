@@ -126,16 +126,15 @@ module KDsl
 
       def add_document(document)
         project.register_dsl(document)
+        project.add_resource_document(self, document)
         document.resource = self
         documents << document
         document
       end
 
-      # REFACT: RENAME: RegisterResourceDocuments
-      def register_documents
+      def register
         L.warn "Do not know how to register #{type} resources"
       end
-      alias register register_documents
 
       def load
         L.warn "Do not know how to load #{type} resources"

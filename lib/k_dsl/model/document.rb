@@ -32,12 +32,16 @@ module KDsl
           instance_eval(&@block)
         rescue KDsl::Error => e
           puts "Invalid code block in document during registration: #{key}"
+          puts "__FILE__: #{__FILE__}"
+          puts "__LINE__: #{__LINE__}"
           puts e.message
           # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
           # L.exception exception
           raise
         rescue StandardError => exception
           puts "Invalid code block in document during registration: #{key}"
+          puts "__FILE__: #{__FILE__}"
+          puts "__LINE__: #{__LINE__}"
           puts exception.message
           # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
           # L.exception exception

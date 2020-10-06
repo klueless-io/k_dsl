@@ -44,9 +44,14 @@ module KDsl
       # List of resource files that are visible to this project
       # REFACT: May be available from dsls, need to check
       # REFACT: Also there is no guarantee that the file is actually a DSL
-      # RENAME: registered_resources (as they may not be DSL's)
-      attr_reader :registered_resources
+      # RENAME: resources (as they may not be DSL's)
+      attr_reader :resources
 
+      # Link resource and document togetner
+      # Resources generally have 1 document, but in the case of
+      # DSL resources there can be more then one document in the resource.
+      # This would then be storing a resource document for each structure
+      # found in the DSL.
       attr_reader :resource_documents
 
       # There is currently a tight cupling between is boolean and DSL's so that they know whether they are being refrenced for registration or importation
@@ -66,7 +71,7 @@ module KDsl
         # REFACT: Wrap DSL's up into it's own class
         @dsls = {}
         @watch_paths = []
-        @registered_resources = []
+        @resources = []
         @resource_documents = []
 
         begin
@@ -137,12 +142,18 @@ module KDsl
         end
       end
 
-      # Work through each resource and load into memory so that we can access
-      # the data in the resource
-      def load_resources
-        @registered_resources.each do |resource|
+      # Work through each resource and register with document into memory
+      # so that we can access the data in the resource
+      def register_resources
+        @resources.each do |resource|
           register_documents(resource)
-          # resource.load
+        end
+      end
+
+      def load_resources
+        @resource_documents.each do |resource_document|
+          resource_document.load
+          resource_document.status = :loaded
         end
       end
 
@@ -184,7 +195,7 @@ module KDsl
           watch_path: watch_path,
           source: KDsl::Resources::Resource::SOURCE_FILE)
 
-        @registered_resources << resource unless @registered_resources.include? resource
+        @resources << resource unless @resources.include? resource
       end
 
       def register_dsl(document)
@@ -247,11 +258,11 @@ module KDsl
 
       def debug(format: :resource)
         if format == :resource
-          tp registered_resources,
+          tp resources,
           # :state,
           { source: { } },
           { type: { display_name: 'R-Type' } },
-          { raw_data: { width: 40, display_name: 'Data' } },
+          # { raw_data: { width: 40, display_name: 'Data' } },
           { error: { width: 40, display_method: lambda { |r| r.error && r.error.message ? 'Error' : '' } } },
           { base_resource_path: { width: 100, display_name: 'Resource Path' } },
           { relative_watch_path: { width: 100, display_name: 'Watch Path' } },
@@ -260,7 +271,7 @@ module KDsl
           # { :filename => { width: 100, display_name: 'Filename' } },
           { filename: { width: 150, display_method: lambda { |r| "\u001b]8;;file://#{r.file}\u0007#{r.filename}\u001b]8;;\u0007" } } }
         elsif format == :resource_document
-          # resource_documents = registered_resources.flat_map { |r| r.documents.map { |d| KDsl::Resources::ResourceDocument.new(r, d) } }
+          # resource_documents = resources.flat_map { |r| r.documents.map { |d| KDsl::Resources::ResourceDocument.new(r, d) } }
 
           tp resource_documents,
             :status,
@@ -270,7 +281,7 @@ module KDsl
             # :state,
             { source: { } },
             { resource_type: { display_name: 'R-Type' } },
-            { raw_data: { width: 40, display_name: 'Data' } },
+            { data: { width: 40, display_name: 'Data' } },
             { error: { width: 40, display_method: lambda { |r| r.error && r.error.message ? 'Error' : '' } } },
             { base_resource_path: { width: 100, display_name: 'Resource Path' } },
             { relative_watch_path: { width: 100, display_name: 'Watch Path' } },
