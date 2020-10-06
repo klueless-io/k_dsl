@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module KDsl
-  module Resources
+  module ResourceDocuments
     # ResourceDocument represents the (1-M) link between a resource and a document
     class ResourceDocument
       extend Forwardable
@@ -10,7 +10,7 @@ module KDsl
       attr_reader :resource
       attr_reader :document
 
-      def_delegator :resource, :register
+      def_delegator :resource, :load
       def_delegator :resource, :load
 
       def_delegator :resource, :error

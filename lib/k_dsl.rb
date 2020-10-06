@@ -25,12 +25,22 @@ require 'k_dsl/artifacts/artifact'
 
 # Resources
 require 'k_dsl/resources/resource'
-require 'k_dsl/resources/resource_document'
 require 'k_dsl/resources/csv_resource'
 require 'k_dsl/resources/json_resource'
 require 'k_dsl/resources/ruby_resource'
 require 'k_dsl/resources/unknown_resource'
 require 'k_dsl/resources/yaml_resource'
+
+# Resources / Factories
+require 'k_dsl/resources/factories/csv_document_factory'
+
+# ResourceDocuments
+require 'k_dsl/resource_documents/resource_document'
+# require 'k_dsl/resource_documents/csv_resource_document'
+# require 'k_dsl/resources/json_resource'
+# require 'k_dsl/resources/ruby_resource'
+# require 'k_dsl/resources/unknown_resource'
+# require 'k_dsl/resources/yaml_resource'
 
 # DSL document structures
 require 'k_dsl/model/document'
