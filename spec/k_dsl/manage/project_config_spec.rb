@@ -51,21 +51,21 @@ RSpec.describe KDsl::Manage::ProjectConfig do
     end
   end
 
-  describe '.base_data_path' do
-    subject { config.base_data_path }
+  describe '.base_cache_path' do
+    subject { config.base_cache_path }
 
     context 'with default value' do
-      it { is_expected.to eq(File.join(Dir.getwd, '.data')) }
+      it { is_expected.to eq(File.join(Dir.getwd, '.cache')) }
 
       context 'when base_path is altered' do
         before { config.base_path = '/some_folder' }
 
-        it { is_expected.to eq('/some_folder/.data') }
+        it { is_expected.to eq('/some_folder/.cache') }
       end
     end
 
     context 'when set' do
-      before { config.base_data_path = '/Users/mydata' }
+      before { config.base_cache_path = '/Users/mydata' }
 
       it { is_expected.to eq('/Users/mydata') }
     end
