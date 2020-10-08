@@ -27,6 +27,26 @@ module KDsl
           @resource = resource
           resource.type = type
         end
+
+        def self.instance(resource, source, file)
+          if source === KDsl::Resources::Resource::SOURCE_FILE
+            extension = File.extname(file).downcase
+
+            case extension
+            when '.rb'
+              return KDsl::Resources::Factories::RubyDocumentFactory.new(resource)
+            when '.csv'
+              return KDsl::Resources::Factories::CsvDocumentFactory.new(resource)
+            when '.json'
+              return KDsl::Resources::Factories::JsonDocumentFactory.new(resource)
+            when '.yaml'
+              return KDsl::Resources::Factories::YamlDocumentFactory.new(resource)
+            end
+          end
+
+          return KDsl::Resources::Factories::UnknownDocumentFactory.new(resource)
+        end
+
       end
     end
   end
