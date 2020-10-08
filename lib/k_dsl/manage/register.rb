@@ -17,8 +17,8 @@ module KDsl
       # what file is currently being processed
       # attr_reader :current_processing_file
 
-      # def initialize(base_dsl_path, base_cache_path = nil, base_definition_path = nil, base_template_path = nil, base_app_template_path = nil)
-      #   @base_dsl_path = base_dsl_path.is_a?(Pathname) ? base_dsl_path.to_s : base_dsl_path
+      # def initialize(base_resource_path, base_cache_path = nil, base_definition_path = nil, base_template_path = nil, base_app_template_path = nil)
+      #   @base_resource_path = base_resource_path.is_a?(Pathname) ? base_resource_path.to_s : base_resource_path
         
       #   @dsls = {}
       #   @current_state = :dynamic
@@ -35,16 +35,16 @@ module KDsl
       #   @@instance
       # end
 
-      # def self.create(base_dsl_path, base_cache_path: nil, base_definition_path: nil, base_template_path: nil, &block)
+      # def self.create(base_resource_path, base_cache_path: nil, base_definition_path: nil, base_template_path: nil, &block)
       #   # L.kv 'create1', '@@instance is Present'  if @@instance.present?
       #   # L.kv 'create1', '@@instance is Nil'      if @@instance.nil?
 
       #   if @@instance.nil?
       #     # L.heading 'in create'
-      #     # L.kv 'dsl', base_dsl_path; 
+      #     # L.kv 'dsl', base_resource_path; 
       #     # L.kv 'data', base_cache_path
 
-      #     @@instance = new(base_dsl_path, base_cache_path, base_definition_path, base_template_path)
+      #     @@instance = new(base_resource_path, base_cache_path, base_definition_path, base_template_path)
       #     @@instance.instance_eval(&block) if block_given?
 
       #   end
@@ -216,13 +216,13 @@ module KDsl
       #   elsif filename.start_with?('~/')
       #     File.expand_path(filename)
       #   else
-      #     File.expand_path(filename, base_dsl_path)
+      #     File.expand_path(filename, base_resource_path)
       #   end
       # end
 
       # def get_relative_folder(fullpath)
       #   absolute_path = Pathname.new(fullpath)
-      #   project_root  = Pathname.new(base_dsl_path)
+      #   project_root  = Pathname.new(base_resource_path)
       #   relative      = absolute_path.relative_path_from(project_root)
       #   rel_dir, file = relative.split
         
@@ -240,7 +240,7 @@ module KDsl
       # end
 
       # def print_main_properties
-      #   # L.kv 'base_dsl_path'            , base_dsl_path
+      #   # L.kv 'base_resource_path'            , base_resource_path
       #   # L.kv 'base_cache_path'           , base_cache_path
       #   # L.kv 'base_definition_path'     , base_definition_path
       #   # L.kv 'current_state'            , current_state

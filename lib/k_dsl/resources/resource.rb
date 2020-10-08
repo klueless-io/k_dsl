@@ -132,12 +132,12 @@ module KDsl
 
       # example:  ~/dev/kgems/k_dsl/spec/factories/dsls
       def base_resource_path
-        project.config.base_dsl_path
+        project.config.base_resource_path
       end
 
       # example:  /Users/david/dev/kgems/k_dsl/spec/factories/dsls
       def base_resource_path_expanded
-        @base_resource_path ||=  File.expand_path(project.config.base_dsl_path)
+        @base_resource_path ||=  File.expand_path(project.config.base_resource_path)
       end
 
       def infer_document_key

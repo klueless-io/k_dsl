@@ -4,11 +4,11 @@
 
 # RSpec.describe KDsl::Model::Register do
 #   subject { described_class.new }
-#   # let(:base_dsl_path1) { File.join(Rails.root, 'spec', '_', 'klue-files') }
-#   # let(:base_dsl_path2) { Rails.root }
+#   # let(:base_resource_path1) { File.join(Rails.root, 'spec', '_', 'klue-files') }
+#   # let(:base_resource_path2) { Rails.root }
 
-#   # let(:register_dsl1) { Klue::Dsl::RegisterDsl.create(base_dsl_path1) }
-#   # let(:register_dsl2) { Klue::Dsl::RegisterDsl.create(base_dsl_path2) }
+#   # let(:register_dsl1) { Klue::Dsl::RegisterDsl.create(base_resource_path1) }
+#   # let(:register_dsl2) { Klue::Dsl::RegisterDsl.create(base_resource_path2) }
 
 #   # subject { register_dsl1 }
 
@@ -97,14 +97,14 @@
 #   #   }
 
 #   #   context 'fails via private constructor' do
-#   #     it { expect { Klue::Dsl::RegisterDsl.new(base_dsl_path2) }.to raise_error(NoMethodError) }
+#   #     it { expect { Klue::Dsl::RegisterDsl.new(base_resource_path2) }.to raise_error(NoMethodError) }
 #   #   end
 
 #   #   context 'with minimum params' do
-#   #     let(:with_min_param_registered_dsl) { Klue::Dsl::RegisterDsl.create(base_dsl_path2) }
+#   #     let(:with_min_param_registered_dsl) { Klue::Dsl::RegisterDsl.create(base_resource_path2) }
 
 #   #     it { expect(with_min_param_registered_dsl).to_not be_nil }
-#   #     it { expect(with_min_param_registered_dsl.base_dsl_path).to end_with('klue-less') }
+#   #     it { expect(with_min_param_registered_dsl.base_resource_path).to end_with('klue-less') }
 #   #     it { expect(with_min_param_registered_dsl.base_cache_path).to end_with('klue-less/.data') }
 #   #     it { expect(with_min_param_registered_dsl.base_definition_path).to end_with('klue-less/.definition') }
 #   #     it { expect(with_min_param_registered_dsl.base_template_path).to end_with('klue-less/.template') }
@@ -116,24 +116,24 @@
 #   #   end
 
 #   #   context 'with custom data folder' do
-#   #     let(:with_data_registered_dsl) { Klue::Dsl::RegisterDsl.create(base_dsl_path2, base_cache_path: File.join(base_dsl_path2, '_data')) }
+#   #     let(:with_data_registered_dsl) { Klue::Dsl::RegisterDsl.create(base_resource_path2, base_cache_path: File.join(base_resource_path2, '_data')) }
 
-#   #     it { expect(with_data_registered_dsl.base_dsl_path).to end_with('klue-less') }
+#   #     it { expect(with_data_registered_dsl.base_resource_path).to end_with('klue-less') }
 #   #     it { expect(with_data_registered_dsl.base_cache_path).to end_with('klue-less/_data') }
 #   #   end
 
 #   #   context 'with custom data folder' do
-#   #     let(:with_definition_registered_dsl) { Klue::Dsl::RegisterDsl.create(base_dsl_path2, base_definition_path: File.join(base_dsl_path2, '_definition')) }
+#   #     let(:with_definition_registered_dsl) { Klue::Dsl::RegisterDsl.create(base_resource_path2, base_definition_path: File.join(base_resource_path2, '_definition')) }
 
-#   #     it { expect(with_definition_registered_dsl.base_dsl_path).to end_with('klue-less') }
+#   #     it { expect(with_definition_registered_dsl.base_resource_path).to end_with('klue-less') }
 #   #     it { expect(with_definition_registered_dsl.base_cache_path).to end_with('klue-less/.data') }
 #   #     it { expect(with_definition_registered_dsl.base_definition_path).to end_with('klue-less/_definition') }
 #   #   end
     
 #   #   context 'with custom template folder' do
-#   #     let(:with_data_registered_dsl) { Klue::Dsl::RegisterDsl.create(base_dsl_path2, base_template_path: File.join(base_dsl_path2, '_template')) }
+#   #     let(:with_data_registered_dsl) { Klue::Dsl::RegisterDsl.create(base_resource_path2, base_template_path: File.join(base_resource_path2, '_template')) }
 
-#   #     it { expect(with_data_registered_dsl.base_dsl_path).to end_with('klue-less') }
+#   #     it { expect(with_data_registered_dsl.base_resource_path).to end_with('klue-less') }
 #   #     it { expect(with_data_registered_dsl.base_template_path).to end_with('klue-less/_template') }
 #   #   end
 
@@ -447,18 +447,18 @@
 #   #   context 'dsl path 1' do
 #   #     subject { register_dsl1 }
 
-#   #     it { expect(subject.get_relative_folder(File.join(base_dsl_path1, 'a','b','c','somefile.rb'))).to eq('a/b/c') }
-#   #     it { expect(subject.get_relative_folder(File.join(base_dsl_path1, 'a','b','c','somefile'))).to eq('a/b/c') }
-#   #     it { expect(subject.get_relative_folder(File.join(base_dsl_path1, 'somefile.rb'))).to eq('.') }
+#   #     it { expect(subject.get_relative_folder(File.join(base_resource_path1, 'a','b','c','somefile.rb'))).to eq('a/b/c') }
+#   #     it { expect(subject.get_relative_folder(File.join(base_resource_path1, 'a','b','c','somefile'))).to eq('a/b/c') }
+#   #     it { expect(subject.get_relative_folder(File.join(base_resource_path1, 'somefile.rb'))).to eq('.') }
 
 #   #   end
 
 #   #   context 'dsl path 2' do
 #   #     subject { register_dsl2 }
 
-#   #     it { expect(subject.get_relative_folder(File.join(base_dsl_path2, 'a','b','c','somefile.rb'))).to eq('a/b/c') }
-#   #     it { expect(subject.get_relative_folder(File.join(base_dsl_path2, 'a','b','c','somefile'))).to eq('a/b/c') }
-#   #     it { expect(subject.get_relative_folder(File.join(base_dsl_path2, 'somefile.rb'))).to eq('.') }
+#   #     it { expect(subject.get_relative_folder(File.join(base_resource_path2, 'a','b','c','somefile.rb'))).to eq('a/b/c') }
+#   #     it { expect(subject.get_relative_folder(File.join(base_resource_path2, 'a','b','c','somefile'))).to eq('a/b/c') }
+#   #     it { expect(subject.get_relative_folder(File.join(base_resource_path2, 'somefile.rb'))).to eq('.') }
 
 #   #   end
     
@@ -494,7 +494,7 @@
 #   #           state: :registered,
 #   #           data: nil,
 #   #           source: :file,
-#   #           file: File.join(base_dsl_path1, admin_user_file)
+#   #           file: File.join(base_resource_path1, admin_user_file)
 #   #         )
        
 #   #       end
@@ -514,7 +514,7 @@
 #   #           state: :registered,
 #   #           data: nil,
 #   #           source: :file,
-#   #           file: File.join(base_dsl_path1, basic_user_file)
+#   #           file: File.join(base_resource_path1, basic_user_file)
 #   #         )
 
 #   #       end
@@ -594,7 +594,7 @@
 #   #         k_type: :entity,
 #   #         state: :loaded,
 #   #         source: :file,
-#   #         file: File.join(base_dsl_path1, admin_user_file)
+#   #         file: File.join(base_resource_path1, admin_user_file)
 #   #       )
       
 #   #     end
@@ -609,7 +609,7 @@
 #   #         k_type: :entity,
 #   #         state: :loaded,
 #   #         source: :file,
-#   #         file: File.join(base_dsl_path1, basic_user_file)
+#   #         file: File.join(base_resource_path1, basic_user_file)
 #   #       )
       
 #   #     end
@@ -686,7 +686,7 @@
 #   #       last_at: nil,
 #   #       last_data: nil,
 #   #       source: :file,
-#   #       file: File.join(base_dsl_path1, admin_user_file)
+#   #       file: File.join(base_resource_path1, admin_user_file)
 #   #     )
 
 #   #     expect(subject.dsls.values[1]).to include(
@@ -698,7 +698,7 @@
 #   #       last_at: nil,
 #   #       last_data: nil,
 #   #       source: :file,
-#   #       file: File.join(base_dsl_path1, basic_user_file)
+#   #       file: File.join(base_resource_path1, basic_user_file)
 #   #     )
 
 #   #     subject.load_file(admin_user_file)
@@ -715,7 +715,7 @@
 #   #       last_at: nil,
 #   #       last_data: nil,
 #   #       source: :file,
-#   #       file: File.join(base_dsl_path1, admin_user_file)
+#   #       file: File.join(base_resource_path1, admin_user_file)
 #   #     )
 
 #   #     # L.heading('load_file')
