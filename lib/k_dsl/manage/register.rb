@@ -53,88 +53,6 @@ module KDsl
       # end
 
       # private_class_method :new
-
-      # def register_path(path)
-      #   path = expand_path(path)
-
-      #   Dir[path].sort.each do |file|
-      #     @register_paths << File.dirname(file) unless @register_paths.include? File.dirname(file)
-      #     register_file(file, path_expansion: false)
-      #   end
-      # end
-
-      # def process_code(caller, code, source_file = nil)
-      #   # L.kv 'process_code.caller', caller
-      #   # L.kv 'process_code.source_file', source_file
-        
-      #   @current_processing_file = source_file
-
-      #   if source_file.blank?
-      #     # L.info 'no source files'
-      #   end
-
-      #   if source_file.present? && !source_file.starts_with?(*@register_paths)
-      #     L.kv 'source_file', source_file
-      #     raise Klue::Dsl::DslError, 'source file skipped, file is not on a registered path'
-      #   end
-
-      #   print_main_properties
-      #   # L.block code
-
-      #   begin
-      #     # Anything can potentially run, but generally one of the Klue.factory_methods 
-      #     # should run such as Klue.structure or Klue.artifact
-      #     # When they run they can figure out for themselves what file called them by 
-      #     # storing @current_processing_file into a document property
-      #     eval(code)
-      #   rescue Klue::Dsl::DslError => exception
-      #     # puts "__FILE__: #{__FILE__}"
-      #     # puts "__LINE__: #{__LINE__}"
-      #     L.error exception.message
-      #     raise
-
-      #   rescue => exception
-      #     L.kv '@current_processing_file', @current_processing_file
-      #     L.kv '@current_state', current_state
-      #     L.kv '@current_register_file', @current_register_file
-    
-      #     L.exception(exception)          
-      #   end
-      #   @current_processing_file = nil
-      # end
-
-      # def register_file(file, path_expansion: true)
-      #   file = expand_path(file) if path_expansion
-
-      #   # L.kv 'register_file.file', file
-
-      #   @current_state = :register_file
-      #   @current_register_file = file
-
-      #   content = File.read(file)
-
-      #   process_code(:register_file, content)
-    
-      #   @current_register_file = nil
-      #   @current_state = :dynamic
-      # end
-
-      # def load_file(file, path_expansion: true)
-      #   file = expand_path(file) if path_expansion
-
-      #   # L.kv 'load_file.file', file
-
-      #   @current_state = :load_file
-      #   @current_register_file = file
-
-      #   content = File.read(file)
-
-      #   process_code(:load_file, content)
-
-      #   @current_register_file = nil
-      #   @current_state = :dynamic
-      # end
-
       # def load_dynamic(content)
       #   @current_state = :dynamic
       #   @current_register_file = nil
@@ -163,22 +81,6 @@ module KDsl
       #   end
 
       #   dsl
-      # end
-
-      # def build_unique_key(key, namespace = nil, type = :entity)
-      #   namespace.blank? ? "#{key}_#{type}" : "#{namespace}_#{key}_#{type}" 
-      # end
-
-      # def dsl_exist?(key, namespace = nil, type = :entity)
-      #   dsl = get_dsl(key, type, namespace)
-
-      #   !dsl.nil?
-      # end
-
-      # def get_dsl(key, namespace = nil, type = :entity)
-      #   unique_key = build_unique_key(key, type, namespace)
-
-      #   @dsls[unique_key]
       # end
 
       # def get_dsls_by_type(k_type = :entity, namespace = nil)

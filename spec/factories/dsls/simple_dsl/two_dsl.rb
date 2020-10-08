@@ -22,17 +22,11 @@ KDsl.document :my_name2 do
         target_path:  File.join(s.app_path, 'client')
   end
 
+  actions do
+    puts 'fuckit'
+    csv.each do |row|
+      puts row.to_h
+    end
+  end
+
 end
-
-# puts 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-# KDsl::Model::Document.new :my_name do
-#   my_csv = import(:abc)
-#   settings do
-#     rails_port 3000
-#   end
-
-
-#   # my_csv.each do |row|
-#   #   puts row.series_refernce
-#   # end
-# end

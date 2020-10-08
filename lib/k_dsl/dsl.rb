@@ -36,7 +36,7 @@ module KDsl
       end
 
       @status = :setup
-      @resource = nil
+      @target_resource = nil
       @project_manager = project_manager
     end
 
