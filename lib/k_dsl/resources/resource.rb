@@ -81,27 +81,8 @@ module KDsl
             file: file,
             watch_path: watch_path)
 
-        resource.document_factory = document_factory(resource, source, file)
+        resource.document_factory = KDsl::Resources::Factories::DocumentFactory.instance(resource, source, file)
         resource
-      end
-
-      def self.document_factory(resource, source, file)
-        if source === SOURCE_FILE
-          extension = File.extname(file).downcase
-
-          case extension
-          when '.rb'
-            return KDsl::Resources::Factories::RubyDocumentFactory.new(resource)
-          when '.csv'
-            return KDsl::Resources::Factories::CsvDocumentFactory.new(resource)
-          when '.json'
-            return KDsl::Resources::Factories::JsonDocumentFactory.new(resource)
-          when '.yaml'
-            return KDsl::Resources::Factories::YamlDocumentFactory.new(resource)
-          end
-        end
-
-        return KDsl::Resources::Factories::UnknownDocumentFactory.new(resource)
       end
 
       def load_content
