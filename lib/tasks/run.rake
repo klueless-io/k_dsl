@@ -17,7 +17,7 @@ namespace :k_dsl do
 
     config_command = KDsl::Manage::ProjectConfig.new do |config|
       config.base_path = BASE_PATH
-      config.base_dsl_path = config.base_path
+      config.base_resource_path = config.base_path
     end
 
     project_command = KDsl::Manage::Project.new('quick_commands', config_command)
@@ -25,7 +25,7 @@ namespace :k_dsl do
 
     config_microapp = KDsl::Manage::ProjectConfig.new do |config|
       config.base_path = BASE_PATH
-      config.base_dsl_path = '~/dev/kgems/k_dsl/spec/factories/dsls'
+      config.base_resource_path = '~/dev/kgems/k_dsl/spec/factories/dsls'
     end
 
     project_microapp1 = KDsl::Manage::Project.new('microapp1', config_microapp) do

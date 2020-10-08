@@ -11,9 +11,9 @@ module KDsl
       # Usually set to centralized path that is reused across projects
       attr_accessor :base_path
 
-      # Base path for your DSL's (defaults to current working directory)
-      # TODO: rename to base_resource_path
-      attr_accessor :base_dsl_path
+      # Base path for your resources (DSL's & Data)
+      # defaults to current working directory
+      attr_accessor :base_resource_path
 
       # Bases path where cache data is written to
       attr_writer :base_cache_path
@@ -30,7 +30,7 @@ module KDsl
 
       def initialize(&block)
         @base_path = Dir.getwd
-        @base_dsl_path = Dir.getwd
+        @base_resource_path = Dir.getwd
 
         begin
           instance_eval(&block) if block_given?
@@ -45,7 +45,7 @@ module KDsl
       def to_h
         {
           base_path: base_path,
-          base_dsl_path: base_dsl_path,
+          base_resource_path: base_resource_path,
           base_cache_path: base_cache_path,
           base_definition_path: base_definition_path,
           base_template_path: base_template_path,
