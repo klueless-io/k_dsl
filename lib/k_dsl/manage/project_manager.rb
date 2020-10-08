@@ -68,7 +68,6 @@ module KDsl
 
           projects.each do |project|
             L.subheading(project.name)
-            # Refactor (DslPath to ResourcePath)
             L.kv "Resource Path (DSL's, Data)", project.config.base_resource_path
             L.kv 'Base Path', project.config.base_path
             L.kv 'Cache Data Path', project.config.base_cache_path
