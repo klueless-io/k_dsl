@@ -23,6 +23,7 @@ module KDsl
       # Reference to manager that manages all projects
       attr_accessor :manager
 
+      # DEPRECATE
       # Reference to processor that processes files, e.g. DSL's
       attr_accessor :processor
 
@@ -90,7 +91,7 @@ module KDsl
         resource_documents << KDsl::ResourceDocuments::ResourceDocument.new(resource, document)
       end
 
-      def register_documents(resource)
+      def create_documents(resource)
         status = KDsl.status
         KDsl.status = :registering
         KDsl.target_resource = resource
@@ -146,7 +147,7 @@ module KDsl
       # so that we can access the data in the resource
       def register_resources
         @resources.each do |resource|
-          register_documents(resource)
+          create_documents(resource)
         end
       end
 

@@ -3,28 +3,28 @@ require 'csv'
 
 module KDsl
   module Resources
-    # CSV Resource represents a CSV data structure in the project
-    class CsvResource < Resource
-      def initialize(project:, source:, file:, watch_path: nil, content: nil)
-        super(project: project, source: source, file: file, watch_path: watch_path)#, content: content)
-
-        self.type = KDsl::Resources::Resource::TYPE_CSV
-      end
-
-      def register
-        @document = add_document(new_document)
-      end
-
-      def load
-        data = []
-        CSV.parse(content, headers: true, header_converters: :symbol).each do |row|
-          data << row.to_h
+    module Factories
+      # CsvDocumentFactory can handle CSV content to produce a document
+      class CsvDocumentFactory < DocumentFactory
+        def initialize(resource)
+          super(resource, KDsl::Resources::Resource::TYPE_CSV)
         end
-        @document.set_data(data)
-      end
 
-      def debug
-        tp @document.data, @document.data.first.to_h.keys
+        def create_documents
+          @document = add_document(new_document)
+        end
+
+        def parse_content
+          data = []
+          CSV.parse(content, headers: true, header_converters: :symbol).each do |row|
+            data << row.to_h
+          end
+          @document.set_data(data)
+        end
+
+        def debug
+          tp @document.data, @document.data.first.to_h.keys
+        end
       end
     end
   end

@@ -8,7 +8,16 @@ module KDsl
     # other types of files such as (PORO, Ruby, JSON, CSV) and be able to use
     # them easily.
     class Resource
+      extend Forwardable
+
+      # Resources must belong to a factory
+      attr_reader :project
+
+      # Resources create documents via a resource specific factory
+      attr_accessor :document_factory
+
       # Store an exeption that may exist
+      # REFACT: This should move to ResourceDocument
       attr_reader :error
 
       # Currently supports read from file, but will support read from HTTP in the future
@@ -25,14 +34,13 @@ module KDsl
       TYPE_RUBY_DSL = 'dsl'
       TYPE_YAML = 'yaml'
 
-      attr_reader :project
-
       # Source of the content
       #
       # :file, :uri, :dynamic
       attr_reader :source
 
-      # Type of resource
+      # Type of resource, infered via the document factory type
+      # THINK this should be resource_type
       attr_accessor :type
 
       # Full file path
@@ -50,56 +58,50 @@ module KDsl
       # Content of resource, use read content to load this property
       attr_reader :content
 
-      # NOTE: I have an idea that multiple artifacts could be derived from a resource
-      # EXAMPLE: You may define two Klue.structures inside of a single DSL file
-      # This means that artifact should be in it's own class and either linked as a 
-      # single instance or as an array.
-
       # REFACT: I think I want to refactor documents so that the only thing that exists is
       #         ResourceDocument
       #         that way I have looser coupling and the ability to both register and load
       #         can be cleaned up
       attr_reader :documents
-      attr_reader :artifact
 
-      def initialize(project: nil, source: nil, file: nil, watch_path: nil)#, content: nil)
+      def initialize(project: nil, source: nil, file: nil, watch_path: nil)
         @project = project
         @source = source
         @file = file
         @watch_path = watch_path
-        # @content = content
         @documents = []
       end
 
       def self.instance(project:, source: KDsl::Resources::Resource::SOURCE_FILE, file: nil, watch_path: nil)
         raise ::KDsl::Error, 'Unknown source' unless [SOURCE_FILE].include? source
 
-        klass = resource_class(source, file)
-
-        klass.new(
+        resource = Resource.new(
             project: project,
             source: source,
             file: file,
             watch_path: watch_path)
+
+        resource.document_factory = document_factory(resource, source, file)
+        resource
       end
 
-      def self.resource_class(source, file)
+      def self.document_factory(resource, source, file)
         if source === SOURCE_FILE
           extension = File.extname(file).downcase
 
           case extension
           when '.rb'
-            return RubyResource # content&.include?('KDsl.document') ? DslResource : RubyResource
+            return KDsl::Resources::Factories::RubyDocumentFactory.new(resource)
           when '.csv'
-            return CsvResource
+            return KDsl::Resources::Factories::CsvDocumentFactory.new(resource)
           when '.json'
-            return JsonResource
+            return KDsl::Resources::Factories::JsonDocumentFactory.new(resource)
           when '.yaml'
-            return YamlResource
+            return KDsl::Resources::Factories::YamlDocumentFactory.new(resource)
           end
         end
 
-        return UnknownResource
+        return KDsl::Resources::Factories::UnknownDocumentFactory.new(resource)
       end
 
       def load_content
@@ -113,15 +115,20 @@ module KDsl
         end
       end
 
-      def new_document(key: infer_document_key, type: infer_document_type, namespace: infer_document_namespace)
-        KDsl::Model::Document.new(key, type, namespace: namespace)
+      def register
+        document_factory.create_documents
       end
 
-      def add_new_document(key: infer_document_key, type: infer_document_type, namespace: infer_document_namespace, data: nil)
-        document = new_document(key: key, type: type, namespace: namespace)
-        document.set_data(data) if data
+      def load
+        document_factory.parse_content
+      end
+  
+      def exist?
+        source === SOURCE_FILE && File.exist?(file)
+      end
 
-        add_document(document)
+      def new_document(klass: KDsl::Model::Document, key: infer_document_key, type: infer_document_type, namespace: infer_document_namespace)
+        klass.new(key, type, namespace: namespace)
       end
 
       def add_document(document)
@@ -130,18 +137,6 @@ module KDsl
         document.resource = self
         documents << document
         document
-      end
-
-      def register
-        L.warn "Do not know how to register #{type} resources"
-      end
-
-      def load
-        L.warn "Do not know how to load #{type} resources"
-      end
-  
-      def exist?
-        source === SOURCE_FILE && File.exist?(file)
       end
 
       # example:  ~/dev/kgems/k_dsl/spec/factories/dsls

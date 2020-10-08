@@ -16,6 +16,11 @@ module KDsl
     # Instance of the currently focused resource so that documents can attach themselves
     attr_accessor :target_resource
 
+    # When creating a documents, we need a global container to hold them
+    # Be careful when using this property as it is a Known anti-pattern
+    # that is just trying to solve a specific problem.
+    attr_accessor :transient_documents
+
     # Instance of a project manager that can manage multiple projects
     attr_reader :project_manager
 
