@@ -37,15 +37,15 @@ RSpec.describe KDsl::Manage::ProjectConfig do
     end
   end
 
-  describe '.base_dsl_path' do
-    subject { config.base_dsl_path }
+  describe '.base_resource_path' do
+    subject { config.base_resource_path }
 
     context 'with default value' do
       it { is_expected.to eq(Dir.getwd) }
     end
 
     context 'when set' do
-      before { config.base_dsl_path = '/some_folder' }
+      before { config.base_resource_path = '/some_folder' }
 
       it { is_expected.to eq('/some_folder') }
     end

@@ -128,12 +128,12 @@ module KDsl
       end
       # rubocop:enable Metrics/AbcSize
 
-      # Register any files found in the absolute path or path relative to base_dsl_path
+      # Register any files found in the absolute path or path relative to base_resource_path
       #
       # Files are generally DSL's but support for other types (PORO, Ruby, JSON, CSV) will come
       def watch_path(path, ignore: nil)
         # puts  "watch path: #{path} "
-        path = KDsl::Util.file.expand_path(path, config.base_dsl_path)
+        path = KDsl::Util.file.expand_path(path, config.base_resource_path)
 
         Dir[path].sort.each do |file|
           watch_path = File.dirname(file)
@@ -176,7 +176,7 @@ module KDsl
       #   dsl[:document].data
       # end
 
-      # Register a resource in @reegeistered_resources from a file
+      # Register a resource in @registered_resources from a file
       #
       # Primary resource that is registered will be a Klue DSL
       # Other resources that can be supported include
@@ -185,7 +185,7 @@ module KDsl
       # ruby code
       #   Classes etc..
       def register_file_resource(file, watch_path: nil, path_expansion: true, ignore: nil)
-        file = KDsl::Util.file.expand_path(file, config.base_dsl_path) if path_expansion
+        file = KDsl::Util.file.expand_path(file, config.base_resource_path) if path_expansion
 
         return if ignore && file.match(ignore)
         return unless File.exist?(file)
@@ -292,7 +292,7 @@ module KDsl
           # projects.each do |project|
           #   L.subheading(project.name)
           #   L.kv 'Base Path', project.config.base_path
-          #   L.kv 'DSL Path', project.config.base_dsl_path
+          #   L.kv 'DSL Path', project.config.base_resource_path
           #   L.kv 'Data_Path', project.config.base_cache_path
           #   L.kv 'Definition Path', project.config.base_definition_path
           #   L.kv 'Template Path', project.config.base_template_path
@@ -302,16 +302,16 @@ module KDsl
 
       end
 
-      # def self.create(base_dsl_path, base_cache_path: nil, base_definition_path: nil, base_template_path: nil, &block)
+      # def self.create(base_resource_path, base_cache_path: nil, base_definition_path: nil, base_template_path: nil, &block)
       #   # L.kv 'create1', '@@instance is Present'  if @@instance.present?
       #   # L.kv 'create1', '@@instance is Nil'      if @@instance.nil?
 
       #   if @@instance.nil?
       #     # L.heading 'in create'
-      #     # L.kv 'dsl', base_dsl_path;
+      #     # L.kv 'dsl', base_resource_path;
       #     # L.kv 'data', base_cache_path
 
-      #     @@instance = new(base_dsl_path, base_cache_path, base_definition_path, base_template_path)
+      #     @@instance = new(base_resource_path, base_cache_path, base_definition_path, base_template_path)
       #     @@instance.instance_eval(&block) if block_given?
 
       #   end
@@ -410,7 +410,7 @@ module KDsl
 
       # def get_relative_folder(fullpath)
       #   absolute_path = Pathname.new(fullpath)
-      #   project_root  = Pathname.new(base_dsl_path)
+      #   project_root  = Pathname.new(base_resource_path)
       #   relative      = absolute_path.relative_path_from(project_root)
       #   rel_dir, file = relative.split
         
@@ -428,7 +428,7 @@ module KDsl
       # end
 
       # def print_main_properties
-      #   # L.kv 'base_dsl_path'            , base_dsl_path
+      #   # L.kv 'base_resource_path'       , base_resource_path
       #   # L.kv 'base_cache_path'          , base_cache_path
       #   # L.kv 'base_definition_path'     , base_definition_path
       #   # L.kv 'current_state'            , current_state
