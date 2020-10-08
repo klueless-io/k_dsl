@@ -36,6 +36,11 @@ module KDsl
           end
         end
       end
+
+      # Generate hyper link encoded string for the console
+      def self.console_file_hyperlink(text, file)
+        "\u001b]8;;file://#{file}\u0007#{text}\u001b]8;;\u0007"
+      end
     end
   end
 end

@@ -18,37 +18,52 @@ module KDsl
       # @param args[0] Type of the document, defaults to KDsl.config.default_document_type if not set
       # @param default: Default value (using named params), as above
       def initialize(key, *args, **options, &block)
-        initialize_attributes(key, *args, **options)
+        @key = key
+        @type = args.length.positive? ? args[0] || KDsl.config.default_document_type : KDsl.config.default_document_type
+
+        @options = options || {}
+        @namespace = options[:namespace] || ''
+
+        @namespace = @namespace.to_s
+
+        # Most documents live within a hash, some tabular documents such as
+        # CSV will use an []
+        set_data({})
 
         @block = block if block_given?
-        # REFACT: Split out as
-        #         Data and Document
-        #         Document and DslDocument
       end
 
-      def execute_block
+      def execute_block(run_actions: nil)
         return if @block.nil?
-        begin
-          instance_eval(&@block)
-        rescue KDsl::Error => e
-          puts "Invalid code block in document during registration: #{key}"
-          puts "__FILE__: #{__FILE__}"
-          puts "__LINE__: #{__LINE__}"
-          puts e.message
-          # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
-          # L.exception exception
-          raise
-        rescue StandardError => exception
-          puts "Invalid code block in document during registration: #{key}"
-          puts "__FILE__: #{__FILE__}"
-          puts "__LINE__: #{__LINE__}"
-          puts exception.message
-          # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
-          # L.exception exception
-          raise
-        end
+        
+        # The DSL actions method will only run on run_actions: true
+        @run_actions = run_actions
+        L.kv 'run_actions1', @run_actions
+
+        self.instance_eval(&@block)
+     rescue KDsl::Error => e
+        puts "KDsl error in document: #{key}"
+        puts "file: #{resource.file}"
+        puts e.message
+        # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
+        # L.exception exception
+        raise
+      rescue StandardError => exception
+        L.error("Standard error in document")
+        L.kv 'key', unique_key
+        L.kv 'file', resource.file
+        L.kv 'link', KDsl.data.console_file_hyperlink('Click Here', resource.file)
+        L.error exception.message
+        # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
+        # L.exception exception
+        raise
+      ensure
+        @run_actions = nil
+        return
       end
 
+      # REFACT: This is not really part of the document, so how could it be refactored
+      #         and used as some sort of decorator or importer module
       def import(key, type = KDsl.config.default_document_type, namespace = nil)
         project = resource&.project
 
@@ -62,6 +77,30 @@ module KDsl
         end
       end
 
+      # REFACT: This is not really part of the document, so how could it be refactored
+      #         and used as some sort of decorator or actionable module
+      def actions(&action_block)
+        # debug(include_header: true)
+        L.kv 'run_actions2', @run_actions
+        return unless @run_actions
+
+        instance_eval(&action_block)
+      rescue KDsl::Error => e
+        puts "KDsl error in action: #{key}"
+        puts "file: #{resource.file}"
+        puts e.message
+        # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
+        # L.exception exception
+        raise
+      rescue StandardError => exception
+        puts "Invalid code block in actions"
+        puts "file: #{resource.file}"
+        puts exception.message
+        # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
+        # L.exception exception
+        raise
+      end
+  
       def unique_key
         @unique_key ||= KDsl::Util.dsl.build_unique_key(key, type, namespace)
       end
@@ -91,7 +130,6 @@ module KDsl
       #   KDsl::Builder::Shotstack.new(@data, key, &block)
       # end
 
-      # Spe
       def set_data(data)
         @data = data
       end
@@ -122,21 +160,6 @@ module KDsl
       end
 
       private
-
-      # I don't like the *args, best of setting it up with :type
-      def initialize_attributes(key, *args, **options)
-        @key = key
-        @type = args.length.positive? ? args[0] || KDsl.config.default_document_type : KDsl.config.default_document_type
-
-        @options = options || {}
-        @namespace = options[:namespace] || ''
-
-        @namespace = @namespace.to_s
-
-        # Most documents live within a hash, some tabular documents such as
-        # CSV will use an []
-        set_data({})
-      end
 
       def settings_instance(data, key, **options, &block)
         KDsl.config.settings_class.new(data, key, **options, &block)

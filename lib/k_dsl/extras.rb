@@ -24,30 +24,6 @@ module KDsl
     #   table(name, &block)
     # end
 
-    def actions(&block)
-      # return if Klue.register_instance.current_state == :register_files
-
-      # if Klue.register_instance.current_processing_file.nil?
-      #   L.kv 'Skipping Actions', k_key
-      #   return
-      # end
-
-      # L.kv 'Run Actions', k_key
-
-      # begin
-      #   self.instance_eval(&block) if block_given?
-      # rescue => exception
-      #   L.heading "Invalid code block in document_dsl: #{k_key}"
-      #   L.exception exception
-      #   raise
-      # end
-    end
-
-    def import(k_key, k_type = :entity, namespace = nil)
-      # data = Klue.register_instance.get_data(k_key, namespace, k_type)
-      # result = DocumentDsl.to_struct(data)
-    end
-
     def method_missing(name, *args, &block)
       puts 'yyyyyyyyyyyyyyyyyyyyyyy'
       # L.block 'artifact_dsl.method_missing'

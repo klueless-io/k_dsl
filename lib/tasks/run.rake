@@ -55,6 +55,10 @@ namespace :k_dsl do
     15.times { puts '' }
     manager.debug(format: :detail, project_formats: [:resource, :resource_document])
 
+    dsl = project_sample.get_dsl('my_name2')
+    document = dsl[:document]
+    document.execute_block(run_actions: true)
+
     # manager.run('/Users/davidcruwys/dev/kgems/k_dsl/spec/factories/dsls/simple_dsl/two_dsl.rb')
     # manager.watch 
     # KDsl.process.file(file)
