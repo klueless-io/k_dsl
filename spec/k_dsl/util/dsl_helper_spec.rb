@@ -29,7 +29,6 @@ RSpec.describe KDsl::Util::DslHelper do
       context 'containing a space' do
         let(:key) { 'some name' }
 
-        # REFACTOR: I think the space needs to be replaced by underscore, not sure yet
         it { expect(subject).to eq("some name_#{KDsl.config.default_document_type}") }
       end
 

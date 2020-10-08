@@ -58,10 +58,12 @@ module KDsl
       # Content of resource, use read content to load this property
       attr_reader :content
 
-      # REFACT: I think I want to refactor documents so that the only thing that exists is
-      #         ResourceDocument
-      #         that way I have looser coupling and the ability to both register and load
-      #         can be cleaned up
+      # List of documents derived from this resource
+      #
+      # Most resources will create on document, but a DSL can generate multiple
+      # documents and some future resources may do as well
+      # Currently there will always be a minimum of 1 document even if the resource
+      # is not a data resource, e.g. Ruby class
       attr_reader :documents
 
       def initialize(project: nil, source: nil, file: nil, watch_path: nil)

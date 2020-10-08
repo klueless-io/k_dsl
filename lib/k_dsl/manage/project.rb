@@ -43,9 +43,6 @@ module KDsl
       attr_reader :watch_paths
 
       # List of resource files that are visible to this project
-      # REFACT: May be available from dsls, need to check
-      # REFACT: Also there is no guarantee that the file is actually a DSL
-      # RENAME: resources (as they may not be DSL's)
       attr_reader :resources
 
       # Link resource and document togetner

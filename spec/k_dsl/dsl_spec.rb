@@ -107,7 +107,6 @@ RSpec.describe KDsl do
 
           it { expect(subject.key).to eq('my_key') }
         end
-        # MAY REFACTOR - Should a symbol just turn into a string, think about this
         context 'when key is symbol' do
           let(:key) { :my_key }
 
