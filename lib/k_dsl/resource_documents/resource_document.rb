@@ -6,7 +6,7 @@ module KDsl
     class ResourceDocument
       extend Forwardable
 
-      attr_reader :status
+      attr_accessor :status
       attr_reader :resource
       attr_reader :document
 
