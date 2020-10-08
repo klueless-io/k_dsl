@@ -18,7 +18,7 @@ RSpec.describe KDsl::ResourceDocuments::ResourceDocument do
   let(:file) { csv_file }
 
   describe '#constructor' do
-    before { resource.add_new_document }
+    before { resource.add_document(resource.new_document) }
 
     it 'is linked to resource' do
       expect(subject.resource).not_to be_nil
