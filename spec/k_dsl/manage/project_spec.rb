@@ -427,7 +427,7 @@ RSpec.describe KDsl::Manage::Project do
 
   #     it { expect(with_min_param_registered_dsl).to_not be_nil }
   #     it { expect(with_min_param_registered_dsl.base_dsl_path).to end_with('klue-less') }
-  #     it { expect(with_min_param_registered_dsl.base_data_path).to end_with('klue-less/.data') }
+  #     it { expect(with_min_param_registered_dsl.base_cache_path).to end_with('klue-less/.data') }
   #     it { expect(with_min_param_registered_dsl.base_definition_path).to end_with('klue-less/.definition') }
   #     it { expect(with_min_param_registered_dsl.base_template_path).to end_with('klue-less/.template') }
   #     it { expect(with_min_param_registered_dsl.base_app_template_path).to end_with('klue-less/.template_app') }
@@ -438,17 +438,17 @@ RSpec.describe KDsl::Manage::Project do
   #   end
 
   #   context 'with custom data folder' do
-  #     let(:with_data_registered_dsl) { Klue::Dsl::RegisterDsl.create(base_dsl_path2, base_data_path: File.join(base_dsl_path2, '_data')) }
+  #     let(:with_data_registered_dsl) { Klue::Dsl::RegisterDsl.create(base_dsl_path2, base_cache_path: File.join(base_dsl_path2, '_data')) }
 
   #     it { expect(with_data_registered_dsl.base_dsl_path).to end_with('klue-less') }
-  #     it { expect(with_data_registered_dsl.base_data_path).to end_with('klue-less/_data') }
+  #     it { expect(with_data_registered_dsl.base_cache_path).to end_with('klue-less/_data') }
   #   end
 
   #   context 'with custom data folder' do
   #     let(:with_definition_registered_dsl) { Klue::Dsl::RegisterDsl.create(base_dsl_path2, base_definition_path: File.join(base_dsl_path2, '_definition')) }
 
   #     it { expect(with_definition_registered_dsl.base_dsl_path).to end_with('klue-less') }
-  #     it { expect(with_definition_registered_dsl.base_data_path).to end_with('klue-less/.data') }
+  #     it { expect(with_definition_registered_dsl.base_cache_path).to end_with('klue-less/.data') }
   #     it { expect(with_definition_registered_dsl.base_definition_path).to end_with('klue-less/_definition') }
   #   end
     

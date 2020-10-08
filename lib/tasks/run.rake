@@ -51,9 +51,11 @@ namespace :k_dsl do
     manager.add_project(project_sample)
     manager.load_resources
     
+    
     15.times { puts '' }
     manager.debug(format: :detail, project_formats: [:resource, :resource_document])
 
+    # manager.run('/Users/davidcruwys/dev/kgems/k_dsl/spec/factories/dsls/simple_dsl/two_dsl.rb')
     # manager.watch 
     # KDsl.process.file(file)
 

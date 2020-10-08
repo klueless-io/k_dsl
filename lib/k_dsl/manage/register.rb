@@ -17,7 +17,7 @@ module KDsl
       # what file is currently being processed
       # attr_reader :current_processing_file
 
-      # def initialize(base_dsl_path, base_data_path = nil, base_definition_path = nil, base_template_path = nil, base_app_template_path = nil)
+      # def initialize(base_dsl_path, base_cache_path = nil, base_definition_path = nil, base_template_path = nil, base_app_template_path = nil)
       #   @base_dsl_path = base_dsl_path.is_a?(Pathname) ? base_dsl_path.to_s : base_dsl_path
         
       #   @dsls = {}
@@ -35,16 +35,16 @@ module KDsl
       #   @@instance
       # end
 
-      # def self.create(base_dsl_path, base_data_path: nil, base_definition_path: nil, base_template_path: nil, &block)
+      # def self.create(base_dsl_path, base_cache_path: nil, base_definition_path: nil, base_template_path: nil, &block)
       #   # L.kv 'create1', '@@instance is Present'  if @@instance.present?
       #   # L.kv 'create1', '@@instance is Nil'      if @@instance.nil?
 
       #   if @@instance.nil?
       #     # L.heading 'in create'
       #     # L.kv 'dsl', base_dsl_path; 
-      #     # L.kv 'data', base_data_path
+      #     # L.kv 'data', base_cache_path
 
-      #     @@instance = new(base_dsl_path, base_data_path, base_definition_path, base_template_path)
+      #     @@instance = new(base_dsl_path, base_cache_path, base_definition_path, base_template_path)
       #     @@instance.instance_eval(&block) if block_given?
 
       #   end
@@ -241,7 +241,7 @@ module KDsl
 
       # def print_main_properties
       #   # L.kv 'base_dsl_path'            , base_dsl_path
-      #   # L.kv 'base_data_path'           , base_data_path
+      #   # L.kv 'base_cache_path'           , base_cache_path
       #   # L.kv 'base_definition_path'     , base_definition_path
       #   # L.kv 'current_state'            , current_state
       #   # L.kv 'current_register_file'    , current_register_file
