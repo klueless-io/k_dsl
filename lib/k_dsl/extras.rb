@@ -559,7 +559,7 @@ module KDsl
 
     def write_as(data, file, as_type = nil, is_edit = false)
 
-      # full_file = File.expand_path(file, Klue.register_instance.base_data_path)
+      # full_file = File.expand_path(file, Klue.register_instance.base_cache_path)
 
       # if as_type.nil?
       #   ext = File.extname(full_file)

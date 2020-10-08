@@ -59,7 +59,7 @@ module KDsl
             :managed?,
             { 'config.base_path'              => { width: 60, display_name: 'Base Path' } },
             { 'config.base_dsl_path'          => { width: 60, display_name: 'DSL Path' } },
-            { 'config.base_data_path'         => { width: 60, display_name: 'Data_Path' } },
+            { 'config.base_cache_path'        => { width: 60, display_name: 'Cache Path' } },
             { 'config.base_definition_path'   => { width: 60, display_name: 'Definition Path' } },
             { 'config.base_template_path'     => { width: 60, display_name: 'Template Path' } },
             { 'config.base_app_template_path' => { width: 60, display_name: 'AppTemplate Path' } }
@@ -72,7 +72,7 @@ module KDsl
             L.kv "Resource Path (DSL's, Data)", project.config.base_dsl_path
             L.kv 'Base Path', project.config.base_path
             # Refactor (DataPath to CachePath)
-            L.kv 'Data Path (Cache)', project.config.base_data_path
+            L.kv 'Cache Data Path', project.config.base_cache_path
             L.kv 'Definition Path', project.config.base_definition_path
             L.kv 'Template Path (Global)', project.config.base_template_path
             L.kv 'Template Path (Application)', project.config.base_app_template_path

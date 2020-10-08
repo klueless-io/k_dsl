@@ -293,7 +293,7 @@ module KDsl
           #   L.subheading(project.name)
           #   L.kv 'Base Path', project.config.base_path
           #   L.kv 'DSL Path', project.config.base_dsl_path
-          #   L.kv 'Data_Path', project.config.base_data_path
+          #   L.kv 'Data_Path', project.config.base_cache_path
           #   L.kv 'Definition Path', project.config.base_definition_path
           #   L.kv 'Template Path', project.config.base_template_path
           #   L.kv 'AppTemplate Path', project.config.base_app_template_path
@@ -302,16 +302,16 @@ module KDsl
 
       end
 
-      # def self.create(base_dsl_path, base_data_path: nil, base_definition_path: nil, base_template_path: nil, &block)
+      # def self.create(base_dsl_path, base_cache_path: nil, base_definition_path: nil, base_template_path: nil, &block)
       #   # L.kv 'create1', '@@instance is Present'  if @@instance.present?
       #   # L.kv 'create1', '@@instance is Nil'      if @@instance.nil?
 
       #   if @@instance.nil?
       #     # L.heading 'in create'
       #     # L.kv 'dsl', base_dsl_path;
-      #     # L.kv 'data', base_data_path
+      #     # L.kv 'data', base_cache_path
 
-      #     @@instance = new(base_dsl_path, base_data_path, base_definition_path, base_template_path)
+      #     @@instance = new(base_dsl_path, base_cache_path, base_definition_path, base_template_path)
       #     @@instance.instance_eval(&block) if block_given?
 
       #   end
@@ -429,7 +429,7 @@ module KDsl
 
       # def print_main_properties
       #   # L.kv 'base_dsl_path'            , base_dsl_path
-      #   # L.kv 'base_data_path'           , base_data_path
+      #   # L.kv 'base_cache_path'          , base_cache_path
       #   # L.kv 'base_definition_path'     , base_definition_path
       #   # L.kv 'current_state'            , current_state
       #   # L.kv 'current_register_file'    , current_register_file

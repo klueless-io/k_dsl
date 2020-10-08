@@ -15,9 +15,8 @@ module KDsl
       # TODO: rename to base_resource_path
       attr_accessor :base_dsl_path
 
-      # Bases path where data is written to
-      # Refactor (DataPath to CachePath)
-      attr_writer :base_data_path
+      # Bases path where cache data is written to
+      attr_writer :base_cache_path
 
       # Path to Templated DSLs. These are the basis for new DSL's
       # Refactor (DefinitionPath to DslTemplatePath)
@@ -47,18 +46,18 @@ module KDsl
         {
           base_path: base_path,
           base_dsl_path: base_dsl_path,
-          base_data_path: base_data_path,
+          base_cache_path: base_cache_path,
           base_definition_path: base_definition_path,
           base_template_path: base_template_path,
           base_app_template_path: base_app_template_path
         }
       end
 
-      def base_data_path
-        if @base_data_path.nil?
-          File.join(base_path, '.data')
+      def base_cache_path
+        if @base_cache_path.nil?
+          File.join(base_path, '.cache')
         else
-          @base_data_path
+          @base_cache_path
         end
       end
 
