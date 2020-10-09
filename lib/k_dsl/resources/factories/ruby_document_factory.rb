@@ -24,9 +24,9 @@ module KDsl
         rescue => exeption
           # Report the error but still add the document so that you can see
           # it in the ResourceDocument list, it will be marked as Error
-          @error = exeption
+          resource.error = exeption
   
-          L.exception @error
+          L.exception resource.error
         ensure
           KDsl.target_resource = nil
   

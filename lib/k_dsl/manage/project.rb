@@ -23,10 +23,6 @@ module KDsl
       # Reference to manager that manages all projects
       attr_accessor :manager
 
-      # DEPRECATE
-      # Reference to processor that processes files, e.g. DSL's
-      attr_accessor :processor
-
       # List of DSL's instances
       attr_reader :dsls
 
@@ -256,6 +252,8 @@ module KDsl
 
       def debug(format: :resource)
         if format == :resource
+          puts ''
+          L.subheading 'List of resources'
           tp resources,
           # :state,
           { source: { } },
@@ -269,6 +267,8 @@ module KDsl
           # { :filename => { width: 100, display_name: 'Filename' } },
           { filename: { width: 150, display_method: lambda { |r| "\u001b]8;;file://#{r.file}\u0007#{r.filename}\u001b]8;;\u0007" } } }
         elsif format == :resource_document
+          puts ''
+          L.subheading 'List of documents'
           tp resource_documents,
             :status,
             { namespace: { width: 20, display_name: 'Namespace' } },

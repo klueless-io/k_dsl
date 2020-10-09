@@ -13,6 +13,8 @@ namespace :k_dsl do
 
     file = args[:dsl_file]
 
+    10.times { puts '' }
+
     KDsl.setup(log_level: KDsl::LOG_INFO)
 
     config_command = KDsl::Manage::ProjectConfig.new do |config|
@@ -49,15 +51,16 @@ namespace :k_dsl do
     # manager.add_project(project_microapp1)
     # manager.add_project(project_microapp2)
     manager.add_project(project_sample)
-    manager.load_resources
+    manager.register_all_resource_documents
+    manager.load_all_documents
     
     
-    15.times { puts '' }
+    2.times { puts '' }
     manager.debug(format: :detail, project_formats: [:resource, :resource_document])
 
-    dsl = project_sample.get_dsl('my_name2')
-    document = dsl[:document]
-    document.execute_block(run_actions: true)
+    # dsl = project_sample.get_dsl('my_name2')
+    # document = dsl[:document]
+    # document.execute_block(run_actions: true)
 
     # manager.run('/Users/davidcruwys/dev/kgems/k_dsl/spec/factories/dsls/simple_dsl/two_dsl.rb')
     # manager.watch 

@@ -18,7 +18,7 @@ module KDsl
 
       # Store an exeption that may exist
       # REFACT: This should move to ResourceDocument
-      attr_reader :error
+      attr_accessor :error
 
       # Currently supports read from file, but will support read from HTTP in the future
       SOURCE_FILE = 'file'
