@@ -13,7 +13,7 @@ module KDsl
       def_delegator :resource, :load
       def_delegator :resource, :load
 
-      def_delegator :resource, :error
+      def_delegator :document, :error
       def_delegator :resource, :project
       def_delegator :resource, :source
       def_delegator :resource, :type, :resource_type
