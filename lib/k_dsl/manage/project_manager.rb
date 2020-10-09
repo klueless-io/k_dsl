@@ -41,6 +41,21 @@ module KDsl
         @active_project = nil
       end
 
+      def watch
+        
+        L.block "Project manager is watching resources for #{projects.length} project"
+        wait_key
+        L.block 'Stopping'
+      end
+      
+      # require 'io/console'
+      def wait_key
+        sleep
+        # print "press any key to stop\r"
+        # STDIN.getch
+        # print "xxxxxxxxxxxx\r" # extra space to overwrite in case next sentence is short
+      end                                                                                                                        
+
       # Register document with a project
       #
       # There is a tight coupling between new document instances and the active project

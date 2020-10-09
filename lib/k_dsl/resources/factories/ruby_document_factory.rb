@@ -18,7 +18,7 @@ module KDsl
   
           # Only DSL's will add new resource_documents
           if documents.length > 0
-            resource.type = KDsl::Resources::Resource::TYPE_RUBY_DSL
+            resource.resource_type = KDsl::Resources::Resource::TYPE_RUBY_DSL
           end
   
         rescue => exeption
@@ -36,7 +36,7 @@ module KDsl
         end
 
         def parse_content
-          documents.each(&:execute_block) if self.resource.type === KDsl::Resources::Resource::TYPE_RUBY_DSL
+          documents.each(&:execute_block) if self.resource.resource_type === KDsl::Resources::Resource::TYPE_RUBY_DSL
         rescue => exeption
           # Report the error but still add the document so that you can see
           # it in the ResourceDocument list, it will be marked as Error
