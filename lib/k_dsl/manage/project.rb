@@ -26,16 +26,16 @@ module KDsl
       # List of DSL's instances
       attr_reader :dsls
 
+      # List of path and wild card patterns to watch for.
+      attr_reader :watch_path_patterns
+
       # List of paths containing DSL's
-      # WARN  : This list does not keep the wild card pattern.
-      #         e.g. /*.rb or /**/*.rb 
-      #         It does expand the ** for situations where there
-      #         is a file in that child path, but because it is not
-      #         being stored we have some edge case failures during
-      #         file add, update and delete
-      # REFACT: This pattern should be stored so that it can be 
-      #         checked when a file is add, updated, deleted and that
-      #         file fits the pattern
+      #
+      # This list does not keep the wild card pattern.
+      # See: :watch_path_patterns if you need that
+      # 
+      # It does expand the ** for situations where there
+      # is a file in that child path
       attr_reader :watch_paths
 
       # List of resource files that are visible to this project
@@ -64,6 +64,7 @@ module KDsl
 
         # REFACT: Wrap DSL's up into it's own class
         @dsls = {}
+        @watch_path_patterns = []
         @watch_paths = []
         @resources = []
         @resource_documents = []
@@ -125,6 +126,8 @@ module KDsl
       #
       # Files are generally DSL's but support for other types (PORO, Ruby, JSON, CSV) will come
       def watch_path(path, ignore: nil)
+        @watch_path_patterns << path
+
         # puts  "watch path: #{path} "
         path = KDsl::Util.file.expand_path(path, config.base_resource_path)
 
@@ -144,6 +147,7 @@ module KDsl
         end
       end
 
+      # REFACT: Time for a resource_documents class
       def load_resources
         @resource_documents.each do |resource_document|
           resource_document.load
@@ -198,6 +202,8 @@ module KDsl
         # REFACT: I need a guard to check on duplicate keys from different files
         return dsls[ukey] if dsls.key?(ukey)
 
+        # REFACT: Can I just use document or can I use ResourceDocument
+        # REASON: This state here is not being used
         dsls[ukey] = {
           key: document.key.to_s,
           type: document.type.to_s,
@@ -250,6 +256,43 @@ module KDsl
         !self.manager.nil?
       end
 
+      def watch
+        listener = Listen.to(*watch_paths) do |modified, added, removed|
+          update_resources(modified) unless modified.empty?
+          # puts "modified absolute path: #{modified}"
+          # puts "added absolute path: #{added}"
+          # puts "removed absolute path: #{removed}"
+        end
+        listener.start # not blocking
+
+        L.subheading 'Listening'
+        L.block watch_paths
+
+        listener
+      end
+
+      def update_resources(files)
+        files.each do |file|
+          puts "\rUpdating #{file}\r"
+
+          resource_document = get_resource_document(file: file)
+          if resource_document
+            resource_document.resource.load_content
+            resource_document.resource.load
+
+            2.times { puts '' }
+            manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
+          end
+
+        end
+      end
+
+      def get_resource_document(file: nil)
+        if file
+          @resource_documents.find { |rd| rd.file === file }
+        end
+      end
+
       def debug(format: :resource)
         if format == :resource
           puts ''
@@ -266,6 +309,16 @@ module KDsl
           # { :file => { width: 100, display_name: 'File' } },
           # { :filename => { width: 100, display_name: 'Filename' } },
           { filename: { width: 150, display_method: lambda { |r| "\u001b]8;;file://#{r.file}\u0007#{r.filename}\u001b]8;;\u0007" } } }
+        elsif format == :watch_path_patterns
+          puts ''
+          L.subheading 'Watch these paths and patterns'
+          watch_path_patterns.each { |path| L.info path }
+
+        elsif format == :watch_path
+          puts ''
+          L.subheading 'Watch these paths'
+          watch_paths.each { |path| L.info path }
+
         elsif format == :resource_document
           puts ''
           L.subheading 'List of documents'

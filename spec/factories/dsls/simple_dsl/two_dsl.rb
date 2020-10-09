@@ -9,6 +9,7 @@ end
 
 KDsl.document :my_name2 do
   s = import(:my_name1).settings
+  # csv = import('sample.csv', 'csv')
 
   rows :applets do
     fields [:name, f(:active, true)]
@@ -23,9 +24,12 @@ KDsl.document :my_name2 do
   end
 
   actions do
-    puts 'run action'
+    # puts 'run action'
     # csv.each do |row|
-    #   row.to_h
+
+    #   L.subheading "#{row.name} #{row.last_name}"
+    #   L.kv 'Name', row.name
+    #   L.kv 'Title', row.title
     # end
   end
 

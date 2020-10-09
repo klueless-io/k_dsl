@@ -87,7 +87,6 @@ module KDsl
       # REFACT: This is not really part of the document, so how could it be refactored
       #         and used as some sort of decorator or actionable module
       def actions(&action_block)
-        # debug(include_header: true)
         return unless @run_actions
 
         instance_eval(&action_block)
@@ -100,7 +99,7 @@ module KDsl
         # L.exception exception
         raise
       rescue StandardError => exception
-        L.error("Standard rror in action")
+        L.error("Standard error in action")
         L.kv 'key', unique_key
         L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
         L.error exception.message

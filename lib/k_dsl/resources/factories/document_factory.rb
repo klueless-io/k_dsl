@@ -10,8 +10,6 @@ module KDsl
       class DocumentFactory
         extend Forwardable
 
-        # attr_reader :type
-
         attr_reader :resource
 
         def_delegator :resource, :project
@@ -23,9 +21,9 @@ module KDsl
         def_delegator :resource, :infer_document_type
         def_delegator :resource, :infer_document_namespace
 
-        def initialize(resource, type)
+        def initialize(resource, resource_type)
           @resource = resource
-          resource.type = type
+          resource.resource_type = resource_type
         end
 
         def self.instance(resource, source, file)
