@@ -51,19 +51,26 @@ namespace :k_dsl do
     # manager.add_project(project_microapp1)
     # manager.add_project(project_microapp2)
     manager.add_project(project_sample)
-    manager.register_all_resource_documents
-    manager.load_all_documents
-    
+    # manager.register_all_resource_documents
+    # manager.load_all_documents
     
     2.times { puts '' }
-    manager.debug(format: :detail, project_formats: [:resource, :resource_document])
+    manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
 
-    # dsl = project_sample.get_dsl('my_name2')
-    # document = dsl[:document]
-    # document.execute_block(run_actions: true)
+    # dsl1 = project_sample.get_dsl('my_name1')
+    # document1 = dsl1[:document]
+    # document1.debug(include_header: true)
 
+    # dsl2 = project_sample.get_dsl('my_name2')
+    # document2 = dsl2[:document]
+    # # document2.debug(include_header: true)
+    # document2.execute_block(run_actions: true)
+
+    # listener = project_sample.watch
+    # manager.watch
+    # listener.stop
     # manager.run('/Users/davidcruwys/dev/kgems/k_dsl/spec/factories/dsls/simple_dsl/two_dsl.rb')
-    # manager.watch 
+    # manager.watch
     # KDsl.process.file(file)
 
   end

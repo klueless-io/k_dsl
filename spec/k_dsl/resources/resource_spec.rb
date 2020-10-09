@@ -32,7 +32,7 @@ RSpec.describe KDsl::Resources::Resource do
             project: be_a(KDsl::Manage::Project),
             document_factory: be_a(KDsl::Resources::Factories::UnknownDocumentFactory),
             file: file,
-            type: described_class::TYPE_UNKNOWN,
+            resource_type: described_class::TYPE_UNKNOWN,
             source: described_class::SOURCE_FILE,
             watch_path: nil,
             documents: [],
@@ -44,38 +44,38 @@ RSpec.describe KDsl::Resources::Resource do
       context 'with json file' do
         let(:file) { '/somepath/file.json' }
   
-        it { is_expected.to have_attributes(file: file, type: described_class::TYPE_JSON, document_factory: be_a(KDsl::Resources::Factories::JsonDocumentFactory)) }
+        it { is_expected.to have_attributes(file: file, resource_type: described_class::TYPE_JSON, document_factory: be_a(KDsl::Resources::Factories::JsonDocumentFactory)) }
       end
   
       context 'with yaml file' do
         let(:file) { '/somepath/file.yaml' }
   
-        it { is_expected.to have_attributes(file: file, type: described_class::TYPE_YAML, document_factory: be_a(KDsl::Resources::Factories::YamlDocumentFactory)) }
+        it { is_expected.to have_attributes(file: file, resource_type: described_class::TYPE_YAML, document_factory: be_a(KDsl::Resources::Factories::YamlDocumentFactory)) }
       end
   
       context 'with csv file' do
         let(:file) { '/somepath/file.csv' }
         
-        it { is_expected.to have_attributes(file: file, type: described_class::TYPE_CSV, document_factory: be_a(KDsl::Resources::Factories::CsvDocumentFactory)) }
+        it { is_expected.to have_attributes(file: file, resource_type: described_class::TYPE_CSV, document_factory: be_a(KDsl::Resources::Factories::CsvDocumentFactory)) }
       end
 
       context 'with unknown file' do
         let(:file) { '/somepath/file.xxx' }
         
-        it { is_expected.to have_attributes(file: file, type: described_class::TYPE_UNKNOWN, document_factory: be_a(KDsl::Resources::Factories::UnknownDocumentFactory)) }
+        it { is_expected.to have_attributes(file: file, resource_type: described_class::TYPE_UNKNOWN, document_factory: be_a(KDsl::Resources::Factories::UnknownDocumentFactory)) }
       end
 
       context 'with ruby file' do
         let(:file) { ruby_file }
   
-        it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY, document_factory: be_a(KDsl::Resources::Factories::RubyDocumentFactory)) }
+        it { is_expected.to have_attributes(file: file, resource_type: described_class::TYPE_RUBY, document_factory: be_a(KDsl::Resources::Factories::RubyDocumentFactory)) }
   
         context 'with Klueless ruby DSL' do
           let(:file) { dsl_file1 }
 
           # At this point, we are not aware of ruby file contents and so
-          # the type has not been altered to TYPE_RUBY_DSL
-          it { is_expected.to have_attributes(file: file, type: described_class::TYPE_RUBY, document_factory: be_a(KDsl::Resources::Factories::RubyDocumentFactory)) }
+          # the resource_type has not been altered to TYPE_RUBY_DSL
+          it { is_expected.to have_attributes(file: file, resource_type: described_class::TYPE_RUBY, document_factory: be_a(KDsl::Resources::Factories::RubyDocumentFactory)) }
         end
       end
     end

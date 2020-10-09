@@ -11,9 +11,7 @@ module KDsl
       attr_reader :document
 
       def_delegator :resource, :load
-      def_delegator :resource, :load
 
-      def_delegator :document, :error
       def_delegator :resource, :project
       def_delegator :resource, :source
       def_delegator :resource, :type, :resource_type
@@ -25,6 +23,8 @@ module KDsl
       def_delegator :resource, :base_resource_path
       def_delegator :resource, :base_resource_path_expanded
 
+      # I HAVE an issue between resource.error and document.error that needs to be dealt with
+      def_delegator :document, :error
       def_delegator :document, :unique_key
       def_delegator :document, :key
       def_delegator :document, :type

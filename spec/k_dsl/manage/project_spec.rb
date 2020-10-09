@@ -43,6 +43,12 @@ RSpec.describe KDsl::Manage::Project do
       it { is_expected.to be_empty }
     end
 
+    describe '.watch_path_patterns' do
+      subject { project.watch_path_patterns }
+
+      it { is_expected.to be_empty }
+    end
+
     describe '.manager' do
       subject { project.manager }
 
@@ -64,6 +70,11 @@ RSpec.describe KDsl::Manage::Project do
         before { project.watch_path('ruby_files/*.rb') }
 
         it { is_expected.to eq [File.join(gem_root, 'spec/factories/dsls/ruby_files')] }
+
+        describe '.watch_path_patterns' do
+          subject { project.watch_path_patterns }
+          it { is_expected.to eq ['ruby_files/*.rb'] }
+        end
       end
 
       context 'when configured via &block' do
@@ -88,6 +99,11 @@ RSpec.describe KDsl::Manage::Project do
             File.join(gem_root, 'spec/factories/dsls/microapp1')
             ]
         end
+
+        describe '.watch_path_patterns' do
+          subject { project.watch_path_patterns }
+          it { is_expected.to eq ['common-auth/*.rb', 'microapp1/*.rb'] }
+        end
       end
 
       context 'when deep nested paths' do
@@ -101,6 +117,12 @@ RSpec.describe KDsl::Manage::Project do
             File.join(gem_root, 'spec/factories/dsls/microapp2')
             ]
         end
+
+        describe '.watch_path_patterns' do
+          subject { project.watch_path_patterns }
+
+          it { is_expected.to eq ['microapp2/**/*.rb'] }
+        end
       end
     end
 
@@ -112,9 +134,9 @@ RSpec.describe KDsl::Manage::Project do
 
         it do
           expect(subject).to include(
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), type: 'ruby'),
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby2.rb'), type: 'ruby'),
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby3.rb'), type: 'ruby')
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), resource_type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby2.rb'), resource_type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby3.rb'), resource_type: 'ruby')
           )
         end
       end
@@ -123,11 +145,11 @@ RSpec.describe KDsl::Manage::Project do
 
         it do
           expect(subject).to include(
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), type: 'ruby'),
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby2.rb'), type: 'ruby')
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), resource_type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby2.rb'), resource_type: 'ruby')
           )
           expect(subject).not_to include(
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby3.rb'), type: 'ruby')
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby3.rb'), resource_type: 'ruby')
           )
         end
       end
@@ -140,11 +162,11 @@ RSpec.describe KDsl::Manage::Project do
 
         it do
           expect(subject).to include(
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/common-auth/admin_user.rb'), type: 'ruby'),
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/common-auth/basic_user.rb'), type: 'ruby'),
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp1/domain.rb'), type: 'ruby'),
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp1/microapp.rb'), type: 'ruby'),
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp1/structure.rb'), type: 'ruby')
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/common-auth/admin_user.rb'), resource_type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/common-auth/basic_user.rb'), resource_type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp1/domain.rb'), resource_type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp1/microapp.rb'), resource_type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp1/structure.rb'), resource_type: 'ruby')
           )
         end
       end
@@ -156,11 +178,11 @@ RSpec.describe KDsl::Manage::Project do
 
         it do
           expect(subject).to include(
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/auth/admin_user.rb'), type: 'ruby'),
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/auth/basic_user.rb'), type: 'ruby'),
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/domain.rb'), type: 'ruby'),
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/microapp.rb'), type: 'ruby'),
-            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/structure.rb'), type: 'ruby')
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/auth/admin_user.rb'), resource_type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/auth/basic_user.rb'), resource_type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/domain.rb'), resource_type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/microapp.rb'), resource_type: 'ruby'),
+            have_attributes(file: File.join(gem_root, 'spec/factories/dsls/microapp2/structure.rb'), resource_type: 'ruby')
           )
         end
       end
@@ -176,13 +198,13 @@ RSpec.describe KDsl::Manage::Project do
       context 'when using relative files' do
         before { project.register_file_resource('ruby_files/ruby1.rb') }
         
-        it { is_expected.to include( have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), type: 'ruby')) }
+        it { is_expected.to include( have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), resource_type:  'ruby')) }
       end
 
       context 'when using absolute files' do
         before { project.register_file_resource(File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), path_expansion: false) }
         
-        it { is_expected.to include( have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), type: 'ruby')) }
+        it { is_expected.to include( have_attributes(file: File.join(gem_root, 'spec/factories/dsls/ruby_files/ruby1.rb'), resource_type: 'ruby')) }
       end
 
       context 'when file does not exist' do

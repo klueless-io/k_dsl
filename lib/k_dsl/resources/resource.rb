@@ -8,7 +8,6 @@ module KDsl
     # other types of files such as (PORO, Ruby, JSON, CSV) and be able to use
     # them easily.
     class Resource
-      extend Forwardable
 
       # Resources must belong to a factory
       attr_reader :project
@@ -40,8 +39,7 @@ module KDsl
       attr_reader :source
 
       # Type of resource, infered via the document factory type
-      # THINK this should be resource_type
-      attr_accessor :type
+      attr_accessor :resource_type
 
       # Full file path
       #
@@ -174,6 +172,18 @@ module KDsl
         else
           'unknown'
         end
+      end
+
+      def debug(format: :detail)
+        L.kv 'project.name', project.name
+        L.kv 'document_factory.class', document_factory.class.name
+        L.kv 'error', error&.message
+        L.kv 'source', source
+        L.kv 'resource_type', resource_type
+        L.kv 'file', file
+        L.kv 'watch_path', watch_path
+        L.kv 'content', content
+        L.kv 'document.count', documents.length
       end
     end
   end
