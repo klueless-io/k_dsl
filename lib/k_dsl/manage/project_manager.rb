@@ -18,12 +18,16 @@ module KDsl
         raise KDsl::Error, 'Project class is ivalid' unless project.is_a?(KDsl::Manage::Project)
 
         project.manager = self
-        project.register_resources
+        # project.register_resources
 
         @projects |= [project]
       end
 
-      def load_resources
+      def register_all_resource_documents
+        projects.each(&:register_resources)
+      end
+
+      def load_all_documents
         projects.each(&:load_resources)
       end
 
@@ -67,7 +71,7 @@ module KDsl
           L.kv '# of Projects', projects.length
 
           projects.each do |project|
-            L.subheading(project.name)
+            L.subheading("Project #{project.name}")
             L.kv "Resource Path (DSL's, Data)", project.config.base_resource_path
             L.kv 'Base Path', project.config.base_path
             L.kv 'Cache Data Path', project.config.base_cache_path

@@ -49,12 +49,6 @@ RSpec.describe KDsl::Manage::Project do
       it { is_expected.to be_nil }
     end
 
-    describe '.processor' do
-      subject { project.processor }
-
-      it { is_expected.to be_nil }
-    end
-
     describe '.managed?' do
       subject { project.managed? }
 

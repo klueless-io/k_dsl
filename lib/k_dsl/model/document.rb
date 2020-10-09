@@ -2,6 +2,11 @@
 
 module KDsl
   module Model
+    # TODO
+    # Missing tests around errors
+    # Make sure that error writes to resource or document appropriately
+    # Puts errors onto a project manager pipeline so that they can be be printed out after the documents
+    #
     # General purpose document DSL
     #
     # Made up of 0 or more setting groups and table groups
@@ -11,6 +16,7 @@ module KDsl
       attr_reader :type
       attr_reader :namespace
       attr_reader :options
+      attr_reader :error
 
       # Create docoument
       #
@@ -25,6 +31,7 @@ module KDsl
         @namespace = options[:namespace] || ''
 
         @namespace = @namespace.to_s
+        @error = nil
 
         # Most documents live within a hash, some tabular documents such as
         # CSV will use an []
@@ -38,23 +45,23 @@ module KDsl
         
         # The DSL actions method will only run on run_actions: true
         @run_actions = run_actions
-        L.kv 'run_actions1', @run_actions
 
         self.instance_eval(&@block)
      rescue KDsl::Error => e
-        puts "KDsl error in document: #{key}"
-        puts "file: #{resource.file}"
-        puts e.message
+        L.error("KDsl::Error in document")
+        L.kv 'key', unique_key
+        L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
+        L.error exception.message
+        @error = exception
         # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
         # L.exception exception
         raise
       rescue StandardError => exception
         L.error("Standard error in document")
         L.kv 'key', unique_key
-        L.kv 'file', resource.file
-        L.kv 'link', KDsl.data.console_file_hyperlink('Click Here', resource.file)
+        L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
         L.error exception.message
-        # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
+        @error = exception
         # L.exception exception
         raise
       ensure
@@ -81,22 +88,23 @@ module KDsl
       #         and used as some sort of decorator or actionable module
       def actions(&action_block)
         # debug(include_header: true)
-        L.kv 'run_actions2', @run_actions
         return unless @run_actions
 
         instance_eval(&action_block)
       rescue KDsl::Error => e
-        puts "KDsl error in action: #{key}"
-        puts "file: #{resource.file}"
-        puts e.message
-        # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
+        L.error("KDsl::Error in action")
+        L.kv 'key', unique_key
+        L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
+        L.error exception.message
+        @error = exception
         # L.exception exception
         raise
       rescue StandardError => exception
-        puts "Invalid code block in actions"
-        puts "file: #{resource.file}"
-        puts exception.message
-        # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
+        L.error("Standard rror in action")
+        L.kv 'key', unique_key
+        L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
+        L.error exception.message
+        @error = exception
         # L.exception exception
         raise
       end

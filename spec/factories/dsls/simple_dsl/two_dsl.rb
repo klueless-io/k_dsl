@@ -23,10 +23,10 @@ KDsl.document :my_name2 do
   end
 
   actions do
-    puts 'fuckit'
-    csv.each do |row|
-      puts row.to_h
-    end
+    puts 'run action'
+    # csv.each do |row|
+    #   row.to_h
+    # end
   end
 
 end
