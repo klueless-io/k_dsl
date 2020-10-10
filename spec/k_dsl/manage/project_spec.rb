@@ -195,8 +195,6 @@ RSpec.describe KDsl::Manage::Project do
     describe '.resources' do
       subject { project.resources }
 
-      # before { allow(project).to receive(:process_code) }
-
       context 'when using relative files' do
         before { project.register_file_resource('ruby_files/ruby1.rb') }
         
@@ -235,47 +233,59 @@ RSpec.describe KDsl::Manage::Project do
     # end
   end
 
-  describe '#register_dsl' do
-    it 'project dsls starts of empty' do
-      expect(project.dsls.length).to eq 0
+  describe '#add_resource_document' do
+    it '.resource_documents are empty' do
+      expect(project.resource_documents.length).to eq 0
     end
 
-    context 'with document' do
-      subject { project.register_dsl(document) }
+    context 'with resource, document' do
+      subject { project.add_resource_document(resource, document) }
 
       let(:document) { document1 }
 
-      it 'registers dsl' do
-        expect(subject).to eq({
-                                key: 'xmen',
-                                type: 'entity',
-                                namespace: '',
-                                state: :registered,
-                                document: document1
-                              })
+      it 'returns resource_document' do
+        expect(subject).to have_attributes(
+          status: resource.status,
+          project: resource.project,
+          source: resource.source,
+          resource_type: resource.resource_type,
+          file: resource.file,
+          watch_path: resource.watch_path,
+          content: resource.content,
+          relative_watch_path: resource.relative_watch_path,
+          filename: resource.filename,
+          base_resource_path: resource.base_resource_path,
+          base_resource_path_expanded: resource.base_resource_path_expanded,
+          error: document.error,
+          unique_key: document.unique_key,
+          key: document.key,
+          type: document.type,
+          namespace: document.namespace,
+          options: document.options,
+          data: document.data)
       end
+
     end
 
-    describe '.dsls' do
-      subject { project.dsls }
+    describe '.resource_documents' do
+      subject { project.resource_documents }
 
       it 'add a document' do
-        project.register_dsl(document1)
-        expect(project.dsls.length).to eq 1
+        project.add_resource_document(resource, document1)
+        expect(subject.length).to eq 1
       end
 
-      it 'add a document many times' do
-        project.register_dsl(document2)
-        project.register_dsl(document2)
-        project.register_dsl(document2)
-        expect(project.dsls.length).to eq 1
+      it 'add the same document many times' do
+        project.add_resource_document(resource, document2)
+        project.add_resource_document(resource, document2)
+        expect(subject.length).to eq 1
       end
 
       it 'add many documents' do
-        project.register_dsl(document1)
-        project.register_dsl(document2)
-        project.register_dsl(document3)
-        expect(project.dsls.length).to eq 3
+        project.add_resource_document(resource, document1)
+        project.add_resource_document(resource, document2)
+        project.add_resource_document(resource, document3)
+        expect(subject.length).to eq 3
       end
     end
   end
@@ -285,7 +295,7 @@ RSpec.describe KDsl::Manage::Project do
 
     let(:document) { document3 }
 
-    before { project.add_resource_document(resource, document) }
+    before { resource.add_document(document) }
 
     it { expect(subject).not_to be_nil }
     it { expect(subject.document).not_to be_nil }
@@ -293,7 +303,7 @@ RSpec.describe KDsl::Manage::Project do
   end
 
   describe 'resource_document_exist?' do
-    before { project.add_resource_document(resource, document) }
+    before { resource.add_document(document) }
 
     context 'when key exists' do
       subject { project.resource_document_exist?(:xmen, :entity, '') }
@@ -308,37 +318,41 @@ RSpec.describe KDsl::Manage::Project do
     end
   end
 
-  describe 'get_dsl_by_type' do
+  describe 'get_resource_documents_by_type' do
     before do
-      project.register_dsl(document1)
-      project.register_dsl(document2)
-      project.register_dsl(document3)
-      project.register_dsl(document4)
+      resource.add_document(document1)
+      resource.add_document(document2)
+      resource.add_document(document3)
+      resource.add_document(document4)
     end
 
     context 'for default type' do
-      subject { project.get_dsls_by_type }
+      subject { project.get_resource_documents_by_type }
 
-      it 'returns dsls of type :entity' do
+      # fit do
+      #   project.resource_documents.each(&:debug)
+      # end
+
+      it 'returns resource_documents of type :entity' do
         expect(subject.length).to eq 2
-        expect(subject).to all(include(type: 'entity'))
+        expect(subject).to all(have_attributes(type: :entity))
       end
     end
 
     context 'for custom type' do
-      subject { project.get_dsls_by_type(:model) }
+      subject { project.get_resource_documents_by_type(:model) }
 
-      it 'returns dsls of type :model' do
+      it 'returns resource_documents of type :model' do
         expect(subject.length).to eq 2
-        expect(subject).to all(include(type: 'model'))
+        expect(subject).to all(have_attributes(type: :model))
       end
 
       context 'with namespace' do
-        subject { project.get_dsls_by_type(:model, :child) }
+        subject { project.get_resource_documents_by_type(:model, :child) }
 
-        it 'returns dsls of type :model' do
+        it 'returns resource_documents of type :model' do
           expect(subject.length).to eq 1
-          expect(subject).to all(include(namespace: 'child'))
+          expect(subject).to all(have_attributes(namespace: 'child'))
         end
       end
     end
