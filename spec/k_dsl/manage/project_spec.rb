@@ -18,11 +18,13 @@ RSpec.describe KDsl::Manage::Project do
       c.base_resource_path = File.join(Dir.getwd, 'spec', 'factories', 'dsls')
     end
   end
+  let(:resource) { KDsl::Resources::Resource.instance(project: project, file: file) }
   let(:document1) { KDsl::Model::Document.new :xmen }
   let(:document2) { KDsl::Model::Document.new :xmen, :model }
   let(:document3) { KDsl::Model::Document.new :xmen, :model, namespace: :child }
   let(:document4) { KDsl::Model::Document.new :ymen }
   let(:document) { document1 }
+  let(:file) { 'a.txt' }
 
   describe '#constructor' do
     describe '.name' do
@@ -278,29 +280,29 @@ RSpec.describe KDsl::Manage::Project do
     end
   end
 
-  describe 'get_dsl' do
-    subject { project.get_dsl(document.key, document.type, document.namespace) }
+  describe 'get_resource_document' do
+    subject { project.get_resource_document(document.key, document.type, document.namespace) }
 
     let(:document) { document3 }
 
-    before { project.register_dsl(document) }
+    before { project.add_resource_document(resource, document) }
 
     it { expect(subject).not_to be_nil }
-    it { expect(subject[:document]).not_to be_nil }
-    it { expect(subject[:document].unique_key).to eq(document.unique_key) }
+    it { expect(subject.document).not_to be_nil }
+    it { expect(subject.document.unique_key).to eq(document.unique_key) }
   end
 
-  describe 'dsl_exist?' do
-    before { project.register_dsl(document) }
+  describe 'resource_document_exist?' do
+    before { project.add_resource_document(resource, document) }
 
     context 'when key exists' do
-      subject { project.dsl_exist?(:xmen, :entity, '') }
+      subject { project.resource_document_exist?(:xmen, :entity, '') }
 
       it { is_expected.to eq(true) }
     end
 
     context 'when key does not exists' do
-      subject { project.dsl_exist?(:xmen, :entity, 'unknown_namespace') }
+      subject { project.resource_document_exist?(:xmen, :entity, 'unknown_namespace') }
 
       it { is_expected.to eq(false) }
     end

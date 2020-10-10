@@ -12,7 +12,6 @@ module KDsl
 
   class << self
 
-    attr_accessor :status
     # Instance of the currently focused resource so that documents can attach themselves
     attr_accessor :target_resource
 
