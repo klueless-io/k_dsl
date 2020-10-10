@@ -165,13 +165,7 @@ module KDsl
 
       def infer_document_key
         if filename
-          ext = File.extname(filename)
-          case ext
-          when '.json', '.csv', '.yaml'
-            File.basename(filename)
-          else
-            File.basename(filename, File.extname(filename))
-          end
+          File.basename(filename, File.extname(filename))
         else
           'unknown'
         end
