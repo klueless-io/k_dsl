@@ -17,7 +17,7 @@ module KDsl
       # Project name
       attr_reader :name
 
-      # Project configuration
+      # Configuration for this project
       attr_reader :config
 
       # Reference to manager that manages all projects
@@ -76,13 +76,9 @@ module KDsl
           L.exception exception
           raise
         end
-
-        # @current_state = :dynamic
-        # @current_register_file = nil
       end
 
       def add_resource_document(resource, document)
-        # resource_document = resource_documents.find { |rd| rd.resource === resource && rd.document.unique_key === document.unique_key}
         resource_documents << KDsl::ResourceDocuments::ResourceDocument.new(resource, document)
       end
 
@@ -90,27 +86,16 @@ module KDsl
         resource_documents.delete_if { |rd| rd.resource === resource }
       end
 
-      def create_documents(resource)
-        status = KDsl.status
-        KDsl.status = :registering
-        KDsl.target_resource = resource
+      def resource_document_exist?(key, type = nil, namespace = nil)
+        resource_document = get_resource_document(key, type, namespace)
 
-        resource.load_content
-        resource.register
-
-        KDsl.status = status
+        !resource_document.nil?
       end
 
-      def dsl_exist?(key, type = nil, namespace = nil)
-        dsl = get_dsl(key, type, namespace)
-
-        !dsl.nil?
-      end
-
-      def get_dsl(key, type = nil, namespace = nil)
+      def get_resource_document(key, type = nil, namespace = nil)
         unique_key = KDsl::Util.dsl.build_unique_key(key, type, namespace)
 
-        @dsls[unique_key]
+        resource_documents.find { |rd| rd.unique_key === unique_key }
       end
 
       # rubocop:disable Metrics/AbcSize
@@ -148,7 +133,7 @@ module KDsl
       # so that we can access the data in the resource
       def register_resources
         @resources.each do |resource|
-          create_documents(resource)
+          resource.create_documents
         end
       end
 
@@ -159,11 +144,11 @@ module KDsl
       end
 
       def get_data(key, type = :entity, namespace = nil)
-        dsl = get_dsl(key, type, namespace)
+        resoure_document = get_resource_document(key, type, namespace)
 
-        raise "Could not get data for missing DSL: #{KDsl::Util.dsl.build_unique_key(key, type, namespace)}" if dsl.nil?
+        raise "Could not get data for missing DSL: #{KDsl::Util.dsl.build_unique_key(key, type, namespace)}" if resoure_document.nil?
 
-        dsl[:document].data
+        resoure_document.document.data
         # load_data_from_dsl(dsl)
       end
 

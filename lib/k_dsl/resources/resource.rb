@@ -101,6 +101,15 @@ module KDsl
         resource.documents = []
       end
 
+      def create_documents
+        KDsl.target_resource = self
+
+        load_content
+        register
+
+        KDsl.target_resource = nil
+      end
+
       def load_content
         @status = :content_loading
         @content = nil
@@ -115,9 +124,9 @@ module KDsl
       end
 
       def register
-      @status = :registering
-      document_factory.create_documents
-      @status = :registered
+        @status = :registering
+        document_factory.create_documents
+        @status = :registered
       end
 
       def load
@@ -135,7 +144,6 @@ module KDsl
       end
 
       def add_document(document)
-        # Deprecate this line
         project.register_dsl(document)
         project.add_resource_document(self, document)
         document.resource = self
