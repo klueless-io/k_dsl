@@ -79,11 +79,18 @@ module KDsl
       end
 
       def add_resource_document(resource, document)
-        resource_documents << KDsl::ResourceDocuments::ResourceDocument.new(resource, document)
+        resource_document = get_resource_document(document.key, document.type, document.namespace)
+        if resource_document.nil?
+          resource_document = KDsl::ResourceDocuments::ResourceDocument.new(resource, document)
+          resource_documents << resource_document
+        else
+          L.warn "Cannot add to resource_documents for an existing unique_key: #{document.unique_key}"
+        end
+        resource_document
       end
 
       def delete_resource_documents_for_resource(resource)
-        resource_documents.delete_if { |rd| rd.resource === resource }
+        resource_documents.delete_if { |rd| rd.resource == resource }
       end
 
       def resource_document_exist?(key, type = nil, namespace = nil)
@@ -95,19 +102,19 @@ module KDsl
       def get_resource_document(key, type = nil, namespace = nil)
         unique_key = KDsl::Util.dsl.build_unique_key(key, type, namespace)
 
-        resource_documents.find { |rd| rd.unique_key === unique_key }
+        resource_documents.find { |rd| rd.unique_key == unique_key }
       end
 
       # rubocop:disable Metrics/AbcSize
-      def get_dsls_by_type(type = nil, namespace = nil)
+      def get_resource_documents_by_type(type = nil, namespace = nil)
         type ||= KDsl.config.default_document_type
         type = type.to_s
         namespace = namespace.to_s
 
         if namespace.nil? || namespace.empty?
-          @dsls.values.select { |dsl| dsl[:type] == type.to_s }
+          resource_documents.select { |resource_document| resource_document.type.to_s == type.to_s }
         else
-          @dsls.values.select { |dsl| dsl[:namespace] == namespace && dsl[:type] == type }
+          resource_documents.select { |resource_document| resource_document.namespace == namespace.to_s && resource_document.type.to_s == type.to_s }
         end
       end
       # rubocop:enable Metrics/AbcSize
@@ -182,23 +189,6 @@ module KDsl
           source: KDsl::Resources::Resource::SOURCE_FILE)
 
         @resources << resource unless @resources.include? resource
-      end
-
-      def register_dsl(document)
-        ukey = document.unique_key
-
-        # REFACT: I need a guard to check on duplicate keys from different files
-        return dsls[ukey] if dsls.key?(ukey)
-
-        # REFACT: Can I just use document or can I use ResourceDocument
-        # REASON: This state here is not being used
-        dsls[ukey] = {
-          key: document.key.to_s,
-          type: document.type.to_s,
-          namespace: document.namespace.to_s,
-          state: :registered,
-          document: document
-        }
       end
 
       # REACT: This method may not belong to project, it should be in it's own class
@@ -298,13 +288,13 @@ module KDsl
 
       # def get_resource_document(file: nil)
       #   if file
-      #     @resource_documents.find { |rd| rd.file === file }
+      #     @resource_documents.find { |rd| rd.file == file }
       #   end
       # end
 
       def get_resource(file: nil)
         if file
-          @resources.find { |rd| rd.file === file }
+          @resources.find { |rd| rd.file == file }
         end
       end
 

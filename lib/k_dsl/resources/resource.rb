@@ -144,7 +144,7 @@ module KDsl
       end
 
       def add_document(document)
-        project.register_dsl(document)
+        # project.register_dsl(document)
         project.add_resource_document(self, document)
         document.resource = self
         documents << document
@@ -153,7 +153,7 @@ module KDsl
 
       # example:  ~/dev/kgems/k_dsl/spec/factories/dsls
       def relative_watch_path
-        @relative_watch_path ||= watch_path.delete_prefix(base_resource_path_expanded)
+        @relative_watch_path ||= watch_path&.delete_prefix(base_resource_path_expanded)
       end
 
       # example:  ~/dev/kgems/k_dsl/spec/factories/dsls
