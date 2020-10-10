@@ -9,7 +9,7 @@ end
 
 KDsl.document :my_name2 do
   s = import(:my_name1).settings
-  # csv = import('sample.csv', 'csv')
+  # csv = import('sample', 'csv')
 
   rows :applets do
     fields [:name, f(:active, true)]

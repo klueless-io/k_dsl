@@ -121,11 +121,11 @@ RSpec.describe KDsl::Resources::Resource do
 
           it do
             is_expected.to have_attributes(
-              key: 'sample.csv',
+              key: 'sample',
               type: 'csv',
               namespace: '',
               resource: resource,
-              unique_key: 'sample.csv_csv',
+              unique_key: 'sample_csv',
               data: {}
             )
           end
@@ -156,11 +156,11 @@ RSpec.describe KDsl::Resources::Resource do
 
           it do
             is_expected.to have_attributes(
-              key: 'sample.json',
+              key: 'sample',
               type: 'json',
               namespace: '',
               resource: resource,
-              unique_key: 'sample.json_json',
+              unique_key: 'sample_json',
               data: {}
             )
           end
@@ -202,11 +202,11 @@ RSpec.describe KDsl::Resources::Resource do
 
           it do
             is_expected.to have_attributes(
-              key: 'sample.yaml',
+              key: 'sample',
               type: 'yaml',
               namespace: '',
               resource: resource,
-              unique_key: 'sample.yaml_yaml',
+              unique_key: 'sample_yaml',
               data: {}
             )
           end
