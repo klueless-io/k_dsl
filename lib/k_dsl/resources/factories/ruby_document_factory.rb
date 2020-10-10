@@ -36,13 +36,19 @@ module KDsl
         end
 
         def parse_content
-          documents.each(&:execute_block) if self.resource.resource_type === KDsl::Resources::Resource::TYPE_RUBY_DSL
-        rescue => exeption
-          # Report the error but still add the document so that you can see
-          # it in the ResourceDocument list, it will be marked as Error
-          @error = exeption
-  
-          L.exception @error
+          if self.resource.resource_type === KDsl::Resources::Resource::TYPE_RUBY_DSL
+            documents.each do |document|
+              begin
+                document.execute_block
+              rescue => exeption
+                # Report the error but still add the document so that you can see
+                # it in the ResourceDocument list, it will be marked as Error
+                document.error = exeption
+        
+                L.exception @error
+              end                      
+            end
+          end
         end
       end
     end

@@ -15,7 +15,7 @@ KDsl.document :my_name2 do
     fields [:name, f(:active, true)]
 
     row name:         'rails5',
-        active:       true,
+        active:       true, 
         target_path:  s.app_path
 
     row name:         'react',
@@ -24,13 +24,16 @@ KDsl.document :my_name2 do
   end
 
   actions do
-    # puts 'run action'
+    # puts
+    # L.warn 'run action'
     # csv.each do |row|
 
     #   L.subheading "#{row.name} #{row.last_name}"
     #   L.kv 'Name', row.name
     #   L.kv 'Title', row.title
     # end
+    # L.warn 'finished action'
+    # puts
   end
 
 end

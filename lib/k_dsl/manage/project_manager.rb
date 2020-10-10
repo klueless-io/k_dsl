@@ -72,7 +72,8 @@ module KDsl
       def debug(format: :tabular, project_formats: [:resource])
         # tp projects
 
-        if format == :tabular
+        case format
+        when :tabular
           tp projects,
             :name,
             :managed?,
@@ -82,7 +83,14 @@ module KDsl
             { 'config.base_definition_path'   => { width: 60, display_name: 'Definition Path' } },
             { 'config.base_template_path'     => { width: 60, display_name: 'Template Path' } },
             { 'config.base_app_template_path' => { width: 60, display_name: 'AppTemplate Path' } }
-        elsif
+        when :simple
+          projects.each do |project|
+            L.subheading("Project #{project.name}")
+            project_formats.each do |project_format|
+              project.debug(format: project_format)
+            end
+          end
+        when :detail
           L.kv '# of Projects', projects.length
 
           projects.each do |project|
