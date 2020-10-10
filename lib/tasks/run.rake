@@ -40,9 +40,12 @@ namespace :k_dsl do
     end
 
     project_sample = KDsl::Manage::Project.new('sample', config_microapp) do
-      watch_path('data_files/**/*.*')
-      watch_path('ruby_files/**/*.rb', ignore: /ruby3.rb$/)
-      watch_path('simple_dsl/**/*.rb')
+      # watch_path('data_files/**/*.*')
+      # watch_path('ruby_files/**/*.rb', ignore: /ruby3.rb$/)
+      # watch_path('simple_dsl/**/*.rb')
+      # watch_path('ruby_files/ruby3.rb')
+      watch_path('data_files/sample.csv')
+      watch_path('simple_dsl/two_dsl.rb')
     end
 
     manager = KDsl.project_manager
@@ -51,8 +54,8 @@ namespace :k_dsl do
     # manager.add_project(project_microapp1)
     # manager.add_project(project_microapp2)
     manager.add_project(project_sample)
-    # manager.register_all_resource_documents
-    # manager.load_all_documents
+    manager.register_all_resource_documents
+    manager.load_all_documents
     
     2.times { puts '' }
     manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
@@ -65,10 +68,11 @@ namespace :k_dsl do
     # document2 = dsl2[:document]
     # # document2.debug(include_header: true)
     # document2.execute_block(run_actions: true)
+    # manager.debug(format: :simple, project_formats: [:resource_document])
 
-    # listener = project_sample.watch
-    # manager.watch
-    # listener.stop
+    listener = project_sample.watch
+    manager.watch
+    listener.stop
     # manager.run('/Users/davidcruwys/dev/kgems/k_dsl/spec/factories/dsls/simple_dsl/two_dsl.rb')
     # manager.watch
     # KDsl.process.file(file)

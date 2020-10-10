@@ -6,15 +6,16 @@ module KDsl
     class ResourceDocument
       extend Forwardable
 
-      attr_accessor :status
+      # attr_accessor :status
       attr_reader :resource
       attr_reader :document
 
-      def_delegator :resource, :load
+      # def_delegator :resource, :load
 
+      def_delegator :resource, :status
       def_delegator :resource, :project
       def_delegator :resource, :source
-      def_delegator :resource, :type, :resource_type
+      def_delegator :resource, :resource_type
       def_delegator :resource, :file
       def_delegator :resource, :watch_path
       def_delegator :resource, :content
@@ -34,10 +35,36 @@ module KDsl
       def_delegator :document, :data
 
       def initialize(resource, document)
-        @status = :initialized
+        # @status = :initialized
         @resource = resource
         @document = document
       end
+
+      # def load_content
+      #   @status = :content_loading
+      #   resource.load_content
+      #   @status = :content_loaded
+      # end
+
+      # def register
+      #   @status = :registering
+      #   resource.register
+      #   @status = :registered
+      # end
+
+      # def load
+      #   @status = :loading
+      #   resource.load
+      #   @status = :loaded
+      # end
+
+      def debug(format: :detail)
+        L.line
+        L.kv 'Status', status
+        resource.debug
+        document.debug(include_header: true)
+      end
+
     end
   end
 end

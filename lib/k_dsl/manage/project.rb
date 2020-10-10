@@ -82,7 +82,12 @@ module KDsl
       end
 
       def add_resource_document(resource, document)
+        # resource_document = resource_documents.find { |rd| rd.resource === resource && rd.document.unique_key === document.unique_key}
         resource_documents << KDsl::ResourceDocuments::ResourceDocument.new(resource, document)
+      end
+
+      def delete_resource_documents_for_resource(resource)
+        resource_documents.delete_if { |rd| rd.resource === resource }
       end
 
       def create_documents(resource)
@@ -147,11 +152,9 @@ module KDsl
         end
       end
 
-      # REFACT: Time for a resource_documents class
       def load_resources
-        @resource_documents.each do |resource_document|
-          resource_document.load
-          resource_document.status = :loaded
+        @resources.each do |resource|
+          resource.load
         end
       end
 
@@ -275,21 +278,48 @@ module KDsl
         files.each do |file|
           puts "\rUpdating #{file}\r"
 
-          resource_document = get_resource_document(file: file)
-          if resource_document
-            resource_document.resource.load_content
-            resource_document.resource.load
+          resource = get_resource(file: file)
+          if resource
+            KDsl::Resources::Resource.reset_instance(resource)
+            resource.load_content
+            resource.register
+            resource.load
+            resource.documents.each { |d| d.execute_block(run_actions: true) }
+
+            resource.debug
 
             2.times { puts '' }
             manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
+          else
+            puts 'resource not registered'
           end
+
+          # resource_document = get_resource_document(file: file)
+          # if resource_document
+          #   resource_document.load_content
+          #   resource_document.register
+          #   resource_document.load
+
+          #   resource_document.debug
+
+          #   2.times { puts '' }
+          #   manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
+          # else
+          #   puts 'resource not registered'
+          # end
 
         end
       end
 
-      def get_resource_document(file: nil)
+      # def get_resource_document(file: nil)
+      #   if file
+      #     @resource_documents.find { |rd| rd.file === file }
+      #   end
+      # end
+
+      def get_resource(file: nil)
         if file
-          @resource_documents.find { |rd| rd.file === file }
+          @resources.find { |rd| rd.file === file }
         end
       end
 
@@ -297,12 +327,13 @@ module KDsl
         if format == :resource
           puts ''
           L.subheading 'List of resources'
-          tp resources,
-          # :state,
+          tp resources.sort_by { |r| [r.source, r.file]},
+          { object_id: {} },
+          :status,
           { source: { } },
-          { type: { display_name: 'R-Type' } },
-          # { raw_data: { width: 40, display_name: 'Data' } },
-          { error: { width: 40, display_method: lambda { |r| r.error && r.error.message ? 'Error' : '' } } },
+          { resource_type: { display_name: 'R-Type' } },
+          { content: { width: 100, display_name: 'Content' } },
+          { error: { width: 40, display_method: lambda { |r| r.error && r.error.message ? '** ERROR **' : '' } } },
           { base_resource_path: { width: 100, display_name: 'Resource Path' } },
           { relative_watch_path: { width: 100, display_name: 'Watch Path' } },
           # { :watch_path => { width: 100, display_name: 'Watch Path' } },
@@ -322,7 +353,10 @@ module KDsl
         elsif format == :resource_document
           puts ''
           L.subheading 'List of documents'
-          tp resource_documents,
+          tp resource_documents.sort_by { |r| [r.type.to_s, r.namespace.to_s, r.key.to_s]},
+            { object_id: {} },
+            { resource_id: { display_method: lambda { |r| r.resource.object_id } } },
+            { document_id: { display_method: lambda { |r| r.document.object_id } } },
             :status,
             { namespace: { width: 20, display_name: 'Namespace' } },
             { key: { width: 20, display_name: 'Key' } },
@@ -331,7 +365,7 @@ module KDsl
             { source: { } },
             { resource_type: { display_name: 'R-Type' } },
             { data: { width: 40, display_name: 'Data' } },
-            { error: { width: 40, display_method: lambda { |r| r.error && r.error.message ? 'Error' : '' } } },
+            { error: { width: 40, display_method: lambda { |r| r.error && r.error.message ? '** ERROR **' : '' } } },
             { base_resource_path: { width: 100, display_name: 'Resource Path' } },
             { relative_watch_path: { width: 100, display_name: 'Watch Path' } },
             # { :watch_path => { width: 100, display_name: 'Watch Path' } },

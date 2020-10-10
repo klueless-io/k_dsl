@@ -12,6 +12,16 @@ module KDsl
       # Resources must belong to a factory
       attr_reader :project
 
+      # Status of the resource
+      # - :initialized
+      # - :content_loading
+      # - :content_loaded
+      # - :registering
+      # - :registered
+      # - :loading
+      # - :loaded
+      attr_reader :status
+
       # Resources create documents via a resource specific factory
       attr_accessor :document_factory
 
@@ -62,9 +72,10 @@ module KDsl
       # documents and some future resources may do as well
       # Currently there will always be a minimum of 1 document even if the resource
       # is not a data resource, e.g. Ruby class
-      attr_reader :documents
+      attr_accessor :documents
 
       def initialize(project: nil, source: nil, file: nil, watch_path: nil)
+        @status = :initialized
         @project = project
         @source = source
         @file = file
@@ -85,7 +96,13 @@ module KDsl
         resource
       end
 
+      def self.reset_instance(resource)
+        resource.project.delete_resource_documents_for_resource(resource)
+        resource.documents = []
+      end
+
       def load_content
+        @status = :content_loading
         @content = nil
         if source === SOURCE_FILE
           if File.exist?(file)
@@ -94,14 +111,19 @@ module KDsl
             @error = KDsl::Error.new("Source file not found: #{file}")
           end
         end
+        @status = :content_loaded
       end
 
       def register
-        document_factory.create_documents
+      @status = :registering
+      document_factory.create_documents
+      @status = :registered
       end
 
       def load
+        @status = :loading
         document_factory.parse_content
+        @status = :loaded
       end
   
       def exist?
@@ -113,6 +135,7 @@ module KDsl
       end
 
       def add_document(document)
+        # Deprecate this line
         project.register_dsl(document)
         project.add_resource_document(self, document)
         document.resource = self
@@ -182,7 +205,7 @@ module KDsl
         L.kv 'resource_type', resource_type
         L.kv 'file', file
         L.kv 'watch_path', watch_path
-        L.kv 'content', content
+        # L.kv 'content', content
         L.kv 'document.count', documents.length
       end
     end
