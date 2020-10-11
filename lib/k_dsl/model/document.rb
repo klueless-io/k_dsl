@@ -29,13 +29,14 @@ module KDsl
 
         @options = options || {}
         @namespace = options[:namespace] || ''
-
+        default_data = options[:default_data] || {}
+        
         @namespace = @namespace.to_s
         @error = nil
 
         # Most documents live within a hash, some tabular documents such as
         # CSV will use an []
-        set_data({})
+        set_data(default_data)
 
         @block = block if block_given?
       end
@@ -67,21 +68,6 @@ module KDsl
       ensure
         @run_actions = nil
         return
-      end
-
-      # REFACT: This is not really part of the document, so how could it be refactored
-      #         and used as some sort of decorator or importer module
-      def import(key, type = KDsl.config.default_document_type, namespace = nil)
-        project = resource&.project
-
-        if project
-          data = project.get_data(key, type, namespace)
-          result = KDsl::Util.data.to_struct(data)
-  
-          result
-        else
-          Log.warn 'Import Skipped: Document is not linked to a project'
-        end
       end
 
       # REFACT: This is not really part of the document, so how could it be refactored

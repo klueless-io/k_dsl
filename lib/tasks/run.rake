@@ -17,6 +17,10 @@ namespace :k_dsl do
 
     KDsl.setup(log_level: KDsl::LOG_INFO)
 
+    # Add any extra extensions that you reqire
+    # Documents can import data from other documents
+    KDsl::Model::Document.include(KDsl::Extensions::Importable)
+
     config_command = KDsl::Manage::ProjectConfig.new do |config|
       config.base_path = BASE_PATH
       config.base_resource_path = config.base_path
@@ -50,9 +54,9 @@ namespace :k_dsl do
 
     manager = KDsl.project_manager
 
-    manager.add_project(project_command)
-    manager.add_project(project_microapp1)
-    manager.add_project(project_microapp2)
+    # manager.add_project(project_command)
+    # manager.add_project(project_microapp1)
+    # manager.add_project(project_microapp2)
     manager.add_project(project_sample)
     manager.register_all_resource_documents
     manager.load_all_documents
@@ -64,10 +68,9 @@ namespace :k_dsl do
     # document1 = dsl1[:document]
     # document1.debug(include_header: true)
 
-    # dsl2 = project_sample.get_dsl('my_name2')
-    # document2 = dsl2[:document]
-    # # document2.debug(include_header: true)
-    # document2.execute_block(run_actions: true)
+    resource_document2 = project_sample.get_resource_document('my_name2').document
+    resource_document2.debug(include_header: true)
+    resource_document2.execute_block(run_actions: true)
     # manager.debug(format: :simple, project_formats: [:resource_document])
 
     # listener = project_sample.watch

@@ -108,6 +108,12 @@ RSpec.describe KDsl::Model::Document do
 
         it { expect(subject.options).to eq(a: 1, b: '2') }
       end
+
+      context 'when default_data option is provided' do
+        let(:options) { { default_data: { a: 1, b: '2' } } }
+
+        it { expect(subject.data).to eq(a: 1, b: '2') }
+      end
     end
 
     context 'with &block' do
