@@ -15,6 +15,9 @@ require 'k_dsl/logger/log_helper'
 require 'k_dsl/logger/log_util'
 require 'table_print' # Debugging code needs to be decoupled from k_dsl
 
+# Extensions
+require 'k_dsl/extensions/importable'
+
 # Project management for DSLs and other resources
 require 'k_dsl/manage/project'
 require 'k_dsl/manage/project_config'

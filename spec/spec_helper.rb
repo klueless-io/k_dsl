@@ -15,4 +15,6 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  KDsl::Model::Document.include(KDsl::Extensions::Importable)
 end
