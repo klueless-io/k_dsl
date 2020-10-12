@@ -6,17 +6,20 @@ module KDsl
       # Currently used an extension to document and accesses the linked 
       # resource.project to search for a suitable data attachment
       def import(key, type = KDsl.config.default_document_type, namespace = nil)
-        project = resource&.project
+        proj = resource&.project
+        return import_warn('Import Skipped: Document not linked to a project') unless proj
 
-        if project
-          # REFACT: Must support document not found error handling
-          data = project.get_data(key, type, namespace)
-          result = KDsl::Util.data.to_struct(data)
+        data = proj.get_data(key, type, namespace)
+        result = KDsl::Util.data.to_struct(data)
 
-          result
-        else
-          L.warn 'Import Skipped: Document is not linked to a project'
-        end
+        result
+      end
+
+      private
+
+      def import_warn(message)
+        L.warn message
+        nil
       end
     end
   end
