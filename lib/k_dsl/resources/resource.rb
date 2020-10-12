@@ -207,7 +207,7 @@ module KDsl
         L.kv 'resource_type', resource_type
         L.kv 'file', file
         L.kv 'watch_path', watch_path
-        L.kv 'content', content
+        # L.kv 'content', content
         L.kv 'document.count', documents.length
       end
     end
