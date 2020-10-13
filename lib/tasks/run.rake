@@ -18,8 +18,8 @@ namespace :k_dsl do
     KDsl.setup(log_level: KDsl::LOG_INFO)
 
     # Add any extra extensions that you reqire
-    # Documents can import data from other documents
-    KDsl::Model::Document.include(KDsl::Extensions::Importable)
+    KDsl::Model::Document.include(KDsl::Extensions::Importable)     # Documents can import data from other documents
+    KDsl::Model::Document.include(KDsl::Extensions::Writable)       # Documents can write their contents out to the cache path in JSON or YAML
 
     config_command = KDsl::Manage::ProjectConfig.new do |config|
       config.base_path = BASE_PATH
@@ -68,8 +68,17 @@ namespace :k_dsl do
     # document1 = dsl1[:document]
     # document1.debug(include_header: true)
 
+    # resource_document = project_sample.get_resource_document('my_name').document
+    # resource_document.debug(include_header: true)
+    # resource_document.execute_block(run_actions: true)
+
+
+    # resource_document1 = project_sample.get_resource_document('my_name1').document
+    # resource_document1.debug(include_header: true)
+    # resource_document1.execute_block(run_actions: true)
+
     resource_document2 = project_sample.get_resource_document('my_name2').document
-    resource_document2.debug(include_header: true)
+    # resource_document2.debug(include_header: true)
     resource_document2.execute_block(run_actions: true)
     # manager.debug(format: :simple, project_formats: [:resource_document])
 

@@ -1,0 +1,21 @@
+{
+  "settings": {
+    "rails_port": 3000,
+    "model": "User",
+    "active": true
+  },
+  "custom_rows": {
+    "rows": [
+      {
+        "column1": "david",
+        "column2": null,
+        "column3": false
+      },
+      {
+        "column1": "david",
+        "column2": "cruwys",
+        "column3": true
+      }
+    ]
+  }
+}

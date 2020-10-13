@@ -6,28 +6,6 @@ RSpec.describe KDsl::Model::Table do
   let(:data) { {} }
   let(:instance) { described_class.new(data) }
 
-  describe '#clean_symbol' do
-    subject { instance.clean_symbol(value) }
-
-    let(:value) { nil }
-
-    context 'when value is nil' do
-      it { is_expected.to be_nil }
-    end
-
-    context 'when value is string' do
-      let(:value) { 'a_string' }
-
-      it { is_expected.to eq('a_string') }
-    end
-
-    context 'when value is :symbol' do
-      let(:value) { :a_symbol }
-
-      it { is_expected.to eq('a_symbol') }
-    end
-  end
-
   describe '#field' do
     context '@name of field' do
       context 'when name is string' do
