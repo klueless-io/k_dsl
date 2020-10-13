@@ -33,6 +33,8 @@ module KDsl
         @base_resource_path = Dir.getwd
 
         begin
+          # Create a video for KTG
+          # https://stackoverflow.com/questions/9859846/instance-eval-doesnt-work-with-att-accessor
           instance_eval(&block) if block_given?
         rescue => exception
           L.heading "Invalid code block in project config"
