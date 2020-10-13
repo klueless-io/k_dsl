@@ -10,37 +10,42 @@ module KDsl
       # with extra functionality or predefine the fields for a table
       #
       # Currently used as a class extension to KDsl
+
+      # Create a new MicroApp in a variety of languages
       def microapp(key, **options, &block)
-        valid_types = nil
-        build_document(key, :microapp, valid_types, **options, &block)
+        build_document(key, :microapp, **options, &block)
       end
 
-      # def self.artifact(k_key, type: :entity, **options, &block)
+      # Create a Structure for holding general blueprints, often used when initializing an application
+      def blueprint(key, **options, &block)
+        build_document(key, :blueprint, document_class: KDsl::Model::BlueprintDocument, **options, &block)
+      end
+
+      # def artifact(key, type: :entity, **options, &block)
       #   valid_types = [:entity, :value_object, :app_settings, :command]
-      #   build_document(k_key, type, valid_types, options, &block)
+      #   build_document(key, type, valid_types, **options, &block)
       # end
 
-      # def self.blueprint(k_key, **options, &block)
-      #   build_document(k_key, :blueprint, nil, options, &block)
+      # def blueprint(key, **options, &block)
+      #   valid_types = nil
+      #   build_document(key, :blueprint, valid_types, **options, &block)
       # end
 
-      # def self.domain(k_key, **options, &block)
-      #   build_document(k_key, :domain, nil, options, &block)
+      # def domain(key, **options, &block)
+      #   valid_types = nil
+      #   build_document(key, :domain, valid_types, **options, &block)
       # end
 
-      # def self.cmd(k_key, **options, &block)
-      #   build_document(k_key, :cmd, nil, options, &block)
+      # def cmd(key, **options, &block)
+      #   valid_types = nil
+      #   build_document(key, :cmd, valid_types, **options, &block)
       # end
 
 
-      # def self.structure(k_key, **options, &block)
-      #   build_document(k_key, :structure, nil, options, &block)
+      # def data(key, **options, &block)
+      #   valid_types = nil
+      #   build_document(key, :data, nil, **options, &block)
       # end
-
-      # def self.data(k_key, **options, &block)
-      #   build_document(k_key, :data, nil, options, &block)
-      # end
-
     end
   end
 end

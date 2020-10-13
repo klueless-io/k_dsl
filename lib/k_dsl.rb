@@ -49,6 +49,9 @@ require 'k_dsl/model/document'
 require 'k_dsl/model/table'
 require 'k_dsl/model/settings'
 
+# Advanced document structures
+require 'k_dsl/model/blueprint_document'
+
 # Data decorators
 require 'k_dsl/decorator/helper'
 require 'k_dsl/decorator/lowercase_decorator'
