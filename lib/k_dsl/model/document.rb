@@ -136,6 +136,10 @@ module KDsl
         @data.clone
       end
 
+      def data_struct
+        KDsl::Util.data.to_struct(data)
+      end
+
       def get_node_type(node_name)
         node_name = KDsl::Util.data.clean_symbol(node_name)
         node_data = @data[node_name]
