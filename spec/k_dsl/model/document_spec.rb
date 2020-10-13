@@ -445,105 +445,155 @@ RSpec.describe KDsl::Model::Document do
       end
     end
   end
+  
+  describe '#data_struct' do
+    let(:action) { instance.data_struct }
 
-  #   describe 'write as' do
+    before { instance.execute_block }
 
-  #     let(:some_file) { Tempfile.new() }
-  #     let(:json_file) { Tempfile.new(['','.json']) }
-  #     let(:yaml_file) { Tempfile.new(['','.yaml']) }
-      
-  #     after do
-  #       some_file.unlink
-  #       json_file.unlink
-  #       yaml_file.unlink
-  #     end
+    context '.settings' do
+      subject { action.settings }
 
-  #     subject {
-  #       Klue::Dsl::DocumentDsl.new name do 
-  #         settings do
-  #           rails_port        3000
-  #           model             'User'
-  #           active            true
-  #         end
+      let(:block) do
+        lambda do |_|
+          settings do
+            a "A"
+            b 1
+            c true
+            d false
+          end
+        end
+      end
 
-  #         rows :custom_rows do
+      it { expect(subject).to_not be_nil }
+      it { expect(subject).to have_attributes(a: "A", b: 1, c: true, d: false) }
+    end
 
-  #           fields [:column1, :column2, f(:column3, false)]
+    context '.table' do
+      subject { action.table }
 
-  #           row column1: 'david'  
-  #           row 'david','cruwys', column3: true
+      let(:block) do
+        lambda do |_|
+          table do
+            row c1: "A", c2: 1
+            row c1: "B", c2: true
+            row c1: "C", c2: false
+          end
+        end
+      end
 
-  #         end
-  #       end
-  #     }
+      it { is_expected.to respond_to(:fields)}
+      it { is_expected.to respond_to(:rows)}
 
-  #     context 'data' do
+      context '.fields' do
+        subject { action.table.fields }
 
-  #       it 'fail to write for unknown extension' do
-  #         expect { subject.write_data(some_file.path) }.to raise_error 'Provide a valid extension or as_type. Supported types: [json, yaml]'
-  #       end
-        
-  #       it 'fail to write for unknown as_type' do
-  #         expect { subject.write_data(some_file.path, as_type: :abc) }.to raise_error 'Provide a valid extension or as_type. Supported types: [json, yaml]'
-  #       end
+        it { is_expected.to be_empty }
 
-  #       it 'write data as_type :json' do
-  #         subject.write_data(some_file.path, as_type: :json)
-  #         expect(File.exist?(some_file.path)).to be_truthy
-  #       end
+      end
 
-  #       it 'write data as json' do
-  #         subject.write_data(json_file.path)
-  #         expect(File.exist?(json_file.path)).to be_truthy
-  #       end
+      context '.rows' do
+        subject { action.table.rows }
 
-  #       it 'write data as_type :yaml' do
-  #         subject.write_data(some_file.path, as_type: :yaml)
-  #         expect(File.exist?(some_file.path)).to be_truthy
-  #       end
+        it { is_expected.to include( have_attributes(c1: "A", c2: 1) ) }
+        it { is_expected.to include( have_attributes(c1: "B", c2: true) ) }
+        it { is_expected.to include( have_attributes(c1: "C", c2: false) ) }
+      end
+    end
 
-  #       it 'write data as yaml' do
-  #         subject.write_data(yaml_file.path)
-  #         expect(File.exist?(yaml_file.path)).to be_truthy
-  #       end
+    context 'complex - rows and settings' do
 
-  #     end
+      let(:block) do
+        lambda do |_|
+          settings do
+            path "~/somepath"
+          end
 
-  #     context 'data' do
+          c = settings :contact do
+            fname 'david'
+            lname 'cruwys'
+          end
 
-  #       it 'fail to write for unknown extension' do
-  #         expect { subject.write_meta(some_file.path) }.to raise_error 'Provide a valid extension or as_type. Supported types: [json, yaml]'
-  #       end
-        
-  #       it 'fail to write for unknown as_type' do
-  #         expect { subject.write_meta(some_file.path, as_type: :abc) }.to raise_error 'Provide a valid extension or as_type. Supported types: [json, yaml]'
-  #       end
+          table do
+            fields [:column1, f(:column2, 99, :integer), f(:column3, false, :boolean), f(:column4, default: 'CUSTOM VALUE'), f(:column5, '')]
+    
+            row 'row1-c1', 66, true, 'row1-c4'
+            row
+          end
+    
+          table :another_table do
+            fields %w[column1 column2]
+    
+            row column1: c.fname
+            row column2: c.lname
+          end
+        end
+      end
 
-  #       it 'write data as_type :json' do
-  #         subject.write_meta(some_file.path, as_type: :json)
-  #         expect(File.exist?(some_file.path)).to be_truthy
-  #       end
- 
-  #       it 'write data as json' do
-  #         subject.write_meta(json_file.path)
-  #         expect(File.exist?(json_file.path)).to be_truthy
-  #       end
+      context '.settings' do
+        subject { action.settings }
+  
+        it { expect(subject).to_not be_nil }
+        it { expect(subject).to have_attributes(path: "~/somepath") }
+      end
 
-  #       it 'write data as_type :yaml' do
-  #         subject.write_meta(some_file.path, as_type: :yaml)
-  #         expect(File.exist?(some_file.path)).to be_truthy
-  #       end
+      context '.contact' do
+        subject { action.contact }
+  
+        it { expect(subject).to_not be_nil }
+        it { expect(subject).to have_attributes(fname: 'david', lname: 'cruwys') }
+      end
 
-  #       it 'write data as yaml' do
-  #         subject.write_meta(yaml_file.path)
-  #         expect(File.exist?(yaml_file.path)).to be_truthy
-  #       end
+      context '.table' do
+        subject { action.table }
+  
+        it { is_expected.to respond_to(:fields)}
+        it { is_expected.to respond_to(:rows)}
+  
+        context '.fields' do
+          subject { action.table.fields }
 
-  #     end
+          it { is_expected.not_to be_empty }
+          it { is_expected.to include( have_attributes(name: "column1", default: nil, type: 'string') ) }
+          it { is_expected.to include( have_attributes(name: "column2", default: 99, type: 'integer') ) }
+          it { is_expected.to include( have_attributes(name: "column3", default: false, type: 'boolean') ) }
+          it { is_expected.to include( have_attributes(name: "column4", default: 'CUSTOM VALUE', type: 'string') ) }
+          it { is_expected.to include( have_attributes(name: "column5", default: '', type: 'string') ) }
 
-  #   end
+        end
+  
+        context '.rows' do
+          subject { action.table.rows }
 
-  # end
+          it { is_expected.to include( have_attributes(column1: "row1-c1", column2: 66, column3: true, column4: 'row1-c4', column5: '') ) }
+          it { is_expected.to include( have_attributes(column1: nil, column2: 99, column3: false, column4: 'CUSTOM VALUE', column5: '') ) }
+        end
+      end
+
+      context '.another_table' do
+        subject { action.another_table }
+  
+        it { is_expected.to respond_to(:fields)}
+        it { is_expected.to respond_to(:rows)}
+  
+        context '.fields' do
+          subject { action.another_table.fields }
+
+          it { is_expected.not_to be_empty }
+          it { is_expected.to include( have_attributes(name: "column1", default: nil, type: 'string') ) }
+          it { is_expected.to include( have_attributes(name: "column2", default: nil, type: 'string') ) }
+
+        end
+  
+        context '.rows' do
+          subject { action.another_table.rows }
+
+          it { is_expected.to include( have_attributes(column1: "david", column2: nil) ) }
+          it { is_expected.to include( have_attributes(column1: nil, column2: 'cruwys') ) }
+        end
+      end
+    end
+  end
 
   # describe 'klue.process_code' do
 
@@ -659,71 +709,6 @@ RSpec.describe KDsl::Model::Document do
   
   #   end
   
-  # end
-
-
-  # describe 'to_struct' do
-
-  #   subject { Klue::Dsl::DocumentDsl.to_struct(data) }
-
-  #   context 'simple settings' do
-  #     let(:data) { { "settings": {"a":"A", "b": 1, "c": true, "d": false} } }
-
-  #     it { expect(subject.settings).to_not be_nil }
-  #     it { expect(subject.settings.a).to eq("A") }
-  #     it { expect(subject.settings.b).to eq(1) }
-  #     it { expect(subject.settings.c).to eq(true) }
-  #     it { expect(subject.settings.d).to eq(false) }
-  #   end
-
-  #   context 'array of rows' do
-  #     let(:data) { { "rows": [
-  #       {"c1":"A", "c2": 1},
-  #       {"c1":"B", "c2": true},
-  #       {"c1":"C", "c2": false}
-  #       ] } }
-
-  #     it { expect(subject.rows).to_not be_nil }
-  #     it { expect(subject.rows.length).to eq(3) }
-  #     it { expect(subject.rows[0].c1).to eq('A') }
-  #     it { expect(subject.rows[0].c2).to eq(1) }
-  #     it { expect(subject.rows[1].c1).to eq('B') }
-  #     it { expect(subject.rows[1].c2).to eq(true) }
-  #     it { expect(subject.rows[2].c1).to eq('C') }
-  #     it { expect(subject.rows[2].c2).to eq(false) }
-  #   end
-
-  #   context 'complex - rows and settings' do
-  #     let(:data) { { 
-  #       "options": {
-  #         "a":"A", 
-  #         "b": 1, 
-  #         "c": true, 
-  #         "d": false
-  #         }, 
-  #       "records": [
-  #         {"c1":"A", "c2": 1}
-  #       ],
-  #       "rows": [
-  #         {"f1":"B", "f2": true},
-  #         {"f1":"C", "f2": false}
-  #       ]
-  #     } }
-
-  #     it { expect(subject.options).to_not be_nil }
-  #     it { expect(subject.options.a).to eq("A") }
-  #     it { expect(subject.options.b).to eq(1) }
-  #     it { expect(subject.options.c).to eq(true) }
-  #     it { expect(subject.options.d).to eq(false) }
-
-  #     it { expect(subject.records[0].c1).to eq('A') }
-  #     it { expect(subject.records[0].c2).to eq(1) }
-
-  #     it { expect(subject.rows[0].f1).to eq('B') }
-  #     it { expect(subject.rows[0].f2).to eq(true) }
-  #     it { expect(subject.rows[1].f1).to eq('C') }
-  #     it { expect(subject.rows[1].f2).to eq(false) }
-  #   end
   # end
 
 end
