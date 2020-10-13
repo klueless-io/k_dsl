@@ -18,6 +18,7 @@ require 'table_print' # Debugging code needs to be decoupled from k_dsl
 # Extensions
 require 'k_dsl/extensions/importable'
 require 'k_dsl/extensions/writable'
+require 'k_dsl/extensions/document_factories'
 
 # Project management for DSLs and other resources
 require 'k_dsl/manage/project'
