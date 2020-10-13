@@ -52,13 +52,7 @@ module KDsl
     # instantiate a global project, but other project_manager have their
     # own namespaces that can be used to issolate for memory management
     def document(key = nil, type = nil, **options, &block)
-      document = build_document(key, type, nil, **options, &block)
-
-      if KDsl.target_resource
-        KDsl.target_resource.add_document(document)
-      end
-
-      document
+      build_document(key, type, nil, **options, &block)
     end
 
     def log_warn?
@@ -87,7 +81,13 @@ module KDsl
 
       key ||= SecureRandom.uuid.to_s
 
-      KDsl::Model::Document.new(key, type, **options, &block)
+      document = KDsl::Model::Document.new(key, type, **options, &block)
+
+      if KDsl.target_resource
+        KDsl.target_resource.add_document(document)
+      end
+
+      document
     end
   end
 end

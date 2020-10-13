@@ -17,21 +17,24 @@ namespace :k_dsl do
 
     KDsl.setup(log_level: KDsl::LOG_INFO)
 
-    # Add any extra extensions that you reqire
+    # Add any extra extensions that you require on documents
     KDsl::Model::Document.include(KDsl::Extensions::Importable)     # Documents can import data from other documents
     KDsl::Model::Document.include(KDsl::Extensions::Writable)       # Documents can write their contents out to the cache path in JSON or YAML
 
-    config_command = KDsl::Manage::ProjectConfig.new do |config|
-      config.base_path = BASE_PATH
-      config.base_resource_path = config.base_path
+    # Add any extra extensions for factory methods
+    KDsl.extend(KDsl::Extensions::DocumentFactories)
+
+    config_command = KDsl::Manage::ProjectConfig.new do
+      self.base_path = BASE_PATH
+      self.base_resource_path = config.base_path
     end
 
     project_command = KDsl::Manage::Project.new('quick_commands', config_command)
     project_command.watch_path('microapp/_cmds/**/*.rb')
 
-    config_microapp = KDsl::Manage::ProjectConfig.new do |config|
-      config.base_path = BASE_PATH
-      config.base_resource_path = '~/dev/kgems/k_dsl/spec/factories/dsls'
+    config_microapp = KDsl::Manage::ProjectConfig.new do
+      self.base_path = BASE_PATH
+      self.base_resource_path = '~/dev/kgems/k_dsl/spec/factories/dsls'
     end
 
     project_microapp1 = KDsl::Manage::Project.new('microapp1', config_microapp) do
