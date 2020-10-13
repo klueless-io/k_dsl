@@ -16,6 +16,7 @@ KDsl.microapp :spidy_expireddomains do
   end
 
   actions do
+    # I should move this into the test itself
     write_json is_edit: true
   end
 end

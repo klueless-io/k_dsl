@@ -28,6 +28,7 @@ module KDsl
 
     def setup(log_level: LOG_NONE, project_manager: Manage::ProjectManager.new)
 
+      # REFACT: NOT USING CORRECTLY YET, see above
       @log_level = log_level
 
       if log_info?
@@ -52,7 +53,7 @@ module KDsl
     # instantiate a global project, but other project_manager have their
     # own namespaces that can be used to issolate for memory management
     def document(key = nil, type = nil, **options, &block)
-      build_document(key, type, nil, **options, &block)
+      build_document(key, type, **options, &block)
     end
 
     def log_warn?
@@ -69,7 +70,7 @@ module KDsl
 
     private
 
-    def build_document(key, type, valid_types, **options, &block)
+    def build_document(key, type, valid_types: nil, document_class: KDsl::Model::Document, **options, &block)
       # L.kv 'Build Document', k_key
       # L.kv 'K-Key', k_key
       # L.kv 'K-Type', type
@@ -81,7 +82,7 @@ module KDsl
 
       key ||= SecureRandom.uuid.to_s
 
-      document = KDsl::Model::Document.new(key, type, **options, &block)
+      document = document_class.new(key, type, **options, &block)
 
       if KDsl.target_resource
         KDsl.target_resource.add_document(document)

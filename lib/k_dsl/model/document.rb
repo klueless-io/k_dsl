@@ -140,6 +140,10 @@ module KDsl
         KDsl::Util.data.to_struct(data)
       end
 
+      def raw_data_struct
+        KDsl::Util.data.to_struct(raw_data)
+      end
+
       def get_node_type(node_name)
         node_name = KDsl::Util.data.clean_symbol(node_name)
         node_data = @data[node_name]
@@ -176,11 +180,12 @@ module KDsl
         debug_header if include_header
 
         # tp dsls.values, :k_key, :k_type, :state, :save_at, :last_at, :data, :last_data, :source, { :file => { :width => 150 } } 
-        puts JSON.pretty_generate(data)
+        # puts JSON.pretty_generate(data)
+        L.ostruct(raw_data_struct)
       end
 
       def debug_header
-        L.heading 'Document DSL'
+        L.heading self.class.name
         L.kv 'key', key
         L.kv 'type', type
         L.kv 'namespace', namespace
