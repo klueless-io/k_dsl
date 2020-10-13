@@ -82,6 +82,7 @@ RSpec.describe KDsl do
       subject { described_class.document }
 
       it { is_expected.not_to be_nil }
+      it { is_expected.to be_a(KDsl::Model::Document) }
 
       describe '.key' do
         it { expect(subject.key).not_to be_nil }
