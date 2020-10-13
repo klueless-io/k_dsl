@@ -24,6 +24,7 @@ KDsl.document :my_name2 do
   end
 
   actions do
+    # write_json is_edit: true
     # puts
     # L.warn 'run action'
     # csv.each do |row|

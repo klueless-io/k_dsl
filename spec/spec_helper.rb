@@ -17,4 +17,5 @@ RSpec.configure do |config|
   end
 
   KDsl::Model::Document.include(KDsl::Extensions::Importable)
+  KDsl::Model::Document.include(KDsl::Extensions::Writable)
 end
