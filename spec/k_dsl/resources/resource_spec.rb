@@ -398,8 +398,6 @@ RSpec.describe KDsl::Resources::Resource do
           end
 
           describe '#load' do
-            KDsl::Model::Document.include(KDsl::Extensions::Importable)
-
             subject { resource.documents[1].data }
 
             before { resource.load }

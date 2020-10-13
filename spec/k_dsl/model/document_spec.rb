@@ -3,7 +3,9 @@
 require 'spec_helper'
 
 RSpec.describe KDsl::Model::Document do
-  subject { described_class.new(key, &block) }
+  subject { instance }
+
+  let(:instance) { described_class.new(key, &block) }
 
   let(:key) { 'some_name' }
   let(:type) { :controller }
@@ -44,75 +46,77 @@ RSpec.describe KDsl::Model::Document do
 
   describe '#constructor' do
     context 'with key only' do
-      subject { described_class.new(key) }
+      let(:instance) { described_class.new(key) }
 
-      it 'key is set' do
-        expect(subject.key).to eq(key)
-      end
-      it 'type has default value' do
-        expect(subject.type).to eq(KDsl.config.default_document_type)
-      end
-      it 'namespace is empty' do
-        expect(subject.namespace).to be_empty
-      end
-      it 'options are empty' do
-        expect(subject.options).to be_empty
-      end
-    end
+      it {
+        expect(subject).to have_attributes(
+          key: 'some_name',
+          type: KDsl.config.default_document_type,
+          namespace: '',
+          options: {},
+          data: {}
+        )
+      }
 
-    context 'with key, type' do
-      subject { described_class.new(key, type) }
+      context 'with key and type' do
+        let(:instance) { described_class.new(key, type) }
+  
+        it 'type is set' do
+          expect(subject.type).to eq(type)
+        end
+  
+        context 'when type is' do
+          subject { instance.type }
+  
+          context 'nil' do
+            let(:type) { nil }
+    
+            it { is_expected.to eq(KDsl.config.default_document_type) }
+          end
+  
+          context ':some_data_type' do
+            let(:type) { :some_data_type }
+    
+            it { is_expected.to eq(:some_data_type) }
+          end
+        end
 
-      it 'key is set' do
-        expect(subject.key).to eq(key)
-      end
-      it 'type is set' do
-        expect(subject.type).to eq(type)
-      end
-      it 'namespace is empty' do
-        expect(subject.namespace).to be_empty
-      end
-      it 'options are empty' do
-        expect(subject.options).to be_empty
-      end
-    end
+        context 'with key, type and namespace' do
+          let(:instance) { described_class.new(key, type, namespace: namespace) }
+    
+          it 'namespace is set' do
+            expect(subject.namespace).to eq('spaceman')
+          end
+          it 'options have namespace' do
+            expect(subject.options).to eq namespace: :spaceman
+          end
+        end
 
-    context 'with key, type, namespace' do
-      subject { described_class.new(key, type, namespace: namespace) }
+        context 'with key, type and other options' do
+          subject { instance.options }
 
-      it 'key is set' do
-        expect(subject.key).to eq(key)
-      end
-      it 'type is set' do
-        expect(subject.type).to eq(type)
-      end
-      it 'namespace is set' do
-        expect(subject.namespace).to eq('spaceman')
-      end
-      it 'options have namespace' do
-        expect(subject.options).to eq namespace: :spaceman
-      end
-    end
+          let(:instance) { described_class.new(key, type, **options) }
+    
+          let(:options) { {} }
 
-    context 'with options' do
-      subject { described_class.new(key, type, **options ) }
+          it { is_expected.to eq({}) }
 
-      let(:options) { {} }
-
-      context 'when options are nil' do
-        it { expect(subject.options).to eq({}) }
-      end
-
-      context 'when custom options are provided' do
-        let(:options) { { a: 1, b: '2' } }
-
-        it { expect(subject.options).to eq(a: 1, b: '2') }
-      end
-
-      context 'when default_data option is provided' do
-        let(:options) { { default_data: { a: 1, b: '2' } } }
-
-        it { expect(subject.data).to eq(a: 1, b: '2') }
+          context 'when custom options are provided' do
+            let(:options) { { a: 1, b: '2' } }
+    
+            it { is_expected.to eq(a: 1, b: '2') }
+          end
+    
+          context 'when default_data option is provided' do
+            let(:options) { { default_data: { a: 1, b: '2' } } }
+    
+            it { is_expected.to eq(default_data: { a: 1, b: '2' }) }
+            
+            it 'alters the default starting data to {:a=>1, :b=>"2"}' do
+              expect(instance.data).to eq(a: 1, b: '2')
+            end
+          end
+        end
       end
     end
 
@@ -157,161 +161,118 @@ RSpec.describe KDsl::Model::Document do
     end
   end
 
-  describe '#' do
-    context 'with minimum params' do
-      it {
-        expect(subject).to have_attributes(
-          key: 'some_name',
-          type: :entity,
-          namespace: '',
-          options: {},
-          data: {}
-        )
-      }
-    end
+  describe '#get_node_type' do
+    # subject { instance.data}
 
-    context 'with type' do
-      subject { described_class.new key, type }
+    before { instance.execute_block }
 
-      context 'when nil' do
-        let(:type) { nil }
+    let(:block) do
+      lambda do |_|
+        settings do
+        end
+        settings :key_values do
+        end
 
-        it { expect(subject.type).to eq(KDsl.config.default_document_type) }
-      end
+        table do
+        end
 
-      context 'when :some_data_type' do
-        let(:type) { :some_data_type }
-
-        it { expect(subject.type).to eq(:some_data_type) }
-      end
-    end
-
-    context 'with namespace' do
-      subject { described_class.new key, namespace: namespace }
-
-      context 'when nil' do
-        let(:namespace) { nil }
-
-        it { expect(subject.namespace).to eq('') }
-      end
-
-      context 'when :some_namespace' do
-        let(:namespace) { :some_namespace }
-
-        it { expect(subject.namespace).to eq('some_namespace') }
-      end
-    end
-
-    context 'with options' do
-      let(:options) { {} }
-
-      subject { described_class.new key, **options }
-
-      context 'when options are nil' do
-        it { expect(subject.options).to eq({}) }
-      end
-
-      context 'when custom options are provided' do
-        let(:options) { { a: 1, b: '2' } }
-
-        it { expect(subject.options).to eq(a: 1, b: '2') }
-      end
-    end
-
-    context 'with &block' do
-      subject { described_class.new key, **options, &block }
-
-      let(:options) { {} }
-      let(:block) do
-        lambda do |_|
-          @data = { thunder_birds: :are_go }
+        table :custom do
         end
       end
+    end
 
-      it { expect(subject.data).to eq({}) }
+    it { expect { subject.get_node_type(:xmen) }.to raise_error(KDsl::Error) }
+    it { expect(subject.get_node_type(:settings)).to eq(:settings) }
+    it { expect(subject.get_node_type('settings')).to eq(:settings) }
+    it { expect(subject.get_node_type('key_values')).to eq(:settings) }
+    it { expect(subject.get_node_type('table')).to eq(:table) }
+    it { expect(subject.get_node_type('custom')).to eq(:table) }
+  end
 
-      context 'after execute_block' do
-        before { subject.execute_block }            
+  describe '.raw_data' do
+    subject { instance.raw_data }
 
-        it { expect(subject.data).to eq(thunder_birds: :are_go) }
+    before { instance.execute_block }
+
+    let(:block) do
+      lambda do |_|
+        settings do
+        end
+        settings :key_values do
+        end
+
+        table do
+        end
+
+        table :custom do
+        end
       end
     end
+
+    # Data: Includes Meta, eg. fields
+    # {"settings"=>{}, "key_values"=>{}, "table"=>{"fields"=>[], "rows"=>[]}, "custom"=>{"fields"=>[], "rows"=>[]}}
+
+    # RawData: Excludes Meta
+    # {"settings"=>{}, "key_values"=>{}, "table"=>{"rows"=>[]}, "custom"=>{"rows"=>[]}}
+    it { is_expected.to eq({"settings"=>{}, "key_values"=>{}, "table"=>{"rows"=>[]}, "custom"=>{"rows"=>[]}}) }
   end
 
   describe 'configure settings' do
-    subject { described_class.new(key, &block) }
-
-    before { subject.execute_block }
-
-    context 'setting groups' do
-      context 'with default name' do
-        let(:block) do
-          lambda do |_|
-            settings do
-            end
-          end
-        end
-
-        it { expect(subject.data).to eq('settings' => {}) }
-      end
-
-      context 'with custom name' do
-        let(:block) do
-          lambda do |_|
-            settings :key_values do
-            end
-          end
-        end
-
-        it { expect(subject.data).to eq('key_values' => {}) }
-      end
-
-      context 'with multiple groups' do
-        let(:block) do
-          lambda do |_|
-            settings do
-            end
-            settings :key_values do
-            end
-            settings :name_values do
-            end
-          end
-        end
-
-        it { expect(subject.data).to eq('settings' => {}, 'key_values' => {}, 'name_values' => {}) }
-      end
-    end
 
     context 'default DI/IOC class' do
-      subject { described_class.new(key).settings }
+      subject { instance.settings }
 
       it { expect(subject).to be_a(KDsl::Model::Settings) }
     end
 
-    context 'setting key/values' do
-      let(:block) do
-        lambda do |_|
-          settings do
-            model             'user'
-            rails_port        3000
-            active            true
+    context '.data' do
+      subject { instance.data }
+
+      before { instance.execute_block }
+    
+      context 'setting groups' do
+        context 'with default name' do
+          let(:block) do
+            lambda do |_|
+              settings do
+              end
+            end
           end
+  
+          it { is_expected.to eq('settings' => {}) }
+        end
+  
+        context 'with custom name' do
+          let(:block) do
+            lambda do |_|
+              settings :key_values do
+              end
+            end
+          end
+  
+          it { is_expected.to eq('key_values' => {}) }
+        end
+  
+        context 'with multiple groups' do
+          let(:block) do
+            lambda do |_|
+              settings do
+              end
+              settings :key_values do
+              end
+              settings :name_values do
+              end
+            end
+          end
+  
+          it { is_expected.to eq('settings' => {}, 'key_values' => {}, 'name_values' => {}) }
         end
       end
 
-      it do
-        expect(subject.data).to eq('settings' =>
-          {
-            'model' => 'user',
-            'rails_port' => 3000,
-            'active' => true
-          })
-      end
-
-      context 'with decorators - sample 1' do
+      context 'setting key/values' do
         let(:block) do
           lambda do |_|
-            settings decorators: [Pluralizer, :uppercase] do
+            settings do
               model             'user'
               rails_port        3000
               active            true
@@ -320,149 +281,167 @@ RSpec.describe KDsl::Model::Document do
         end
 
         it do
-          expect(subject.data).to eq('settings' =>
+          is_expected.to eq('settings' =>
             {
-              'model' => 'USER',
-              'model_plural' => 'USERS',
+              'model' => 'user',
               'rails_port' => 3000,
               'active' => true
             })
         end
-      end
 
-      context 'with decorators - sample 2' do
-        let(:block) do
-          lambda do |_|
-            settings decorators: [AlterKeyValues, AlterStructure] do
-              first_name 'David'
-              last_name 'Cruwys'
-              age 40
+        context 'with decorators - sample 1' do
+          let(:block) do
+            lambda do |_|
+              settings decorators: [Pluralizer, :uppercase] do
+                model             'user'
+                rails_port        3000
+                active            true
+              end
             end
+          end
+
+          it do
+            is_expected.to eq('settings' =>
+              {
+                'model' => 'USER',
+                'model_plural' => 'USERS',
+                'rails_port' => 3000,
+                'active' => true
+              })
           end
         end
 
-        it do
-          expect(subject.data).to eq('settings' =>
-            {
-              'first_name' => 'Davo',
-              'last_name' => 'The Great',
-              'funny_name' => 'davo the great',
-              'age' => 40
-            })
+        context 'with decorators - sample 2' do
+          let(:block) do
+            lambda do |_|
+              settings decorators: [AlterKeyValues, AlterStructure] do
+                first_name 'David'
+                last_name 'Cruwys'
+                age 40
+              end
+            end
+          end
+
+          it do
+            is_expected.to eq('settings' =>
+              {
+                'first_name' => 'Davo',
+                'last_name' => 'The Great',
+                'funny_name' => 'davo the great',
+                'age' => 40
+              })
+          end
         end
       end
     end
   end
 
   describe 'configure table' do
-    subject(:dsl) { described_class.new(key, &block) }
+    before { instance.execute_block }
 
-    before do
-      dsl.execute_block
+    context 'default DI/IOC class' do
+      subject { instance.table }
+
+      it { expect(subject).to be_a(KDsl::Model::Table) }
     end
 
-    context 'table groups' do
-      context 'with default key' do
+    context '.data' do
+      subject { instance.data }
+
+      context 'table groups' do
+        context 'with default key' do
+          let(:block) do
+            lambda do |_|
+              table do
+              end
+            end
+          end
+  
+          it { is_expected.to eq('table' => { 'fields' => [], 'rows' => [] }) }
+        end
+  
+        context 'with custom key' do
+          let(:block) do
+            lambda do |_|
+              table :custom do
+              end
+            end
+          end
+  
+          it { is_expected.to eq('custom' => { 'fields' => [], 'rows' => [] }) }
+        end
+  
+        context 'with multiple tables' do
+          let(:block) do
+            lambda do |_|
+              table do
+              end
+  
+              table :table2 do
+              end
+  
+              table :table3 do
+              end
+            end
+          end
+  
+          it do
+            is_expected.to eq({
+                                         'table' => { 'fields' => [], 'rows' => [] },
+                                         'table2' => { 'fields' => [], 'rows' => [] },
+                                         'table3' => { 'fields' => [], 'rows' => [] }
+                                       })
+          end
+        end
+      end
+  
+      context 'table rows' do
         let(:block) do
           lambda do |_|
             table do
+              fields [:column1, :column2, f(:column3, false), f(:column4, default: 'CUSTOM VALUE')]
+  
+              row 'row1-c1', 'row1-c2', true, 'row1-c4'
+              row
+            end
+  
+            table :another_table do
+              fields %w[column1 column2]
+  
+              row column1: 'david'
+              row column2: 'cruwys'
             end
           end
         end
-
-        it { expect(subject.type).to eq(:entity) }
-        it { expect(subject.data).to eq('table' => { 'fields' => [], 'rows' => [] }) }
-      end
-
-      context 'with custom key' do
-        let(:block) do
-          lambda do |_|
-            table :custom do
-            end
-          end
+  
+        it 'multiple row groups, multiple rows and positional and key/valued data' do
+          # dsl.debug
+  
+          is_expected.to eq({
+                                   'table' => {
+                                     'fields' => [
+                                       { 'name' => 'column1', 'type' => 'string', 'default' => nil },
+                                       { 'name' => 'column2', 'type' => 'string', 'default' => nil },
+                                       { 'name' => 'column3', 'type' => 'string', 'default' => false },
+                                       { 'name' => 'column4', 'type' => 'string', 'default' => 'CUSTOM VALUE' }
+                                     ],
+                                     'rows' => [
+                                       { 'column1' => 'row1-c1', 'column2' => 'row1-c2', 'column3' => true , 'column4' => 'row1-c4' },
+                                       { 'column1' => nil, 'column2' => nil, 'column3' => false, 'column4' => 'CUSTOM VALUE' }
+                                     ]
+                                   },
+                                   'another_table' => {
+                                     'fields' => [
+                                       { 'name' => 'column1', 'type' => 'string', 'default' => nil },
+                                       { 'name' => 'column2', 'type' => 'string', 'default' => nil }
+                                     ],
+                                     'rows' => [
+                                       { 'column1' => 'david', 'column2' => nil },
+                                       { 'column1' => nil, 'column2' => 'cruwys' }
+                                     ]
+                                   }
+                                 })
         end
-
-        it { expect(subject.data).to eq('custom' => { 'fields' => [], 'rows' => [] }) }
-      end
-
-      context 'default DI/IOC class' do
-        subject { described_class.new(key).table }
-
-        it { expect(subject).to be_a(KDsl::Model::Table) }
-      end
-
-      context 'with multiple tables' do
-        let(:block) do
-          lambda do |_|
-            table do
-            end
-
-            table :table2 do
-            end
-
-            table :table3 do
-            end
-          end
-        end
-
-        it do
-          expect(subject.data).to eq({
-                                       'table' => { 'fields' => [], 'rows' => [] },
-                                       'table2' => { 'fields' => [], 'rows' => [] },
-                                       'table3' => { 'fields' => [], 'rows' => [] }
-                                     })
-        end
-      end
-    end
-
-    context 'table rows' do
-      subject(:dsl) { described_class.new(key, &block) }
-
-      let(:block) do
-        lambda do |_|
-          table do
-            fields [:column1, :column2, f(:column3, false), f(:column4, default: 'CUSTOM VALUE')]
-
-            row 'row1-c1', 'row1-c2', true, 'row1-c4'
-            row
-          end
-
-          table :another_table do
-            fields %w[column1 column2]
-
-            row column1: 'david'
-            row column2: 'cruwys'
-          end
-        end
-      end
-
-      it 'multiple row groups, multiple rows and positional and key/valued data' do
-        # dsl.debug
-
-        expect(dsl.data).to eq({
-                                 'table' => {
-                                   'fields' => [
-                                     { 'name' => 'column1', 'type' => 'string', 'default' => nil },
-                                     { 'name' => 'column2', 'type' => 'string', 'default' => nil },
-                                     { 'name' => 'column3', 'type' => 'string', 'default' => false },
-                                     { 'name' => 'column4', 'type' => 'string', 'default' => 'CUSTOM VALUE' }
-                                   ],
-                                   'rows' => [
-                                     { 'column1' => 'row1-c1', 'column2' => 'row1-c2', 'column3' => true , 'column4' => 'row1-c4' },
-                                     { 'column1' => nil, 'column2' => nil, 'column3' => false, 'column4' => 'CUSTOM VALUE' }
-                                   ]
-                                 },
-                                 'another_table' => {
-                                   'fields' => [
-                                     { 'name' => 'column1', 'type' => 'string', 'default' => nil },
-                                     { 'name' => 'column2', 'type' => 'string', 'default' => nil }
-                                   ],
-                                   'rows' => [
-                                     { 'column1' => 'david', 'column2' => nil },
-                                     { 'column1' => nil, 'column2' => 'cruwys' }
-                                   ]
-                                 }
-                               })
       end
     end
   end

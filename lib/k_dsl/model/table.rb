@@ -40,7 +40,7 @@ module KDsl
 
         # Override with positional arguments
         args.each_with_index do |arg, i|
-          row[fields[i]['name']] = clean_symbol(arg)
+          row[fields[i]['name']] = KDsl::Util.data.clean_symbol(arg)
         end
 
         # Override with named args
@@ -86,18 +86,12 @@ module KDsl
         type_value = (args.length > 1 ? args[1] : type) || :string
 
         {
-          'name' => clean_symbol(name),
-          'default' => clean_symbol(default_value),
-          'type' => clean_symbol(type_value)
+          'name' => KDsl::Util.data.clean_symbol(name),
+          'default' => KDsl::Util.data.clean_symbol(default_value),
+          'type' => KDsl::Util.data.clean_symbol(type_value)
         }
       end
       alias f field
-
-      def clean_symbol(value)
-        return value if value.nil?
-
-        value.is_a?(Symbol) ? value.to_s : value
-      end
     end
   end
 end

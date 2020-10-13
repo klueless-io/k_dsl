@@ -48,6 +48,28 @@ RSpec.describe KDsl::Util::DataHelper do
     end
   end
 
+  describe '#clean_symbol' do
+    subject { described_class.clean_symbol(value) }
+
+    let(:value) { nil }
+
+    context 'when value is nil' do
+      it { is_expected.to be_nil }
+    end
+
+    context 'when value is string' do
+      let(:value) { 'a_string' }
+
+      it { is_expected.to eq('a_string') }
+    end
+
+    context 'when value is :symbol' do
+      let(:value) { :a_symbol }
+
+      it { is_expected.to eq('a_symbol') }
+    end
+  end
+
   describe '#console_file_hyperlink' do
     subject { described_class.console_file_hyperlink(text, file) }
     

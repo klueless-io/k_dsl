@@ -11,12 +11,17 @@ module KDsl
     #
     # Made up of 0 or more setting groups and table groups
     class Document
-      attr_accessor :resource
+      extend Forwardable
+
       attr_reader :key
       attr_reader :type
       attr_reader :namespace
       attr_reader :options
       attr_reader :error
+
+      attr_accessor :resource
+
+      def_delegator :resource, :project
 
       # Create docoument
       #
@@ -129,6 +134,37 @@ module KDsl
 
       def data
         @data.clone
+      end
+
+      def get_node_type(node_name)
+        node_name = KDsl::Util.data.clean_symbol(node_name)
+        node_data = @data[node_name]
+
+        raise KDsl::Error, "Node not found: #{node_name}" if node_data.nil?
+
+        if node_data.keys.length == 2 && (node_data.key?('fields') && node_data.key?('rows'))
+          :table
+        else
+          :settings
+        end
+      end
+
+      # Removes any meta data eg. "fields" from a table and just returns the raw data
+      def raw_data
+        # REFACT, what if this is CSV, meaning it is just an array?
+        #         add specs
+        result = data
+
+        result.keys.each do |key|
+          # ANTI: get_node_type uses @data while we are using @data.clone here
+          if get_node_type(key) == :table
+            data[key] = result[key].delete('fields')
+          else
+            data[key] = result[key]
+          end
+        end
+
+        data
       end
 
       # Move this out to the logger function when it has been refactor
