@@ -3,55 +3,6 @@
 module KDsl
   module Manage
     class Register
-      # @@instance = nil
-
-      attr_reader :dsls                         # List of DSL's instances
-
-      # There is currently a tight cupling between is boolean and DSL's so that they know whether they are being refrenced for registration or importation
-      # The difference is that importation will execute their interal code block while registration will not.
-      # attr_reader :current_state
-      # attr_reader :current_register_file
-
-      # attr_reader :register_paths
-
-      # what file is currently being processed
-      # attr_reader :current_processing_file
-
-      # def initialize(base_resource_path, base_cache_path = nil, base_definition_path = nil, base_template_path = nil, base_app_template_path = nil)
-      #   @base_resource_path = base_resource_path.is_a?(Pathname) ? base_resource_path.to_s : base_resource_path
-        
-      #   @dsls = {}
-      #   @current_state = :dynamic
-      #   @current_register_file = nil
-      #   @register_paths = []
-      # end
-
-      # def self.reset
-      #   @@instance = nil
-      # end
-
-      # def self.get_instance
-      #   # Note: if you have already created an instance using custom code then it will re-used
-      #   @@instance
-      # end
-
-      # def self.create(base_resource_path, base_cache_path: nil, base_definition_path: nil, base_template_path: nil, &block)
-      #   # L.kv 'create1', '@@instance is Present'  if @@instance.present?
-      #   # L.kv 'create1', '@@instance is Nil'      if @@instance.nil?
-
-      #   if @@instance.nil?
-      #     # L.heading 'in create'
-      #     # L.kv 'dsl', base_resource_path; 
-      #     # L.kv 'data', base_cache_path
-
-      #     @@instance = new(base_resource_path, base_cache_path, base_definition_path, base_template_path)
-      #     @@instance.instance_eval(&block) if block_given?
-
-      #   end
-
-      #   @@instance
-      # end
-
       # private_class_method :new
       # def load_dynamic(content)
       #   @current_state = :dynamic
@@ -83,31 +34,6 @@ module KDsl
       #   dsl
       # end
 
-      # def get_dsls_by_type(k_type = :entity, namespace = nil)
-      #   if namespace.nil?
-      #     @dsls.values.select { |dsl| dsl[:k_type] == k_type }
-      #   else
-      #     @dsls.values.select { |dsl| dsl[:namespace] == namespace && dsl[:k_type] == k_type }
-      #   end
-      # end
-
-      # def get_data(key, namespace = nil, type = :entity)
-      #   dsl = get_dsl(key, type, namespace)
-
-      #   raise "Could not get data for missing DSL: #{build_unique_key(key, type, namespace)}" if dsl.nil?
-
-      #   load_data_from_dsl(dsl)
-      # end
-
-      # def load_data_from_dsl(dsl)
-      #   # Need to load this file
-      #   if dsl[:state] == :registered
-      #     load_file(dsl[:file])
-      #   end
-
-      #   dsl[:data]
-      # end
-            
       # def is_pathname_absolute(pathname)
       #   Pathname.new(pathname).absolute?
       # end
