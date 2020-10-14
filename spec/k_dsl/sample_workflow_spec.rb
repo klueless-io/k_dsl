@@ -72,9 +72,9 @@ RSpec.describe 'DSL Sample Workflow' do
 
         it { is_expected.not_to be_nil }
         it { is_expected.to be_a(KDsl::Model::BlueprintDocument) }
-        # it { debug }
+        it { debug }
         # it { run(key, type) }
-        it { debug_document(key, type) }
+        # it { debug_document(key, type) }
      end
     end
   end
