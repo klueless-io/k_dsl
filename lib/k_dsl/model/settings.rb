@@ -97,7 +97,7 @@ module KDsl
         my_data[name.to_s]
       end
 
-      def k_debug
+      def debug
         puts JSON.pretty_generate(my_data)
       end
 

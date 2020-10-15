@@ -101,6 +101,7 @@ module KDsl
 
       def get_resource_document(key, type = nil, namespace = nil)
         unique_key = KDsl::Util.dsl.build_unique_key(key, type, namespace)
+        # L.kv 'uk', unique_key
 
         resource_documents.find { |rd| rd.unique_key == unique_key }
       end
@@ -145,8 +146,14 @@ module KDsl
       end
 
       def load_resources
+        # L.progress(nil, 'Load Resource')
         @resources.each do |resource|
+          # L.progress(nil, 'Debug Resource')
+          # resource.debug
+          # resource.documents.each(&:debug)
+          # L.progress(nil, 'Loading')
           resource.load
+          # resource.documents.each { |d| d.debug(include_header: true) }
         end
       end
 

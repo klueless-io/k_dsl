@@ -16,6 +16,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  KDsl::Model::Document.include(KDsl::Extensions::CommandRunable)
   KDsl::Model::Document.include(KDsl::Extensions::Importable)
   KDsl::Model::Document.include(KDsl::Extensions::Writable)
 

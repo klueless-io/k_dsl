@@ -23,7 +23,7 @@ RSpec.describe KDsl::Extensions::Importable do
 
           context 'when document not linked to a project' do
             it 'will print a warning log message' do
-              expect(document).to receive(:import_warn).with('Import Skipped: Document not linked to a project')
+              expect(document).to receive(:warn).with('Import Skipped: Document not linked to a project')
               subject
             end
           end
