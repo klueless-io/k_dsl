@@ -88,7 +88,7 @@ module KDsl
 
       def debug
         L.kv 'Base Path', base_path
-        L.kv 'DSL Path', base_resource_path
+        L.kv 'Resource Path', base_resource_path
         L.kv 'Data_Path', base_cache_path
         L.kv 'Definition Path', base_definition_path
         L.kv 'Template Path', base_template_path

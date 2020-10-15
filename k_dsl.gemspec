@@ -37,4 +37,6 @@ Gem::Specification.new do |spec|
 
   # spec.add_dependency 'tty-box',         '~> 0.5.0'
   spec.add_dependency 'listen', '~> 3.0'
+  spec.add_dependency 'activesupport'
+  spec.add_dependency 'handlebars'
 end

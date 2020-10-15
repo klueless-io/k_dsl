@@ -13,6 +13,7 @@ RSpec.describe 'DSL Sample Workflow' do
     end
   end
 
+  # HELPERS
   def get(key, type = nil)
     project.get_resource_document(key, type).document
   end
