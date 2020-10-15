@@ -12,6 +12,7 @@
 /bin/runonce/
 k_dsl.yml
 
+/spec/.output/
 /.cache/
 /.bundle/
 /.history/

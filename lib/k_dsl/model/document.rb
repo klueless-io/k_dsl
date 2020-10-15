@@ -53,22 +53,22 @@ module KDsl
         @run_actions = run_actions
 
         self.instance_eval(&@block)
-     rescue KDsl::Error => e
+     rescue KDsl::Error => exception1
         L.error("KDsl::Error in document")
         L.kv 'key', unique_key
         L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
-        L.error exception.message
-        @error = exception
+        L.error(exception1.message)
+        @error = exception1
         # L.heading "Invalid code block in document_dsl during registration: #{k_key}"
         # L.exception exception
         raise
-      rescue StandardError => exception
+      rescue StandardError => exception2
         L.error("Standard error in document")
         L.kv 'key', unique_key
         L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
-        L.error exception.message
-        @error = exception
-        # L.exception exception
+        L.error(exception2.message)
+        @error = exception2
+        # L.exception exception2
         raise
       ensure
         @run_actions = nil
@@ -81,21 +81,21 @@ module KDsl
         return unless @run_actions
 
         instance_eval(&action_block)
-      rescue KDsl::Error => e
-        L.error("KDsl::Error in action")
+      rescue KDsl::Error => exception1
+        error("KDsl::Error in action")
         L.kv 'key', unique_key
         L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
-        L.error exception.message
-        @error = exception
-        # L.exception exception
+        error(exception1.message)
+        @error = exception1
+        # L.exception exception1
         raise
-      rescue StandardError => exception
-        L.error("Standard error in action")
+      rescue StandardError => exception2
+        error("Standard error in action")
         L.kv 'key', unique_key
         L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
-        L.error exception.message
-        @error = exception
-        # L.exception exception
+        error(exception2.message)
+        @error = exception2
+        # L.exception exception2
         raise
       end
   
@@ -197,6 +197,18 @@ module KDsl
         L.line
       end
 
+      # Helpers that often get called by extensions
+
+      def project
+        project ||= resource&.project
+      end
+
+      # Warning message
+      def warn(message)
+        L.warn message
+        nil
+      end
+   
       private
 
       def settings_instance(data, key, **options, &block)

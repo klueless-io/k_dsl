@@ -34,8 +34,7 @@ module KDsl
       # Output type can derived from the file extension (.yaml, .yml, .json)
       # or it can specified with the optional :as_type
       def write_as(data, file, as_type: nil, is_edit: false)
-        proj = resource&.project
-        return writable_warn('Write As Skipped: Document not linked to a project') unless proj
+        return warn('Write As Skipped: Document not linked to a project') if !defined?(project) || project.nil?
 
         # L.kv 'file', file
         # L.kv 'as_type', as_type
