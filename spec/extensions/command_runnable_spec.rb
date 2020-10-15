@@ -40,163 +40,70 @@ RSpec.describe KDsl::Extensions::CommandRunable do
         base_resource_path = File.join(Dir.getwd, 'spec', 'factories', 'dsls')
       end
     end
-    let(:resource) { KDsl::Resources::Resource.instance(project: project, file: 'somedata.txt') }
+    let(:resource) { KDsl::Resources::Resource.instance(project: project, file: 'fakeresource.txt') }
+    let(:microapp1) do
+      KDsl.microapp('app1') do
+        settings do
+          app_path "#{Dir.getwd}/spec/.output/abc"
+        end
+      end
+    end
 
-    context 'write document to output file' do
-      let(:document) { KDsl::Model::Document.new('key', &block) }
-      let(:data) { document.data }
-    
+    context 'run a command' do
       before do
+        # Load Data
+        microapp1.execute_block
+        # Load Data
         document.execute_block
-        resource.add_document(document)
-
+        # Add documents into project via resource
+        resource.add_documents(microapp1, document)
       end
 
-      let(:block) do
-        lambda do |_|
-          actions do
-            run_command
-          end
-        end
-      end
-
-      describe '#write_as' do
-        context 'error handling' do
-          context 'when extension is unknown' do
-            subject { document.write_as(data, some_file.path) }
-    
-            it { expect { subject }.to raise_error 'Provide a valid extension or as_type. Supported types: [json, yaml]' }
-          end
-    
-          context 'when extension is known, but overidden as_type is unknown' do
-            subject { document.write_as(data, json_file.path, as_type: :abc) }
-    
-            it { expect { subject }.to raise_error 'Provide a valid extension or as_type. Supported types: [json, yaml]' }
-          end
-        end
-
-        context 'when extension is unknown' do
-          context 'and as_type: :json' do
-            subject { document.write_as(data, some_file.path, as_type: :json) }
-            
-            it 'input should match output' do
-              subject
-              expect(File.exist?(some_file.path)).to be_truthy
-              output = JSON.parse File.read(some_file.path)
-              expect(document.data).to eq(output)
-            end
-          end
-
-          context 'and as_type: :yaml' do
-            subject { document.write_as(data, some_file.path, as_type: :yaml) }
-            
-            it 'input should match output' do
-              subject
-              expect(File.exist?(some_file.path)).to be_truthy
-              output = YAML.load File.read(some_file.path)
-              expect(document.data).to eq(output)
+      context 'when command expects the folder to exist' do
+        let(:document) do
+          KDsl.document('run') do
+            actions do
+              run_command 'echo "david" > test1.txt'
             end
           end
         end
 
-        context 'when output file is' do
-          context '.json' do
-            subject { document.write_as(data, json_file.path) }
-            
-            it 'write data as json' do
-              subject
-              expect(File.exist?(json_file.path)).to be_truthy
-              output = JSON.parse File.read(json_file.path)
-              expect(document.data).to eq(output)
-            end
-          end
+        it 'create the microapp output folder and then run command that creates a file' do
+          # resource.debug(:resource, :document)
+          path = microapp1.data_struct.settings.app_path
 
-          context '.yaml' do
-            subject { document.write_as(data, yaml_file.path) }
-            
-            it 'write data as yaml' do
-              subject
-              expect(File.exist?(yaml_file.path)).to be_truthy
-              output =YAML.load File.read(yaml_file.path)
-              expect(document.data).to eq(output)
-            end
-          end
+          output_file = File.join(path, 'test1.txt')
+          FileUtils.rm_rf(path) if File.directory?(path)
+
+          document.execute_block(run_actions: true)
+          expect(File.exist?(output_file)).to be_truthy
+          expect(File.read(output_file)).to start_with('david')
+          FileUtils.rm_rf(path) if File.directory?(path)
         end
       end
 
-      context '#write_**** helpers' do
-        let(:block) do
-          lambda do |_|
-            settings do
-              rails_port        3000
-              model             'User'
-              active            true
-            end
-
-            rows :custom_rows do
-
-              fields [:column1, :column2, f(:column3, false)]
-
-              row column1: 'david'  
-              row 'david','cruwys', column3: true
-
+      context 'when command manages its own folder creation' do
+        let(:document) do
+          KDsl.document('run') do
+            actions do
+              run_command 'mkdir abc && cd abc && echo "david" > test2.txt', command_creates_top_folder: true
             end
           end
         end
 
-        describe '#write_json' do
-          context 'using .raw_data via with_meta: false' do
-            subject { document.write_json } #  is_edit: true
+        it 'create the microapp output folder and then run command that creates a file' do
+          # resource.debug(:resource, :document)
+          path = microapp1.data_struct.settings.app_path
 
-            it 'input should match output' do
-              file = subject
-              expect(File.exist?(file)).to be_truthy
-              output = JSON.parse File.read(file)
-              expect(document.raw_data).to eq(output)
-              expect(file).to end_with('key_entity.json')
-            end
-          end
+          output_file = File.join(path, 'test2.txt')
+          FileUtils.rm_rf(path) if File.directory?(path)
 
-          context 'using .data via with_meta: true' do
-            subject { document.write_json with_meta: true }
-
-            it 'input should match output' do
-              file = subject
-              expect(File.exist?(file)).to be_truthy
-              output = JSON.parse File.read(file)
-              expect(document.data).to eq(output)
-              expect(file).to end_with('key_entity.meta.json')
-            end
-          end
-        end
-  
-        describe '#write_yaml' do
-          context 'using .raw_data via with_meta: false' do
-            subject { document.write_yaml }
-
-            it 'input should match output' do
-              file = subject
-              expect(File.exist?(file)).to be_truthy
-              output = YAML.load File.read(file)
-              expect(document.raw_data).to eq(output)
-              expect(file).to end_with('key_entity.yaml')
-            end
-          end
-
-          context 'using .data via with_meta: true' do
-            subject { document.write_yaml with_meta: true }
-
-            it 'input should match output' do
-              file = subject
-              expect(File.exist?(file)).to be_truthy
-              output = YAML.load File.read(file)
-              expect(document.data).to eq(output)
-              expect(file).to end_with('key_entity.meta.yaml')
-            end
-          end
+          document.execute_block(run_actions: true)
+          expect(File.exist?(output_file)).to be_truthy
+          expect(File.read(output_file)).to start_with('david')
+          FileUtils.rm_rf(path) if File.directory?(path)
         end
       end
     end
   end
-
 end

@@ -143,6 +143,14 @@ module KDsl
         klass.new(key, type, namespace: namespace)
       end
 
+      # TEST REQUIRED
+      def add_documents(*documents)
+        documents.each do |document|
+          add_document(document)
+        end
+      end
+
+      # TEST REQUIRED
       def add_document(document)
         # project.register_dsl(document)
         project.add_resource_document(self, document)
@@ -199,16 +207,32 @@ module KDsl
         end
       end
 
-      def debug(format: :detail)
-        L.kv 'project.name', project.name
-        L.kv 'document_factory.class', document_factory.class.name
-        L.kv 'error', error&.message
-        L.kv 'source', source
-        L.kv 'resource_type', resource_type
-        L.kv 'file', file
-        L.kv 'watch_path', watch_path
-        # L.kv 'content', content
-        L.kv 'document.count', documents.length
+      def debug(*formats)
+        formats = %i[resource] if formats.empty?
+
+        formats.each do |format|
+          case format
+          when :resource
+            L.kv 'project.name', project.name
+            L.kv 'document_factory.class', document_factory.class.name
+            L.kv 'error', error&.message
+            L.kv 'source', source
+            L.kv 'resource_type', resource_type
+            L.kv 'file', file
+            L.kv 'watch_path', watch_path
+            # L.kv 'content', content
+            L.kv 'document.count', documents.length
+          when :document
+            documents.each do |document|
+              document.debug(true)
+            end
+          when :document_data
+            # Data Only
+            documents.each do |document|
+              document.debug
+            end
+          end
+        end
       end
     end
   end
