@@ -120,6 +120,7 @@ RSpec.describe 'DSL Sample Workflow' do
           it 'folder under .output called basic_app and then write hello.txt into that folder' do
             # L.kv 'output_path', output_path
             # L.kv 'output_file', output_file
+            # REFACTOR TO USE LINK/UNLINK temp folders
             FileUtils.rm_rf(output_path)
             run(key)
             expect(File.exist?(output_file)).to be_truthy
