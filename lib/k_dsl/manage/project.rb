@@ -358,7 +358,7 @@ module KDsl
           # projects.each do |project|
           #   L.subheading(project.name)
           #   L.kv 'Base Path', project.config.base_path
-          #   L.kv 'DSL Path', project.config.base_resource_path
+          #   L.kv 'Resource Path', project.config.base_resource_path
           #   L.kv 'Data_Path', project.config.base_cache_path
           #   L.kv 'Definition Path', project.config.base_definition_path
           #   L.kv 'Template Path', project.config.base_template_path
