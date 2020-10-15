@@ -20,6 +20,7 @@ namespace :k_dsl do
     # Add any extra extensions that you require on documents
     KDsl::Model::Document.include(KDsl::Extensions::CommandRunable) # Documents can run command line programs
     KDsl::Model::Document.include(KDsl::Extensions::Importable)     # Documents can import data from other documents
+    KDsl::Model::Document.include(KDsl::Extensions::CreateDsl)      # Documents can create a new DSL from their relative position
     KDsl::Model::Document.include(KDsl::Extensions::Writable)       # Documents can write their contents out to the cache path in JSON or YAML
 
     # Add any extra extensions for factory methods

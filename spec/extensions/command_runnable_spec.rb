@@ -34,12 +34,12 @@ RSpec.describe KDsl::Extensions::CommandRunable do
   end
 
   context 'real document' do
-    let(:project) { KDsl::Manage::Project.new('app_name', config) }
     let(:config) do
       KDsl::Manage::ProjectConfig.new do
         base_resource_path = File.join(Dir.getwd, 'spec', 'factories', 'dsls')
       end
     end
+    let(:project) { KDsl::Manage::Project.new('app_name', config) }
     let(:resource) { KDsl::Resources::Resource.instance(project: project, file: 'fakeresource.txt') }
     let(:microapp1) do
       KDsl.microapp('app1') do
