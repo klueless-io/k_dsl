@@ -16,6 +16,7 @@ require 'k_dsl/logger/log_util'
 require 'table_print' # Debugging code needs to be decoupled from k_dsl
 
 # Extensions
+require 'k_dsl/extensions/command_runable'
 require 'k_dsl/extensions/importable'
 require 'k_dsl/extensions/writable'
 require 'k_dsl/extensions/document_factories'

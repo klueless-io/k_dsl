@@ -13,18 +13,17 @@ RSpec.describe 'DSL Sample Workflow' do
     end
   end
 
-  def get(key, type)
+  def get(key, type = nil)
     project.get_resource_document(key, type).document
   end
-  def run(key, type)
+  def run(key, type = nil)
     get(key, type).execute_block(run_actions: true)
   end
- 
   def debug
     2.times { puts '' }
     manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
   end
-  def debug_document(key, type)
+  def debug_document(key, type = nil)
     get(key, type).debug(include_header: true)
   end
 
@@ -56,7 +55,7 @@ RSpec.describe 'DSL Sample Workflow' do
      end
     end
 
-    fdescribe 'blueprint' do
+    describe 'blueprint' do
       let(:project) do
         KDsl::Manage::Project.new('sample_blueprint', config) do
           watch_path('dsl_microapp.rb')
@@ -76,6 +75,76 @@ RSpec.describe 'DSL Sample Workflow' do
         # it { run(key, type) }
         # it { debug_document(key, type) }
      end
+    end
+
+    describe 'document with run command' do
+      context 'when two microapps' do
+        let(:project) do
+          KDsl::Manage::Project.new('document_run_commands', config) do
+            watch_path('dsl_microapp_basic.rb')
+            watch_path('dsl_microapp.rb')
+            watch_path('dsl_document_with_run_command.rb')
+          end
+        end
+
+        context 'has valid run_command1 document' do
+          subject { project.get_resource_document(key).document }
+
+          let(:key) { :run_command1 }
+
+          it { is_expected.not_to be_nil }
+          it 'folder under .output called basic_app and then write hello.txt into that folder' do
+            # expect(project.get_resource_document(key).document).to receive(:error).with('Run command currently supports single MicroApp projects only')
+            # subject
+            run(key)
+          end
+        end
+      end
+      context 'when one microapp' do
+        let(:project) do
+          KDsl::Manage::Project.new('document_run_commands', config) do
+            watch_path('dsl_microapp_basic.rb')
+            watch_path('dsl_document_with_run_command.rb')
+          end
+        end
+
+        let(:output_file) { 'spec/.output/basic_app/hello.txt' }
+        let(:output_path) { File.dirname(output_file) }
+
+        context 'has valid run_command1 document' do
+          subject { project.get_resource_document(key).document }
+
+          let(:key) { :run_command1 }
+
+          it { is_expected.not_to be_nil }
+          it 'folder under .output called basic_app and then write hello.txt into that folder' do
+            # L.kv 'output_path', output_path
+            # L.kv 'output_file', output_file
+            FileUtils.rm_rf(output_path)
+            run(key)
+            expect(File.exist?(output_file)).to be_truthy
+            expect(File.read(output_file)).to start_with('hello world1')
+            FileUtils.rm_rf(output_path)
+          end
+        end
+
+        context 'has valid run_command2 document' do
+          subject { project.get_resource_document(key).document }
+
+          let(:key) { :run_command2 }
+
+          it { is_expected.not_to be_nil }
+          it 'This command will write hello.txt into a folder that is precreated: .output/basic_app' do
+            # L.kv 'output_path', output_path
+            # L.kv 'output_file', output_file
+            # FileUtils.rm_rf(output_path)
+            run(key)
+            expect(File.exist?(output_file)).to be_truthy
+            expect(File.read(output_file)).to start_with('hello world2')
+            FileUtils.rm_rf(output_path)
+          end
+        end
+      end
     end
   end
 end

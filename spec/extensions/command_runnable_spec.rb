@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::Extensions::Writable do
+RSpec.describe KDsl::Extensions::CommandRunable do
 
   context 'fake document' do
     class FakeDocument; attr_accessor :resource; end
@@ -12,19 +12,19 @@ RSpec.describe KDsl::Extensions::Writable do
 
       let(:document) { FakeDocument.new }
 
-      it { is_expected.not_to respond_to(:write_as) }
+      it { is_expected.not_to respond_to(:run_command) }
 
       context 'after extension loaded' do
-        before { FakeDocument.include(KDsl::Extensions::Writable) }
+        before { FakeDocument.include(KDsl::Extensions::CommandRunable) }
 
-        it { is_expected.to respond_to(:write_as) }
+        it { is_expected.to respond_to(:run_command) }
 
-        describe '#write_as' do
-          subject { document.write_as nil, nil }
+        describe '#run_command' do
+          subject { document.run_command nil }
     
           context 'when document not linked to a project' do
             it 'will print a warning log message' do
-              expect(document).to receive(:warn).with('Write As Skipped: Document not linked to a project')
+              expect(document).to receive(:warn).with('Run command skipped: Document not linked to a project')
               subject
             end
           end
@@ -46,23 +46,17 @@ RSpec.describe KDsl::Extensions::Writable do
       let(:document) { KDsl::Model::Document.new('key', &block) }
       let(:data) { document.data }
     
-      let(:some_file) { Tempfile.new() }
-      let(:json_file) { Tempfile.new(['','.json']) }
-      let(:yaml_file) { Tempfile.new(['','.yaml']) }
-      
       before do
         document.execute_block
         resource.add_document(document)
-      end
 
-      after do
-        some_file.unlink
-        json_file.unlink
-        yaml_file.unlink
       end
 
       let(:block) do
         lambda do |_|
+          actions do
+            run_command
+          end
         end
       end
 
