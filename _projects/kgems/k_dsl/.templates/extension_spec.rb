@@ -15,7 +15,7 @@ RSpec.describe KDsl::Extensions::{{camel blueprint_settings.name}} do
       it { is_expected.not_to respond_to(:{{snake blueprint_settings.name}}) }
 
       context 'after extension loaded' do
-        before { FakeDocument.include(KDsl::Extensions::il?) }
+        before { FakeDocument.include(KDsl::Extensions::{{camel blueprint_settings.name}}) }
 
         it { is_expected.to respond_to(:{{snake blueprint_settings.name}}) }
 
@@ -49,7 +49,7 @@ RSpec.describe KDsl::Extensions::{{camel blueprint_settings.name}} do
       end
     end
 
-    context '{{titleize blueprint_settings.name}}' do
+    context 'run a command' do
     end
   end
 end
