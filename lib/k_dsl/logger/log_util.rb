@@ -61,7 +61,7 @@ class LogUtil
   end
 
   # prints out a line to the log
-  def line(size = 70, character = '=')
+  def line(size = 70, character: '=')
     message = LogHelper.line(size, character)
 
     @logger.info(message)
@@ -243,7 +243,7 @@ class LogUtil
 
     L.line
     L.line(20)
-    L.line(20, '-')
+    L.line(20, character: '-')
 
     L.heading('Heading')
     L.subheading('Sub Heading')

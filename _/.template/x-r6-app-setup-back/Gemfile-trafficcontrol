@@ -1,0 +1,50 @@
+ruby '2.4.6'
+source 'https://gemstash-mattress.bugcrowd.com'
+
+source 'https://ix5t7h8xh8qjs5q4v8jus0dakpgfs0cw@gemstash-mattress.bugcrowd.com/private/' do
+  gem 'magnum'
+  gem 'pessimist'
+end
+
+gem 'pg'
+gem 'puma', '~> 3.7'
+gem 'rails', '5.1.6.2'
+gem 'shoryuken'
+
+gem 'active_model_serializers', '~> 0.10.0'
+gem 'adama'
+gem 'addressable'
+
+# AWS gems outlined here https://github.com/aws/aws-sdk-ruby#supported-services
+gem 'aws-sdk-autoscaling'
+gem 'aws-sdk-core' # includes STS
+gem 'aws-sdk-ec2'
+gem 'aws-sdk-ecr'
+gem 'aws-sdk-iam'
+gem 'aws-sdk-kms'
+gem 'aws-sdk-s3'
+gem 'aws-sdk-sqs'
+
+gem 'bugsnag'
+gem 'docker-api'
+gem 'faraday'
+gem 'tzinfo-data'
+
+group :development, :test do
+  gem 'factory_bot_rails'
+  gem 'pry-byebug'
+  gem 'pry-rails'
+  gem 'rspec-rails'
+end
+
+group :development do
+  gem 'annotate', require: false
+  gem 'listen'
+  gem 'rgl'
+  gem 'rubocop', require: false
+end
+
+group :test do
+  gem 'rspec_junit_formatter'
+  gem 'webmock'
+end

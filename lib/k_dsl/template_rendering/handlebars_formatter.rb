@@ -1,5 +1,4 @@
 # Klue-Less DDD generator
-require 'active_support/core_ext/string/inflections'
 
 module KDsl
   module TemplateRendering

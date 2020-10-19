@@ -1,0 +1,49 @@
+# Chamber. Chamber is a tool for managing secrets. Currently it does so by storing secrets in SSM Parameter Store, an AWS service for storing secrets.
+# https://github.com/segmentio/chamber/wiki/Installation
+
+FROM segment/chamber:2 AS chamber
+FROM ruby:2.6.4-alpine
+
+COPY --from=chamber /chamber /bin/chamber
+
+ENV APP_DIR=/usr/src/app
+EXPOSE 3000
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["bin/rails", "server"]
+
+# 2.6.4-slim-buster
+
+# replace shell with bash so we can source files
+# RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
+# RUN apt-get update -qq && apt-get install -y build-essential
+
+# for postgres
+# RUN apt-get install -y libpq-dev
+
+# for nokogiri
+# RUN apt-get install -y libxml2-dev libxslt1-dev
+
+# for capybara-webkit (COULD NOT GET THESE WORKING)
+# RUN apt-get install g++ qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
+# RUN apt install -y gcc g++ make qt5-default libqt5webkit5-dev ruby-dev zlib1g-dev
+
+# RUN apt-get install qt-sdk
+
+# for a JS runtime
+# RUN apt-get install -y nodejs
+
+# ghostscript
+
+# RUN mkdir -p /usr/local/nvm
+
+WORKDIR $APP_DIR
+
+RUN node -v
+# RUN npm -v
+
+# Fetch/install gems
+COPY Gemfile Gemfile.lock $APP_DIR/
+RUN bundle install
+
+COPY . $APP_DIR/

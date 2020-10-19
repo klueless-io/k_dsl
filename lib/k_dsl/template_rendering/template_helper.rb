@@ -9,6 +9,7 @@ module KDsl
         # L.block 'process template'
     
         handlebars = Handlebars::Context.new
+
         KDsl::TemplateRendering::HandlebarsHelper.register(handlebars)
         
         compiled_template = handlebars.compile(template)

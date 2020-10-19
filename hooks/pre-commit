@@ -30,8 +30,8 @@ files_changed = files_changed.reject { |f| f.downcase.end_with?('.yml') }
 # ignore files from specific folders
 
 file_groups = files_changed.select do |item|
-  item.start_with?('hooks') # ||
-  # item.start_with?('lib/generators')
+  item.start_with?('hooks') ||
+  item.start_with?('_/.template')
 end
 
 files_changed -= file_groups

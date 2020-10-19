@@ -1,0 +1,28 @@
+<% content_for :head do %>
+  <%= javascript_pack_tag 'architecture_vue' %>
+  <%= javascript_pack_tag 'architecture_angular' %>
+<% end %>
+
+<h1>Architecture</h1>
+
+<%= render "menu" %>
+
+<div class="container pt-3">
+  <div class="row">
+    <div class="col-lg-6">
+
+      <div id="architecture"></div>
+
+    </div>
+
+    <div class="col-lg-6">
+
+      <architecture-angular></architecture-angular>
+
+    </div>
+
+  </div>
+
+
+</div>
+

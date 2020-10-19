@@ -54,6 +54,19 @@ module KDsl
         }
       end
 
+      # REFACT: THIS NEEDS TO BE IN A CONFIG SYSTEM
+      def github_user
+        ENV['GITHUB_USER']
+      end
+      
+      def github_personal_access_token
+        ENV['GITHUB_PERSONAL_ACCESS_TOKEN']
+      end
+      
+      def github_personal_access_token_delete
+        ENV['GITHUB_PERSONAL_ACCESS_TOKEN_DELETE']
+      end
+    
       def base_cache_path
         if @base_cache_path.nil?
           File.join(base_path, '.cache')

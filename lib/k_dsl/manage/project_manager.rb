@@ -23,6 +23,10 @@ module KDsl
         @projects |= [project]
       end
 
+      def add_projects(*projects)
+        projects.each { |project| self.add_project(project) }
+      end
+
       def register_all_resource_documents
         projects.each(&:register_resources)
       end
@@ -42,10 +46,22 @@ module KDsl
       end
 
       def watch
-        
-        L.block "Project manager is watching resources for #{projects.length} project"
+        L.block "Project manager is watching resources for #{'project'.pluralize(projects.length)}"
+
+        projects.each do |project|
+          project.watch
+        end
+
         wait_key
+
         L.block 'Stopping'
+
+        projects.each do |project|
+          project.listener.stop
+        end
+
+        L.block 'Stopping'
+
       end
       
       # require 'io/console'
@@ -103,9 +119,10 @@ module KDsl
             L.kv 'Template Path (Application)', project.config.base_app_template_path
             puts
 
-            project_formats.each do |project_format|
-              project.debug(format: project_format)
-            end
+            project.debug(formats: project_formats)
+            # project_formats.each do |project_format|
+            #   project.debug(format: project_format)
+            # end
           end
         end
 
