@@ -22,10 +22,12 @@ namespace :k_dsl do
 
     # Add any extra extensions that you require on documents
     KDsl::Model::Document.include(KDsl::Extensions::CommandRunable) # Documents can run command line programs
-    KDsl::Model::Document.include(KDsl::Extensions::Importable)     # Documents can import data from other documents
     KDsl::Model::Document.include(KDsl::Extensions::CreateDsl)      # Documents can create a new DSL from their relative position
+    KDsl::Model::Document.include(KDsl::Extensions::GithubLinkable) # Documents can add, delete or open repos
+    KDsl::Model::Document.include(KDsl::Extensions::Importable)     # Documents can import data from other documents
     KDsl::Model::Document.include(KDsl::Extensions::Writable)       # Documents can write their contents out to the cache path in JSON or YAML
 
+    
     # Add any extra extensions for factory methods
     KDsl.extend(KDsl::Extensions::DocumentFactories)
 
@@ -88,19 +90,19 @@ namespace :k_dsl do
     end
 
     manager = KDsl.project_manager
-    # manager.add_projects(project_command)
 
-    # manager.add_projects(project_command,
-    #                      project_k_xmen_command,
-    #                      project_k_ymen_command,
-    #                      project_k_zmen_command,
-    #                      project_gem_kdsl)
+    manager.add_projects(project_command,
+                         project_k_xmen_command,
+                         project_k_ymen_command,
+                         project_k_zmen_command,
+                         project_gem_kdsl)
 
-    manager.add_projects(project_command, project_gem_kdsl)
+    # manager.add_projects(project_command, project_gem_kdsl)
  
-                         # manager.add_project(project_microapp1)
-    # manager.add_project(project_microapp2)
-    # manager.add_project(project_sample)
+    # manager.add_projects(project_microapp1,
+    #                      project_microapp2,
+    #                      project_sample)
+
     manager.register_all_resource_documents
     manager.load_all_documents
     
