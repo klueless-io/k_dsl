@@ -2,6 +2,13 @@
 
 require 'logger'
 require 'listen'
+require 'active_support/core_ext/string'
+require 'virtus'
+
+require 'k_dsl/github/github_api'
+require 'k_dsl/github/github_hook'
+require 'k_dsl/github/github_printer'
+require 'k_dsl/github/github_repository'
 
 require 'k_dsl'
 
@@ -18,6 +25,7 @@ require 'table_print' # Debugging code needs to be decoupled from k_dsl
 # Extensions
 require 'k_dsl/extensions/create_dsl'
 require 'k_dsl/extensions/command_runable'
+require 'k_dsl/extensions/github_linkable'
 require 'k_dsl/extensions/importable'
 require 'k_dsl/extensions/writable'
 require 'k_dsl/extensions/document_factories'

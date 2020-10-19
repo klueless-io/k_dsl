@@ -18,6 +18,7 @@ RSpec.configure do |config|
 
   KDsl::Model::Document.include(KDsl::Extensions::CommandRunable)
   KDsl::Model::Document.include(KDsl::Extensions::CreateDsl)
+  KDsl::Model::Document.include(KDsl::Extensions::GithubLinkable)
   KDsl::Model::Document.include(KDsl::Extensions::Importable)
   KDsl::Model::Document.include(KDsl::Extensions::Writable)
 

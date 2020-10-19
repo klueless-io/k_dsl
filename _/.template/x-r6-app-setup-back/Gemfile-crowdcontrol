@@ -1,0 +1,158 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+ruby '2.4.6'
+
+gem 'rails', '5.2.2.1'
+
+source 'https://ix5t7h8xh8qjs5q4v8jus0dakpgfs0cw@gemstash-mattress.a.bugcrowd.com/private' do
+  gem 'pessimist'
+  gem 'valis', '0.2.1'
+end
+
+source 'https://71b825ba:82e62942@enterprise.contribsys.com/' do
+  gem 'sidekiq-ent'
+  gem 'sidekiq-pro'
+end
+
+gem 'active_link_to'
+gem 'active_model_serializers'
+gem 'addressable'
+gem 'aws-sdk-s3'
+gem 'bootsnap', require: false
+gem 'bugsnag'
+# Change to rubygems version once this is released
+#   https://github.com/CanCanCommunity/cancancan/pull/444
+gem 'cancancan', git: 'https://github.com/CanCanCommunity/cancancan', branch: 'develop'
+gem 'carrierwave', '~> 0.11.0'
+gem 'carrierwave-bombshelter'
+gem 'countries'
+gem 'cvss-suite', require: 'cvss_suite'
+gem 'devise'
+gem 'devise_invitable'
+gem 'diffy'
+gem 'draper'
+gem 'elasticsearch', '~> 5.0.4'
+gem 'elasticsearch-dsl'
+gem 'factory_bot_rails'
+gem 'faker'
+gem 'faraday_middleware', '~> 0.10.0'
+gem 'faraday_middleware-aws-sigv4'
+gem 'fastimage'
+gem 'flipper'
+gem 'flipper-redis'
+gem 'flipper-ui'
+gem 'fog-aws'
+gem 'fuzzyurl'
+gem 'griddler-mailgun', '~> 1.0.2'
+gem 'groupdate'
+gem 'haikunator', '~> 1.1.0'
+gem 'hamlit'
+gem 'hashids'
+gem 'hexapdf'
+gem 'httparty'
+gem 'interactor', '~> 3.0'
+gem 'jira-ruby'
+gem 'json-schema'
+gem 'kaminari'
+gem 'kv_accessor', '~> 0.1.0'
+gem 'lograge'
+gem 'memoist'
+gem 'mini_magick'
+gem 'money-rails'
+gem 'newrelic_rpm'
+gem 'oauth2'
+gem 'paper_trail'
+gem 'paranoia'
+gem 'pdf-reader'
+gem 'pg'
+gem 'premailer-rails'
+gem 'ransack'
+gem 'redcarpet'
+gem 'redis-rails'
+gem 'reverse_markdown'
+gem 'rouge'
+gem 'ruby-progressbar'
+gem 'ruby-saml'
+gem 'ruby-trello'
+gem 'searchlight'
+gem 'simple_form'
+gem 'simple_segment'
+gem 'slack-notifier'
+gem 'strong_migrations'
+gem 'symmetric-encryption'
+gem 'thin'
+gem 'tophat'
+gem 'url_regex'
+gem 'victor' # SVG generator
+gem 'vrt'
+gem 'warden', '1.2.7'
+gem 'webpacker'
+gem 'wicked_pdf',
+    git: 'https://github.com/mileszs/wicked_pdf',
+    branch: 'master',
+    ref: '36de16c86c5f07f9b088d16ffb11ce54b67ac8f6'
+gem 'wkhtmltopdf-binary'
+gem 'zxcvbn-ruby', require: 'zxcvbn'
+
+# forks
+gem 'activeadmin',
+    git: 'https://github.com/bugcrowd/activeadmin',
+    branch: 'reduce-dependencies-base-1-4-3'
+gem 'redcarpet-confluence',
+    git: 'https://github.com/bugcrowd/redcarpet-confluence',
+    branch: 'use-newer-redcarpet-and-html-escaping',
+    ref: 'c141b5d22b699f4e98b32cc30679b553c6c273f1'
+gem 'two_factor_authentication',
+    git: 'https://github.com/bugcrowd/two_factor_authentication',
+    branch: '1-1-1-rails-5-1-backport'
+
+# rack middleware
+gem 'rack-attack'
+gem 'rack-attack-rate-limit', require: 'rack/attack/rate-limit'
+gem 'rack-utf8_sanitizer'
+gem 'secure_headers', '6.0.0.alpha02'
+
+group :development do
+  gem 'annotate',
+      git: 'https://github.com/ctran/annotate_models',
+      branch: 'develop',
+      ref: 'e84e22de8fb8fc4e251418bdc6875b1003c9898c',
+      require: false
+  gem 'overcommit', require: false
+  gem 'rubocop', require: false
+  gem 'rubocop-performance', require: false
+  gem 'rubocop-rspec', require: false
+end
+
+group :development, :test do
+  gem 'awesome_print'
+  gem 'figaro'
+  gem 'knapsack_pro'
+  gem 'pry-byebug'
+  gem 'pry-rails'
+end
+
+group :test do
+  gem 'axe-matchers'
+  gem 'capybara'
+  gem 'capybara-inline-screenshot'
+  gem 'email_spec'
+  gem 'fakeredis'
+  gem 'percy-capybara'
+  gem 'rails-controller-testing'
+  gem 'rspec-collection_matchers'
+  gem 'rspec-rails'
+  gem 'rspec-sidekiq'
+  gem 'rspec_junit_formatter'
+  gem 'selenium-webdriver'
+  gem 'shoulda-matchers'
+  gem 'vcr'
+  gem 'webdrivers', require: false
+  gem 'webmock', require: false
+end
+
+group :production do
+  gem 'rack-timeout'
+end

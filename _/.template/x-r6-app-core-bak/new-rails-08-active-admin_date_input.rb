@@ -1,0 +1,1 @@
+class DateInput < Formtastic::Inputs::DatePickerInput; end

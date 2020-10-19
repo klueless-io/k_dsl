@@ -1,0 +1,1 @@
+rails generate model {{camelU settings.Model}} {{#each rows}}{{#ifx this.type '==' 'PrimaryKey'}}{{else ifx this.type '==' 'ForeignKey'}}{{else}}{{snake this.name}}:{{camelL this.type}} {{/ifx}}{{/each}} --no-test-framework

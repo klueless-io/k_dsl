@@ -48,6 +48,9 @@ module KDsl
       # found in the DSL.
       attr_reader :resource_documents
 
+      # Listener that is watching for file changes for this project
+      attr_reader :listener
+
       # There is currently a tight cupling between is boolean and DSL's so that they know whether they are being refrenced for registration or importation
       # The difference is that importation will execute their interal code block while registration will not.
       # attr_reader :current_state
@@ -126,8 +129,9 @@ module KDsl
       def watch_path(path, ignore: nil)
         @watch_path_patterns << path
 
-        # puts  "watch path: #{path} "
+        # puts  "watch path-before: #{path} "
         path = KDsl::Util.file.expand_path(path, config.base_resource_path)
+        # puts  "watch path-after: #{path} "
 
         Dir[path].sort.each do |file|
           watch_path = File.dirname(file)
@@ -196,6 +200,8 @@ module KDsl
           source: KDsl::Resources::Resource::SOURCE_FILE)
 
         @resources << resource unless @resources.include? resource
+
+        resource
       end
 
       # REACT: This method may not belong to project, it should be in it's own class
@@ -242,62 +248,94 @@ module KDsl
       end
 
       def watch
-        listener = Listen.to(*watch_paths) do |modified, added, removed|
+        @listener = Listen.to(*watch_paths) do |modified, added, removed|
           update_resources(modified) unless modified.empty?
+          add_resources(added) unless added.empty?
+          remove_resources(removed) unless removed.empty?
           # puts "modified absolute path: #{modified}"
           # puts "added absolute path: #{added}"
           # puts "removed absolute path: #{removed}"
         end
-        listener.start # not blocking
+        @listener.start # not blocking
 
-        L.subheading 'Listening'
-        L.block watch_paths
+        # L.subheading 'Listening'
+        watch_paths.each do |wp|
+          L.kv self.name, wp
+        end
 
-        listener
+        @listener
       end
 
+      def add_resources(files)
+        files.each do |file|
+          add_resource(file)
+        end
+      end
+ 
       def update_resources(files)
         files.each do |file|
-          puts "\rUpdating #{file}\r"
-
-          resource = get_resource(file: file)
-          if resource
-            KDsl::Resources::Resource.reset_instance(resource)
-            resource.load_content
-            resource.register
-            resource.load
-            resource.documents.each { |d| d.execute_block(run_actions: true) }
-
-            resource.debug
-
-            2.times { puts '' }
-            manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
-          else
-            puts 'resource not registered'
-          end
-
-          # resource_document = get_resource_document(file: file)
-          # if resource_document
-          #   resource_document.load_content
-          #   resource_document.register
-          #   resource_document.load
-
-          #   resource_document.debug
-
-          #   2.times { puts '' }
-          #   manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
-          # else
-          #   puts 'resource not registered'
-          # end
-
+          update_resource(file)
         end
       end
 
-      # def get_resource_document(file: nil)
-      #   if file
-      #     @resource_documents.find { |rd| rd.file == file }
-      #   end
-      # end
+      def remove_resources(files)
+        files.each do |file|
+          remove_resource(file)
+        end
+      end
+
+      def add_resource(file)
+        puts "\rAdding #{file}\r"
+
+        puts @watch_paths
+
+        watch_path = File.dirname(file)
+
+        resource = register_file_resource(file, watch_path: watch_path, path_expansion: false, ignore: nil)
+        resource.load_content
+        resource.register
+        resource.load
+
+        # Unlikely that I want to run a file that is added, if I ever do, thenb
+        # will need to figure out what in the file will trigger this concept
+        # resource.documents.each { |d| d.execute_block(run_actions: true) }
+
+        2.times { puts '' }
+        debug(formats: [:watch_path_patterns, :resource, :resource_document])
+        # manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
+      end
+
+      def update_resource(file)
+        puts "\rUpdating #{file}\r"
+
+        resource = get_resource(file: file)
+        if resource
+          KDsl::Resources::Resource.reset_instance(resource)
+          resource.load_content
+          resource.register
+          resource.load
+          resource.documents.each { |d| d.execute_block(run_actions: true) }
+
+          resource.debug
+
+          2.times { puts '' }
+          debug(formats: [:watch_path_patterns, :resource, :resource_document])
+        else
+          puts 'resource not registered'
+        end
+      end
+
+      def remove_resource(file)
+        puts "\rRemoving #{file}\r"
+
+        @resources.select { |r| r.file == file }
+                  .each { |r| KDsl::Resources::Resource.reset_instance(r) }
+
+        @resources.delete_if { |r| r.file == file }
+
+        2.times { puts '' }
+        debug(formats: [:watch_path_patterns, :resource, :resource_document])
+      end
 
       def get_resource(file: nil)
         if file
@@ -305,7 +343,13 @@ module KDsl
         end
       end
 
-      def debug(format: :resource)
+      def debug(format: :resource, formats: [])
+        if formats.present?
+          formats.each { |format| self.debug(format: format) }
+
+          return
+        end
+
         if format == :resource
           puts ''
           L.subheading 'List of resources'

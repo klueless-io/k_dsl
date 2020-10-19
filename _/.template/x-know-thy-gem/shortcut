@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd {{microapp_settings.app_path_expanded}}
+# bundle exec exe/{{snake settings.application}} toc
