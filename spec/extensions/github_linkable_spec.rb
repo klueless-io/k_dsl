@@ -53,13 +53,6 @@ RSpec.describe KDsl::Extensions::GithubLinkable do
     end
     let(:project) { KDsl::Manage::Project.new('app_name', config) }
     let(:resource) { KDsl::Resources::Resource.instance(project: project, file: 'fakeresource.txt') }
-    # let(:microapp1) do
-    #   KDsl.microapp('app1') do
-    #     settings do
-    #       app_path "#{Dir.getwd}/spec/.output/abc"
-    #     end
-    #   end
-    # end
 
     describe '#github_new_repo' do
       let(:document) { KDsl::Model::Document.new :kdsl_test_repo }
