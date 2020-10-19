@@ -24,7 +24,7 @@ KDsl.microapp :k_xmen do
   end
 
   actions do
-    new_github_repo s.name
+    github_new_repo s.name
     # Definition and Template folders should come from specific settings areas within the microap
     # new_structure 'bootstrap' , definition_subfolder: 'ruby-cmdlet', f: true, show_editor: true
     # new_structure 'stories'   , definition_subfolder: 'ruby-cmdlet', output_subfolder: :k_xmen, f: false, show_editor: true
