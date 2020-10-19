@@ -1,6 +1,6 @@
 module KDsl
   module Extensions
-    module CommandRunable
+    module CommandRunnable
       # Run command line program
       def run_command(command, command_creates_top_folder: false)
         return warn('Run command skipped: Document not linked to a project') if !defined?(project) || project.nil?
