@@ -82,18 +82,18 @@ module KDsl
 
         instance_eval(&action_block)
       rescue KDsl::Error => exception1
-        error("KDsl::Error in action")
-        L.kv 'key', unique_key
-        L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
-        error(exception1.message)
+        L.error("KDsl::Error in action")
+        # L.kv 'key', unique_key
+        # L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
+        # L.error(exception1.message)
         @error = exception1
         # L.exception exception1
         raise
       rescue StandardError => exception2
-        error("Standard error in action")
-        L.kv 'key', unique_key
-        L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
-        error(exception2.message)
+        L.error("Standard error in action")
+        # L.kv 'key', unique_key
+        # L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
+        # L.error(exception2.message)
         @error = exception2
         # L.exception exception2
         raise

@@ -35,6 +35,14 @@ RSpec.describe 'Sample for creating a New DSL' do
     get(key, type).debug(include_header: true)
   end
 
+  # MAKE THIS DRY
+  # context 'debug' do
+  #   # it { is_expected.not_to be_nil }
+  #   # it { is_expected.to be_a(KDsl::Model::Document) }
+  #   # it { debug }
+  #   # it { debug_document(key) }
+  # end
+
   context 'initialize project' do
     before do
       manager.add_project(project)
@@ -45,32 +53,47 @@ RSpec.describe 'Sample for creating a New DSL' do
       resource.add_documents(document)
     end
 
-    describe 'create microapps' do
+    describe 'ruby_commandlet' do
       
-      describe 'ruby_commandlet' do
+      subject { project.get_resource_document(key).document }
+      let(:key) { :new_dsl }
+
+      describe 'new microapp' do
         let(:document) do
-          KDsl.document('new_dsl') do
+          KDsl.document(key) do
             actions do
-              new_microapp 'k_swimtracker', definition_name: :ruby_cmdlet, output_subfolder: 'swimtracker'
+              new_microapp 'k_swimtracker',
+                           definition_subfolder: :ruby_cmdlet,
+                           show_editor: true, 
+                           f: true
             end
           end
         end
 
-        # new_microapp s.name, definition_name: :ruby_cmdlet  , output_folder: s.output_folder, f: true, base_path: s.base_path
-        context 'has valid document' do
-          subject { project.get_resource_document(key).document }
+        context 'run' do
+          it { run(key) }
+        end
+      end
 
-          let(:key) { :new_dsl }
+      describe 'new blueprint: bootstrap' do
+        let(:document) do
+          KDsl.document(key) do
+            actions do
+              settings do
+                name 'k_swimtracker'
+              end
+                  
+              new_structure 'bootstrap',
+                            definition_subfolder: :ruby_cmdlet,
+                            output_subfolder: 'k_swimtracker',
+                            show_editor: true, 
+                            f: true
+            end
+          end
+        end
 
-          # it do
-          #   manager.debug(format: :detail, project_formats: [:resource_document])
-          # end
-
-          it { is_expected.not_to be_nil }
-          # it { is_expected.to be_a(KDsl::Model::Document) }
-          # it { debug }
-          # it { debug_document(key) }
-          # fit { run(key) }
+        context 'run' do
+          it { run(key) }
         end
       end
     end

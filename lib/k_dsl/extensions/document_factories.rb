@@ -16,10 +16,17 @@ module KDsl
         build_document(key, :microapp, **options, &block)
       end
 
-      # Create a Structure for holding general blueprints, often used when initializing an application
+      # # Create a Structure for holding general blueprints, often used when initializing an application
+      # def structure(key, **options, &block)
+      #   # REFACT: Rename to StuctureDocument
+      #   build_document(key, :structure, document_class: KDsl::Model::BlueprintDocument, **options, &block)
+      # end
+
       def blueprint(key, **options, &block)
         build_document(key, :blueprint, document_class: KDsl::Model::BlueprintDocument, **options, &block)
       end
+
+      alias structure blueprint
 
       # def artifact(key, type: :entity, **options, &block)
       #   valid_types = [:entity, :value_object, :app_settings, :command]

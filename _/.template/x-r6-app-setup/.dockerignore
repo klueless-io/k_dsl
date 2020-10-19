@@ -1,0 +1,6 @@
+vendor
+.git
+tmp
+log
+config/application.yaml
+.bundle

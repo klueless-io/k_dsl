@@ -42,6 +42,10 @@ module KDsl
         "\u001b]8;;file://#{file}\u0007#{text}\u001b]8;;\u0007"
       end
 
+      def self.console_hyperlink(text, link)
+        "\u001b]8;;#{link}\u0007#{text}\u001b]8;;\u0007"
+      end
+
       def self.clean_symbol(value)
         return value if value.nil?
 

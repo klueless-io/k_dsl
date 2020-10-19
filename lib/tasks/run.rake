@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 require 'pry'
 
-BASE_PATH = '~/dev/kweb/klue-less/_'
+BASE_PATH_OLD = '~/dev/kweb/klue-less/_'
+
+BASE_PATH = '~/dev/kgems/k_dsl/_'
+BASE_PATH_RESOURCES = '~/dev/kgems/k_dsl/_projects'
 
 namespace :k_dsl do
   desc 'Execute the KLUE DSL'
@@ -26,13 +29,40 @@ namespace :k_dsl do
     # Add any extra extensions for factory methods
     KDsl.extend(KDsl::Extensions::DocumentFactories)
 
+    def get_config(path: BASE_PATH, resoure_path: BASE_PATH_RESOURCES, relative_resource_path: nil, app_template_path: nil)
+      resoure_path = File.join(resoure_path, relative_resource_path) if relative_resource_path.present?
+      config = KDsl::Manage::ProjectConfig.new do
+        self.base_path = path
+        self.base_resource_path = resoure_path
+      end
+
+      config.base_app_template_path = app_template_path if app_template_path.present?
+      
+      config
+    end  
+
     config_command = KDsl::Manage::ProjectConfig.new do
       self.base_path = BASE_PATH
-      self.base_resource_path = config.base_path
+      self.base_resource_path = BASE_PATH_RESOURCES
     end
 
-    project_command = KDsl::Manage::Project.new('quick_commands', config_command)
-    project_command.watch_path('microapp/_cmds/**/*.rb')
+    project_command = KDsl::Manage::Project.new('quick_commands', get_config)
+    project_command.watch_path('cmd/**/*.rb')
+
+    project_k_xmen_command = KDsl::Manage::Project.new('k_xmen', get_config(relative_resource_path: 'kcmd/k_xmen'))
+    project_k_xmen_command.watch_path('**/*.rb')
+
+    project_k_ymen_command = KDsl::Manage::Project.new('k_ymen', get_config(relative_resource_path: 'kcmd/k_ymen'))
+    project_k_ymen_command.watch_path('**/*.rb')
+
+    project_k_zmen_command = KDsl::Manage::Project.new('k_zmen', get_config(relative_resource_path: 'kcmd/k_zmen'))
+    project_k_zmen_command.watch_path('**/*.rb')
+
+    project_gem_kdsl_config = get_config(relative_resource_path: 'kgems/k_dsl',
+                                         app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_dsl/.templates')
+
+    project_gem_kdsl = KDsl::Manage::Project.new('k_dsl', project_gem_kdsl_config)
+    project_gem_kdsl.watch_path('**/*.rb')
 
     config_microapp = KDsl::Manage::ProjectConfig.new do
       self.base_path = BASE_PATH
@@ -58,11 +88,19 @@ namespace :k_dsl do
     end
 
     manager = KDsl.project_manager
+    # manager.add_projects(project_command)
 
-    # manager.add_project(project_command)
-    # manager.add_project(project_microapp1)
+    # manager.add_projects(project_command,
+    #                      project_k_xmen_command,
+    #                      project_k_ymen_command,
+    #                      project_k_zmen_command,
+    #                      project_gem_kdsl)
+
+    manager.add_projects(project_command, project_gem_kdsl)
+ 
+                         # manager.add_project(project_microapp1)
     # manager.add_project(project_microapp2)
-    manager.add_project(project_sample)
+    # manager.add_project(project_sample)
     manager.register_all_resource_documents
     manager.load_all_documents
     
@@ -82,17 +120,12 @@ namespace :k_dsl do
     # resource_document1.debug(include_header: true)
     # resource_document1.execute_block(run_actions: true)
 
-    resource_document2 = project_sample.get_resource_document('my_name2').document
+    # resource_document2 = project_sample.get_resource_document('my_name2').document
     # resource_document2.debug(include_header: true)
-    resource_document2.execute_block(run_actions: true)
+    # resource_document2.execute_block(run_actions: true)
     # manager.debug(format: :simple, project_formats: [:resource_document])
 
-    # listener = project_sample.watch
-    # manager.watch
-    # listener.stop
-    # manager.run('/Users/davidcruwys/dev/kgems/k_dsl/spec/factories/dsls/simple_dsl/two_dsl.rb')
-    # manager.watch
-    # KDsl.process.file(file)
+    manager.watch
 
   end
 end

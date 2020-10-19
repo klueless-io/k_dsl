@@ -39,4 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'listen', '~> 3.0'
   spec.add_dependency 'activesupport'
   spec.add_dependency 'handlebars'
+  spec.add_dependency 'octokit' # Working with git
+  spec.add_dependency 'virtus'
+
 end

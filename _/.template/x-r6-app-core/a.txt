@@ -1,0 +1,38 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+describe 'Users', type: :request do
+  let(:user) { create :user, crowdstream_name_visible: true, crowdstream_amount_visible: true }
+  let(:params) { {} }
+
+  before { sign_in user }
+
+  describe 'PATCH/update user' do
+    subject do
+      put user_path(user.username), params: params
+      response
+    end
+
+    let(:params) do
+      {
+        user: {
+          crowdstream_amount_visible: false,
+          crowdstream_name_visible: false
+        }
+      }
+    end
+
+    context 'with visibility settings' do
+      with_feature(:crowdstream, actor: :user) do
+        it 'crowdstream name' do
+          expect { subject }.to change { user.reload.crowdstream_name_visible }.to(false)
+        end
+
+        it 'crowdstream amount' do
+          expect { subject }.to change { user.reload.crowdstream_amount_visible }.to(false)
+        end
+      end
+    end
+  end
+end
