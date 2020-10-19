@@ -17,11 +17,11 @@ RSpec.describe KDsl::Extensions::GithubLinkable do
       context 'after extension loaded' do
         before { FakeDocument.include(KDsl::Extensions::GithubLinkable) }
 
-        it { is_expected.to respond_to(:new_github_repo) }
-        it { is_expected.to respond_to(:delete_github_repo) }
+        it { is_expected.to respond_to(:github_new_repo) }
+        it { is_expected.to respond_to(:github_delete_repo) }
 
-        describe '#new_github_repo' do
-          subject { document.new_github_repo nil }
+        describe '#github_new_repo' do
+          subject { document.github_new_repo nil }
     
           context 'when document not linked to a project' do
             it 'will print a warning log message' do
@@ -31,8 +31,8 @@ RSpec.describe KDsl::Extensions::GithubLinkable do
           end
         end
 
-        describe '#delete_github_repo' do
-          subject { document.delete_github_repo nil }
+        describe '#github_delete_repo' do
+          subject { document.github_delete_repo nil }
     
           context 'when document not linked to a project' do
             it 'will print a warning log message' do
@@ -61,24 +61,24 @@ RSpec.describe KDsl::Extensions::GithubLinkable do
     #   end
     # end
 
-    describe '#new_github_repo' do
+    describe '#github_new_repo' do
       let(:document) { KDsl::Model::Document.new :kdsl_test_repo }
 
       before { resource.add_document(document) }
-      before { document.delete_github_repo(document.key) }
+      before { document.github_delete_repo(document.key) }
 
       context 'when repo does not exists' do
-        subject { document.new_github_repo(document.key, autoopen: false) }
+        subject { document.github_new_repo(document.key, autoopen: false) }
 
         it { is_expected.not_to be_nil }
         it { is_expected.to have_attributes(full_name: 'klueless-io/kdsl_test_repo' ) }
 
         context 'when repo exists' do
-          describe '#new_github_repo will just return existing repo' do
+          describe '#github_new_repo will just return existing repo' do
             it { is_expected.to have_attributes(full_name: 'klueless-io/kdsl_test_repo' ) }
           end
-          describe '#delete_github_repo' do
-            subject { document.delete_github_repo(document.key) }
+          describe '#github_delete_repo' do
+            subject { document.github_delete_repo(document.key) }
 
             it { is_expected.to be_truthy }
           end

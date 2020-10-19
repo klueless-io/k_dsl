@@ -23,8 +23,8 @@ KDsl.microapp :k_zmen do
 
   actions do
     # L.error 'david'
-    # new_github_repo s.name
-    # delete_github_repo s.name
+    # github_new_repo s.name
+    # github_delete_repo s.name
     
     # ToDo: Definition and Template folders should come from specific settings areas within the microap
     new_structure 'bootstrap' , definition_subfolder: 'ruby-cmdlet', f: false, show_editor: true

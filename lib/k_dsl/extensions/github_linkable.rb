@@ -4,7 +4,7 @@ module KDsl
   module Extensions
     module GithubLinkable
       # New Github Repo will create a new repository for the configured Github user
-      def new_github_repo(repo_name, autoopen: true)
+      def github_new_repo(repo_name, autoopen: true)
         return warn('New Github Repo skipped: Document not linked to a project') if !defined?(project) || project.nil?
 
         user_name = project.config.github_user
@@ -38,7 +38,7 @@ module KDsl
         end
       end
 
-      def delete_github_repo(repo_name)
+      def github_delete_repo(repo_name)
         return warn('Delete Github Repo skipped: Document not linked to a project') if !defined?(project) || project.nil?
 
         user_name = project.config.github_user

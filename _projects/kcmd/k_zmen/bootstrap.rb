@@ -14,12 +14,12 @@ KDsl.structure :bootstrap do
     description         microapp.settings.description
   end
 
-  # actions do
-  #   L.error 'action1'
-  #   # run_command "open -a 'Google Chrome' https://github.com/klueless-io/k_zmen"
-  #   # new_github_repo s.name
-  #   # delete_github_repo s.name
-  # end
+  actions do
+    L.error 'action1'
+    # run_command "open -a 'Google Chrome' https://github.com/klueless-io/k_zmen"
+    # github_new_repo microapp.settings.name
+    # github_delete_repo microapp.settings.name
+  end
   
   blueprint do
   end
