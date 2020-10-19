@@ -9,7 +9,7 @@ BASE_PATH_RESOURCES = '~/dev/kgems/k_dsl/_projects'
 namespace :k_dsl do
   desc 'Execute the KLUE DSL'
 
-  # WHY did I have environement?
+  # WHY did I have environnement?
   # task :run, [:dsl_file] => :environment do |_task, args|
   task :run, [:dsl_file] do |_task, args|
     require 'k_dsl'
@@ -21,7 +21,7 @@ namespace :k_dsl do
     KDsl.setup(log_level: KDsl::LOG_INFO)
 
     # Add any extra extensions that you require on documents
-    KDsl::Model::Document.include(KDsl::Extensions::CommandRunable) # Documents can run command line programs
+    KDsl::Model::Document.include(KDsl::Extensions::CommandRunnable) # Documents can run command line programs
     KDsl::Model::Document.include(KDsl::Extensions::CreateDsl)      # Documents can create a new DSL from their relative position
     KDsl::Model::Document.include(KDsl::Extensions::GithubLinkable) # Documents can add, delete or open repos
     KDsl::Model::Document.include(KDsl::Extensions::Importable)     # Documents can import data from other documents

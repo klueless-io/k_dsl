@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::Extensions::CommandRunable do
+RSpec.describe KDsl::Extensions::CommandRunnable do
 
   context 'fake document' do
     class FakeDocument; attr_accessor :resource; end
@@ -15,7 +15,7 @@ RSpec.describe KDsl::Extensions::CommandRunable do
       it { is_expected.not_to respond_to(:run_command) }
 
       context 'after extension loaded' do
-        before { FakeDocument.include(KDsl::Extensions::CommandRunable) }
+        before { FakeDocument.include(KDsl::Extensions::CommandRunnable) }
 
         it { is_expected.to respond_to(:run_command) }
 
@@ -36,7 +36,7 @@ RSpec.describe KDsl::Extensions::CommandRunable do
   context 'real document' do
     let(:config) do
       KDsl::Manage::ProjectConfig.new do
-        base_resource_path = File.join(Dir.getwd, 'spec', 'factories', 'dsls')
+        base_resource_path = File.join(Dir.getwd, 'spec', 'factories', 'dlls')
       end
     end
     let(:project) { KDsl::Manage::Project.new('app_name', config) }
