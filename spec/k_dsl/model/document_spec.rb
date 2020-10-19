@@ -45,18 +45,25 @@ RSpec.describe KDsl::Model::Document do
   end
 
   describe '#constructor' do
-    context 'with key only' do
-      let(:instance) { described_class.new(key) }
+    context 'with no key' do
+      let(:instance) { described_class.new }
 
       it {
+        puts subject.key
         expect(subject).to have_attributes(
-          key: 'some_name',
+          key: match(/^[A-Za-z0-9]{8}$/),
           type: KDsl.config.default_document_type,
           namespace: '',
           options: {},
           data: {}
         )
       }
+    end
+
+    context 'with key only' do
+      let(:instance) { described_class.new(key) }
+
+      it { expect(subject.key).to eq(key) }
 
       context 'with key and type' do
         let(:instance) { described_class.new(key, type) }

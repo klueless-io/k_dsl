@@ -28,7 +28,7 @@ module KDsl
       # @param [String|Symbol] name Name of the document
       # @param args[0] Type of the document, defaults to KDsl.config.default_document_type if not set
       # @param default: Default value (using named params), as above
-      def initialize(key, *args, **options, &block)
+      def initialize(key = SecureRandom.alphanumeric(8), *args, **options, &block)
         @key = key
         @type = args.length.positive? ? args[0] || KDsl.config.default_document_type : KDsl.config.default_document_type
 
