@@ -4,7 +4,7 @@ require_relative 'app'
 require 'forwardable'
 require 'pastel'
 
-module {{camelU settings.application}}
+module {{camelU microapp.settings.application}}
   # Base command class
   class Command
     extend Forwardable
@@ -26,7 +26,7 @@ module {{camelU settings.application}}
 
     # Commandlet Configuration
     def config
-      config = {{camelU settings.application}}::App.config
+      config = {{camelU microapp.settings.application}}::App.config
 
       # @my_config_setting = config.fetch(:my_config_setting)
 

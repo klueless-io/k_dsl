@@ -13,8 +13,7 @@ module KDsl
     
       # rel_path = 'structures', 
       def new_blueprint(name, **opts)
-        opts[:definition_name] = :bootstrap unless opts.key?(:definition_name)
-        opts[:structure_name] = name
+        opts[:definition_name] = name unless opts.key?(:definition_name)
         opts[:output_filename] = opts[:output_filename] || "#{name}.rb" # "#{opts[:definition_name]}.rb"
 
         create_dsl(name, :blueprint, **opts)
@@ -27,15 +26,14 @@ module KDsl
 
       # Create a new DSL based on type
       #
-      # @type = type of defination
+      # @type = type of definition
       #         See: MICROAPP_TYPES & TYPES
-      # @name = name of the new structure
       # @definition_subfolder = subfolder to find a definition for new DSL
       # @output_filename = file to write to, relative to output folder
       # @output_subfolder = alter output folder to be relative to root output folder
       # @opts = hash of options that can processed
-      # @opts[:definition_name] = name of definition file in .definion directory to read from when creating new klue files
-      # @opts[:output_folder] = over ride the out file, the default is usualling the folder of the Klue file that just ran
+      # @opts[:definition_name] = name of definition file in .definition directory to read from when creating new klue files
+      # @opts[:output_folder] = over ride the out file, the default is usually the folder of the Klue file that just ran
       # REFACT: Use a structured params pattern at some time
       def create_dsl(name, type, **opts)
         L.heading "create_dsl: #{name}"

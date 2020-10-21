@@ -2,4 +2,4 @@
 
 require 'mkmf'
 
-create_makefile('{{snake settings.application}}/{{snake settings.application}}')
+create_makefile('{{snake microapp.microapp.settings.application}}/{{snake microapp.microapp.settings.application}}')

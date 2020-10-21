@@ -50,8 +50,17 @@ module KDsl
           base_cache_path: base_cache_path,
           base_definition_path: base_definition_path,
           base_template_path: base_template_path,
-          base_app_template_path: base_app_template_path
+          base_app_template_path: base_app_template_path,
+          github: {
+            user: github_user,
+            personal_access_token: github_personal_access_token,
+            personal_access_token_delete: github_personal_access_token_delete
+          }
         }
+      end
+
+      def to_struct
+        KDsl::Util.data.to_struct(to_h)
       end
 
       # REFACT: THIS NEEDS TO BE IN A CONFIG SYSTEM

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require '{{snake settings.application}}/version'
+require '{{snake microapp.settings.application}}/version'
 
-module {{camelU settings.application}}
+module {{camelU microapp.settings.application}}
   class Error < StandardError; end
   # Your code goes here...
 end

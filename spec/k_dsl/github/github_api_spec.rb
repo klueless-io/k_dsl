@@ -12,8 +12,8 @@ RSpec.describe Github::GithubApi, :integration_tests do
   let(:api_delete) { Github::GithubApi.new(token: KDsl::Manage::ProjectConfig.new.github_personal_access_token_delete) }
 
   let(:sample_repo) { 'klueless-io/z-test-aerial.com' }
-  let(:test_repo_full_key) { 'klueless-io/test-repo' }
-  let(:test_repo) { 'test-repo' }
+  let(:test_repo_full_key) { 'klueless-io/z-test-kdsl' }
+  let(:test_repo) { 'z-test-kdsl' }
 
   # ----------------------------------------------------------------------
   # Check/Debug factory data

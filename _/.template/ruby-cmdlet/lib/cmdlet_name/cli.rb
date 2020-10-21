@@ -2,7 +2,7 @@
 
 require 'thor'
 
-module {{camelU settings.application}}
+module {{camelU microapp.settings.application}}
   # Handle the application command line parsing
   # and the dispatch to various command objects
   #
@@ -11,10 +11,10 @@ module {{camelU settings.application}}
     # Error raised by this runner
     Error = Class.new(StandardError)
 
-    desc 'version', '{{snake settings.application}} version'
+    desc 'version', '{{snake microapp.settings.application}} version'
     def version
       require_relative 'version'
-      puts 'v' + {{camelU settings.application}}::VERSION
+      puts 'v' + {{camelU microapp.settings.application}}::VERSION
     end
     map %w[--version -v] => :version
   end

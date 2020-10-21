@@ -2,14 +2,14 @@
 
 require 'thor'
 
-module {{camelU settings.application}}
+module {{camelU microapp.settings.application}}
   # Handle the global access such as configuration
   class App
     attr_reader :config
 
     def initialize
       @config = TTY::Config.new
-      @config.filename = '{{snake settings.application}}'
+      @config.filename = '{{snake microapp.settings.application}}'
       @config.extname = '.yml'
       # @config.append_path Dir.pwd # Dir.home
       @config.append_path File.join(Dir.home, '.config')

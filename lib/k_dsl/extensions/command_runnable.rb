@@ -11,7 +11,7 @@ module KDsl
 
         raise KDsl::Error, 'Run command requires a microapp with target path' if microapps.empty?
         # Not sure if I will ever have multi-app projects, but if I do, then
-        # a simple paramter to specify the key or namespace or pass in the microapp will surfice
+        # a simple parameter to specify the key or namespace or pass in the microapp will suffice
         raise KDsl::Error, 'Run command currently supports single MicroApp projects only' if microapps.length > 1
 
         microapp_settings = microapps.first.document.data_struct.settings
@@ -20,7 +20,7 @@ module KDsl
 
         L.kv 'Target path', output_path
 
-        # Some commans such as rails new will expect the output path
+        # Some commands such as rails new will expect the output path
         # to not exist. These commands will take care of the path
         # creation themselves
         if command_creates_top_folder
