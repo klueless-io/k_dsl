@@ -2,7 +2,7 @@
 
 guard :bundler, cmd: 'bundle install' do
   watch('Gemfile')
-  watch('{{snake settings.application}}.gemspec')
+  watch('{{snake microapp.settings.application}}.gemspec')
 end
 
 guard :rspec, cmd: 'bundle exec rspec -f doc' do
@@ -18,6 +18,6 @@ guard :rspec, cmd: 'bundle exec rspec -f doc' do
   # Ruby files
   ruby = dsl.ruby
   dsl.watch_spec_files_for(ruby.lib_files)
-  watch(%r{^lib/{{snake settings.application}}/(.+)\.rb$}) { |m| "spec/unit/#{m[1]}_spec.rb" }
-  watch(%r{^lib/{{snake settings.application}}/commands/(.+)\.rb$}) { |m| "spec/unit/commands/#{m[1]}_spec.rb" }
+  watch(%r{^lib/{{snake microapp.settings.application}}/(.+)\.rb$}) { |m| "spec/unit/#{m[1]}_spec.rb" }
+  watch(%r{^lib/{{snake microapp.settings.application}}/commands/(.+)\.rb$}) { |m| "spec/unit/commands/#{m[1]}_spec.rb" }
 end

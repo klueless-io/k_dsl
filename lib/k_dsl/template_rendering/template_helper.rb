@@ -5,7 +5,7 @@ module KDsl
   module TemplateRendering
     class TemplateHelper
 
-      def self.process_template(template, data)
+      def self.process_template(template, opt)
         # L.block 'process template'
     
         handlebars = Handlebars::Context.new
@@ -14,6 +14,9 @@ module KDsl
         
         compiled_template = handlebars.compile(template)
     
+        L.ostruct opt, skip_array: true
+
+        data = opt.to_h
         begin
           data.keys.each do |key|
             data[key] = data[key].to_h if data[key].class == OpenStruct

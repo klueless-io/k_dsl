@@ -10,7 +10,7 @@
 
 # Ignore Klue Setup.sh
 /bin/runonce/
-{{snake settings.application}}.yml
+{{snake microapp.settings.application}}.yml
 
 /.bundle/
 /.history/

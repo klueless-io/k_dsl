@@ -1,10 +1,11 @@
 # KDsl.cmd :cmd do
-KDsl.document :ruby_gem do
+KDsl.document :idea do
   s = settings do
-    name                    'k_dsl'
-    definition_subfolder    'ruby-gem'
-    project_group           :kgems
-    website_slug            :gems
+    name                    'speechelo_automation'
+    definition_subfolder    'idea'
+    project_group           :idea
+    website_slug            :idea
+    new_app_type            :spidy_robot
   end
 
   actions do

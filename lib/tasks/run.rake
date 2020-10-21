@@ -26,16 +26,15 @@ namespace :k_dsl do
     KDsl::Model::Document.include(KDsl::Extensions::GithubLinkable) # Documents can add, delete or open repos
     KDsl::Model::Document.include(KDsl::Extensions::Importable)     # Documents can import data from other documents
     KDsl::Model::Document.include(KDsl::Extensions::Writable)       # Documents can write their contents out to the cache path in JSON or YAML
-
     
     # Add any extra extensions for factory methods
     KDsl.extend(KDsl::Extensions::DocumentFactories)
 
-    def get_config(path: BASE_PATH, resoure_path: BASE_PATH_RESOURCES, relative_resource_path: nil, app_template_path: nil)
-      resoure_path = File.join(resoure_path, relative_resource_path) if relative_resource_path.present?
+    def get_config(path: BASE_PATH, resource_path: BASE_PATH_RESOURCES, relative_resource_path: nil, app_template_path: nil)
+      resource_path = File.join(resource_path, relative_resource_path) if relative_resource_path.present?
       config = KDsl::Manage::ProjectConfig.new do
         self.base_path = path
-        self.base_resource_path = resoure_path
+        self.base_resource_path = resource_path
       end
 
       config.base_app_template_path = app_template_path if app_template_path.present?
@@ -60,11 +59,20 @@ namespace :k_dsl do
     project_k_zmen_command = KDsl::Manage::Project.new('k_zmen', get_config(relative_resource_path: 'kcmd/k_zmen'))
     project_k_zmen_command.watch_path('**/*.rb')
 
+    project_playrb_loquacious = KDsl::Manage::Project.new('playrb_loquacious', get_config(relative_resource_path: 'kgems/playrb_loquacious'))
+    project_playrb_loquacious.watch_path('**/*.rb')
+
     project_gem_kdsl_config = get_config(relative_resource_path: 'kgems/k_dsl',
                                          app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_dsl/.templates')
 
     project_gem_kdsl = KDsl::Manage::Project.new('k_dsl', project_gem_kdsl_config)
     project_gem_kdsl.watch_path('**/*.rb')
+
+    project_idea = KDsl::Manage::Project.new('idea', get_config(relative_resource_path: 'idea/idea'))
+    project_idea.watch_path('**/*.rb')
+
+    project_idea_post = KDsl::Manage::Project.new('idea_post', get_config(relative_resource_path: 'idea_post/idea_post'))
+    project_idea_post.watch_path('**/*.rb')
 
     config_microapp = KDsl::Manage::ProjectConfig.new do
       self.base_path = BASE_PATH
@@ -91,14 +99,22 @@ namespace :k_dsl do
 
     manager = KDsl.project_manager
 
-    manager.add_projects(project_command,
-                         project_k_xmen_command,
-                         project_k_ymen_command,
-                         project_k_zmen_command,
-                         project_gem_kdsl)
+    group = %i[ideas xyz_commands play_loquacious kdsl].first
 
-    # manager.add_projects(project_command, project_gem_kdsl)
- 
+    case group
+    when :xyz_commands
+      manager.add_projects(project_command,
+                          project_k_xmen_command,
+                          project_k_ymen_command,
+                          project_k_zmen_command,
+                          project_gem_kdsl)
+    when :k_dsl
+      manager.add_projects(project_command, project_gem_kdsl)
+    when :ideas
+      manager.add_projects(project_command, project_idea, project_idea_post)
+    when :play_loquacious
+      manager.add_projects(project_command, project_playrb_loquacious)
+    end
     # manager.add_projects(project_microapp1,
     #                      project_microapp2,
     #                      project_sample)

@@ -24,7 +24,7 @@ require 'table_print' # Debugging code needs to be decoupled from k_dsl
 
 # Extensions
 require 'k_dsl/extensions/create_dsl'
-require 'k_dsl/extensions/command_runable'
+require 'k_dsl/extensions/command_runnable'
 require 'k_dsl/extensions/github_linkable'
 require 'k_dsl/extensions/importable'
 require 'k_dsl/extensions/writable'
@@ -82,6 +82,7 @@ require 'k_dsl/manager'
 require 'k_dsl/util/data_helper'
 require 'k_dsl/util/dsl_helper'
 require 'k_dsl/util/file_helper'
+require 'k_dsl/util/format_helper'
 
 # Klue DSL
 module KDsl
