@@ -1,38 +1,16 @@
 KDsl.blueprint :{{snake name}} do
   microapp     = import(:{{settings.name}}, :microapp)
 
-  is_bundle_gem        = 1
-  is_bundle_setup      = 0
-  is_bootstrap_cmdlet  = 0
-  is_open_git          = 0
-  is_customisations    = 0
+  is_run = 0
 
   settings do
     name                parent.key
     type                parent.type
     template_rel_path   'ruby-cmdlet'
-    description         microapp.settings.description
   end
 
-  blueprint :bundle_setup do
-    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, '')]
-
-    row '.gitignore'
-
-    row 'bin/k'
-    row 'bin/khotfix'
-    row 'bin/kgitsync'
-
-    row 'hooks/pre-commit'
-    row 'hooks/update-version'
-
-    row 'bin/runonce/common.sh'
-    row 'bin/runonce/setup-chmod.sh', command: 'execute'
-    row 'bin/runonce/setup-git.sh', command: 'execute'
-  end
-
-  blueprint :bootstrap_cmdlet do
-    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, '')]
+  instructions do
+    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, 'open,open_template')]
 
     # ADD EXE (executable)
     row 'exe/cmdlet_name', 'exe/{{settings.application}}'
@@ -75,30 +53,15 @@ KDsl.blueprint :{{snake name}} do
     # row '', conflict: 'compare'
   end
 
-  blueprint :custom do
-    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'compare'), f(:after_write, 'open')]
+  # instructions :custom do
+  #   fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'compare'), f(:after_write, 'open')]
 
-    # row 'README.md'#, conflict: 'overwrite'
-    # row '.rubocop.yml'
-  end
+  #   # row 'README.md'#, conflict: 'overwrite'
+  #   # row '.rubocop.yml'
+  # end
 
+  L.warn 'set is_run to true if you want to run the action' if is_run == 0
   actions do
-    if is_bundle_gem == 1
-      run_command 'bundle gem --coc --test=rspec --mit {{settings.name}}', command_creates_top_folder: true
-    end
-    if is_bundle_setup == 1
-      run_blueprint blueprint: :bundle_setup        , microapp: microapp
-    end
-    if is_bootstrap_cmdlet == 1
-      run_blueprint blueprint: :bootstrap_cmdlet    , microapp: microapp 
-    end
-    if is_open_git == 1
-      run_command "open -a 'Google Chrome' https://github.com/{{microapp.settings.github_user}}/{{snake settings.application}}"
-    end
-    if is_customisations == 1
-      run_blueprint blueprint: :custom              , microapp: microapp
-    end
-
-    # write_json is_edit: true
-  end
+    run_blueprint microapp: microapp
+  end if is_run == 1
 end

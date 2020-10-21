@@ -49,6 +49,7 @@ module KDsl
         end
 
         @data[@name]['rows'] << row
+        row
       end
       # rubocop:enable Metrics/AbcSize
 

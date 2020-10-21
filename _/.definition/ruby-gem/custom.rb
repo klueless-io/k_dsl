@@ -8,7 +8,7 @@ KDsl.blueprint :{{snake name}} do
     description         microapp.settings.description
   end
 
-  blueprint do
+  instructions do
     fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, '')]
 
     row 'xxx'

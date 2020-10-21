@@ -7,15 +7,15 @@
 exit 1 if ARGV.empty?
 
 version = ARGV[0]
-version = version[1..-1] # revove 'v' character, e.g. v0.1.1 becomes 0.1.1
+version = version[1..-1] # revoke 'v' character, e.g. v0.1.1 becomes 0.1.1
 
 output = <<~RUBY
   # frozen_string_literal: true
 
-  module {{camelU settings.application}}
+  module {{camelU microapp.settings.application}}
     VERSION = '#{version}'
   end
 RUBY
 
 printf "%-25<label>s : %<version>s\n", label: 'GEM VERSION', version: version
-File.open('lib/{{snake settings.application}}/version.rb', 'w+') { |f| f.write(output) }
+File.open('lib/{{snake microapp.settings.application}}/version.rb', 'w+') { |f| f.write(output) }

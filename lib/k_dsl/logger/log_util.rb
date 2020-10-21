@@ -13,6 +13,7 @@
 class LogUtil
   def initialize(logger)
     @logger = logger
+    @fuck = true
   end
 
   # include ActiveSupport::LoggerThreadSafeLevel
@@ -124,28 +125,33 @@ class LogUtil
     @logger.info(JSON.pretty_generate(data))
   end
 
-  def open_struct(data, indent = '')
+  def open_struct(data, indent = '', **opts)
     data.each_pair do |key, value|
       if value.is_a?(OpenStruct)
 
         if value['rows'].is_a?(Array)
           # L.subheading(key)
-          puts LogHelper.subheading(key, 88)
-          open_struct(value, indent)
+          opts[:subheading] = key
+          open_struct(value, indent, **opts)
+          opts.delete(:subheading)
         else
           L.kv "#{indent}#{key}:", ''
           indent = "#{indent}  "
-          open_struct(value, indent)
+          open_struct(value, indent, **opts)
           indent = indent.chomp('  ')
         end
       elsif value.is_a?(Array)
+        next if opts[:skip_array].present?
+        puts LogHelper.subheading(key, 88) if opts[:subheading].present?
         tp value, value.first.to_h.keys if value.length > 0
       else
         L.kv "#{indent}#{key}", value
       end
     end
+    nil
   end
   alias ostruct open_struct
+  alias o open_struct
 
   def exception(e)
     line

@@ -1,6 +1,6 @@
-#ifndef {{constantize settings.application}}_H
-#define {{constantize settings.application}}_H 1
+#ifndef {{constantize microapp.microapp.settings.application}}_H
+#define {{constantize microapp.microapp.settings.application}}_H 1
 
 #include "ruby.h"
 
-#endif /* {{constantize settings.application}}_H */
+#endif /* {{constantize microapp.microapp.settings.application}}_H */

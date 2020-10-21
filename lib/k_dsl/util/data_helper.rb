@@ -19,7 +19,7 @@ module KDsl
           return data.map { |o| to_struct(o) }
   
         else
-          # Assumed to be a primititve value
+          # Some primitave type: String, True/False, Symbol or an ObjectStruct
           return data
         end
       end

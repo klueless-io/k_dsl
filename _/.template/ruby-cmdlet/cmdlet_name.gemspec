@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require_relative 'lib/{{snake settings.application}}/version'
+require_relative 'lib/{{snake microapp.settings.application}}/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = '{{snake settings.application}}'
-  spec.version       = {{camelU settings.application}}::VERSION
-  spec.authors       = ['{{settings.author}}']
-  spec.email         = ['{{settings.author_email}}']
+  spec.name          = '{{snake microapp.settings.application}}'
+  spec.version       = {{camelU microapp.settings.application}}::VERSION
+  spec.authors       = ['{{microapp.settings.author}}']
+  spec.email         = ['{{microapp.settings.author_email}}']
 
-  spec.summary       = '{{settings.description}}'
-  spec.description   = '{{settings.description}}'
-  spec.homepage      = '{{settings.website}}'
+  spec.summary       = '{{microapp.settings.description}}'
+  spec.description   = '{{microapp.settings.description}}'
+  spec.homepage      = '{{microapp.settings.website}}'
   spec.license       = 'MIT'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -20,8 +20,8 @@ Gem::Specification.new do |spec|
   # spec.metadata['allowed_push_host'] = "Set to 'http://mygemserver.com'"
 
   spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri'] = 'https://github.com/{{settings.github_user}}/{{snake settings.application}}'
-  spec.metadata['changelog_uri'] = 'https://github.com/{{settings.github_user}}/{{snake settings.application}}/commits/master'
+  spec.metadata['source_code_uri'] = 'https://github.com/{{project.config.github.user}}/{{snake microapp.settings.application}}'
+  spec.metadata['changelog_uri'] = 'https://github.com/{{project.config.github.user}}/{{snake microapp.settings.application}}/commits/master'
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the RubyGem files that have been added into git.
@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
-  spec.extensions    = ['ext/{{snake settings.application}}/extconf.rb']
+  spec.extensions    = ['ext/{{snake microapp.settings.application}}/extconf.rb']
 
   # spec.add_dependency 'tty-box',         '~> 0.5.0'
   # spec.add_dependency 'tty-color',       '~> 0.5'

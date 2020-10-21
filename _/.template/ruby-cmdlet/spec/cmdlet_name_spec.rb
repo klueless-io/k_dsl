@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe {{camelU settings.application}} do
+RSpec.describe {{camelU microapp.settings.application}} do
   it 'has a version number' do
-    expect({{camelU settings.application}}::VERSION).not_to be nil
+    expect({{camelU microapp.settings.application}}::VERSION).not_to be nil
   end
 end
