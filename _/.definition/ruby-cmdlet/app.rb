@@ -12,11 +12,12 @@ KDsl.microapp :{{snake name}} do
     app_type                      'Ruby Commandlet'
     description                   '{{titleize name}} is a command line tool for '
     application                   '{{snake name}}'
+    avatar                        'Developer'
+    main_story                    '{{settings.main_story}}'
     author                        'David'
     author_email                  'david@ideasmen.com.au'
     shortcut                      '{{snake name}}'
     website                       'http://appydave.com/{{settings.website_slug}}/{{snake name}}'
-    main_story                    'As a Dev/DevOp, I should be able to XXX quickly from the command line, so that I'
     template_rel_path             'ruby-cmdlet'
     app_path                      '~/dev/cmdlets/{{snake name}}'
     data_path                     '_/.data'
@@ -29,8 +30,8 @@ KDsl.microapp :{{snake name}} do
     run_command 'bundle gem --coc --test=rspec --mit {{name}}', command_creates_top_folder: true
     run_command 'code .'
 
-    new_blueprint :bootstrap_bin_hooks, definition_subfolder: 'ruby-gem'    , f: true
-    new_blueprint :bootstrap_cmdlet   , definition_subfolder: 'ruby-cmdlet' , f: true
+    new_blueprint :bootstrap_01_bin_hook    , definition_subfolder: 'ruby-gem'    , f: true
+    new_blueprint :bootstrap_cmdlet , definition_subfolder: 'ruby-cmdlet' , f: true
     
     # ToDo: Definition and Template folders should come from specific settings areas within the microap
     # new_structure 'stories'   , definition_subfolder: 'ruby-cmdlet', f: false, show_editor: true

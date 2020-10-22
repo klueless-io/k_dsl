@@ -1,7 +1,7 @@
 # KDsl.cmd :cmd do
 KDsl.document :ruby_cmdlet do
   s = settings do
-    name                    'k_ymen'
+    name                    'k_xmen'
     description_suffix      "is a Ruby command line for"
     definition_subfolder    'ruby-cmdlet'
     project_group           :kcmd

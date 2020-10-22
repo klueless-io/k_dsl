@@ -2,7 +2,7 @@
 
 require 'pry'
 require 'bundler/setup'
-require '{{snake settings.application}}'
+require '{{snake microapp.settings.application}}'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
