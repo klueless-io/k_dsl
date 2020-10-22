@@ -76,6 +76,11 @@ module KDsl
           KDsl::TemplateRendering::HandlebarsFormatter.titleize(value) 
         }
 
+        # hello world = Hello World (alias: titleize)
+        handlebars.register_helper(:titleize) { |_context, value| 
+          KDsl::TemplateRendering::HandlebarsFormatter.titleize(value) 
+        }
+
         # hello world = Hello world (alias: humanize)
         handlebars.register_helper(:humanize) { |_context, value| 
           KDsl::TemplateRendering::HandlebarsFormatter.humanize(value) 
@@ -87,6 +92,11 @@ module KDsl
         }
         handlebars.register_helper(:constantize) { |_context, value| 
           KDsl::TemplateRendering::HandlebarsFormatter.constantize(value) 
+        }
+
+        # hello world = Hello world (alias: pluralize)
+        handlebars.register_helper(:pluralize) { |_context, value| 
+          KDsl::TemplateRendering::HandlebarsFormatter.pluralize(value) 
         }
         
         # Default

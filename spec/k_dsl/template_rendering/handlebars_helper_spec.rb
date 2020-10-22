@@ -111,6 +111,16 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsHelper do
         it { expect(subject).to include('SPACED_OUT') }
       end
   
+      context 'humanize, then pluralize' do
+        let(:template) { '{{pluralize (humanize name1)}} {{pluralize (humanize name2)}} {{pluralize (humanize name3)}} {{pluralize (humanize name4)}} {{pluralize (humanize name5)}} {{pluralize (humanize name6)}}' }
+  
+        it { expect(subject).to include('Activities') }
+        it { expect(subject).to include('Achievement badges') }
+        it { expect(subject).to include('Hello worlds') }
+        it { expect(subject).to include('The quick brown foxes') }
+        it { expect(subject).to include('Space men') }
+        it { expect(subject).to include('Spaced outs') }
+      end
     end
   
     describe 'common helpers' do

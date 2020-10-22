@@ -22,7 +22,7 @@ KDsl.blueprint :{{snake name}} do
   table :structure do
     fields %i[title points aka]
 
-    row 'What Are {{titleize settings.keyword}}?'
+    row 'What Are {{titleize( pluralize settings.keyword)}}?'
     row 'Why Do {{titleize settings.keyword_plural}} Work So Well?', points: []
     row 'Best Practices', points: [], aka: '8 Tips for Writing a Great {{titleize settings.keyword}}'
     row 'What Not to Do', points: []
