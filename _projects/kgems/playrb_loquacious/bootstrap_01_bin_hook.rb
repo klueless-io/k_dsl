@@ -1,7 +1,7 @@
-KDsl.blueprint :bootstrap_bin_hooks do
+KDsl.blueprint :bootstrap_bin_hook do
   microapp     = import(:playrb_loquacious, :microapp)
 
-  is_run = false
+  is_run = 0
 
   settings do
     name                parent.key
@@ -10,7 +10,7 @@ KDsl.blueprint :bootstrap_bin_hooks do
   end
 
   instructions do
-    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, 'open')]
+    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, '')]
 
     row '.gitignore'
 
@@ -21,9 +21,12 @@ KDsl.blueprint :bootstrap_bin_hooks do
     row 'hooks/pre-commit'
     row 'hooks/update-version'
 
+    row 'bin/setup'
+    row 'bin/console'
+
     row 'bin/runonce/common.sh'
     row 'bin/runonce/setup-chmod.sh', command: 'execute'
-    row 'bin/runonce/setup-git.sh', command: 'execute'
+    row 'bin/runonce/setup-git.sh'  , command: 'execute'
   end
 
   L.warn 'set is_run to true if you want to run the action' if is_run == 0

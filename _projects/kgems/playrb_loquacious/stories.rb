@@ -2,9 +2,9 @@
 # Ruby Commandlet Stories
 # ------------------------------------------------------------
 
-KDsl.document :{{snake name}} do
+KDsl.document :stories do
   s = settings do
-    main_story                    '{{settings.main_story}}'
+    main_story                    'As a Developer, I want to understand what the Loquacious GEM is doing via example, so that I improve my skills with Ruby'
   end
 
   actions do
@@ -21,10 +21,10 @@ KDsl.document :{{snake name}} do
           'Setup guard and unit tests'
         ]
 
-    row 'As a {{settings.avatar}}, I should be able to , so that I',
+    row 'As a Developer, I should be able to , so that I',
         []
 
-    # row 'As a {{settings.avatar}}, I should be able to , so that I',
+    # row 'As a Developer, I should be able to , so that I',
     #     []
   end
 

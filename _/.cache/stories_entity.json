@@ -1,0 +1,25 @@
+{
+  "settings": {
+    "main_story": ""
+  },
+  "stories": {
+    "rows": [
+      {
+        "story": "",
+        "tasks": [
+          "Create new gem",
+          "Setup deployment pipeline",
+          "Setup guard and unit tests"
+        ],
+        "active": true
+      },
+      {
+        "story": "As a XX, I should be able to , so that I",
+        "tasks": [
+
+        ],
+        "active": true
+      }
+    ]
+  }
+}

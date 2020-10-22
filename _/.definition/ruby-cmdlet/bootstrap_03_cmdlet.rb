@@ -1,7 +1,7 @@
 KDsl.blueprint :{{snake name}} do
   microapp     = import(:{{settings.name}}, :microapp)
 
-  is_run = 0
+  is_run = 1
 
   settings do
     name                parent.key
@@ -13,15 +13,12 @@ KDsl.blueprint :{{snake name}} do
     fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, '')] # 'open,open_template'
 
     # ADD EXE (executable)
-    row 'exe/cmdlet_name', 'exe/{{settings.application}}'
+    row 'exe/cmdlet_name'                 , 'exe/{{settings.application}}'
 
     # ADD EXT (extensions)
-    row 'ext/cmdlet_name/cmdlet_name.c', 'ext/{{settings.application}}/{{settings.application}}.c'
-    row 'ext/cmdlet_name/cmdlet_name.h', 'ext/{{settings.application}}/{{settings.application}}.h'
-    row 'ext/cmdlet_name/extconf.rb', 'ext/{{settings.application}}/extconf.rb'
-
-    row 'bin/setup'
-    row 'bin/console'
+    row 'ext/cmdlet_name/cmdlet_name.c'   , 'ext/{{settings.application}}/{{settings.application}}.c'
+    row 'ext/cmdlet_name/cmdlet_name.h'   , 'ext/{{settings.application}}/{{settings.application}}.h'
+    row 'ext/cmdlet_name/extconf.rb'      , 'ext/{{settings.application}}/extconf.rb'
 
     # Setup CLI and command execution
     row 'lib/cmdlet_name.rb'              , 'lib/{{settings.application}}.rb'
@@ -41,7 +38,7 @@ KDsl.blueprint :{{snake name}} do
     row 'CODE_OF_CONDUCT.md'
     row 'Gemfile'
     row 'LICENSE.txt'
-    row 'cmdlet_name.gemspec'               , '{{settings.application}}.gemspec'
+    row 'cmdlet_name.gemspec'             , '{{settings.application}}.gemspec'
     row 'Rakefile'
     row 'README.md'
     row 'Guardfile'

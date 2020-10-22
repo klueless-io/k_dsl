@@ -32,7 +32,9 @@ module KDsl
         # Deep path create if needed
         FileUtils.mkdir_p(output_path)
 
-        build_command = "cd #{output_path} && #{command}"
+        # asdf not working, why?
+        # RBENV_VERSION
+        build_command = "asdf current ruby && cd #{output_path} && #{command}"
 
         L.kv 'Run command in path', build_command
 
