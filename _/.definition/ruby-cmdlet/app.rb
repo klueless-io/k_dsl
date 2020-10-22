@@ -3,7 +3,7 @@
 # ------------------------------------------------------------
 
 KDsl.microapp :{{snake name}} do
-  is_run = false
+  is_run = 0
 
   s = settings do
     ruby_version                  '2.7.2' # Need a service that can return this information for me at the time of creating the project
@@ -24,9 +24,10 @@ KDsl.microapp :{{snake name}} do
 
   L.warn 'set is_run to true if you want to run the action' if is_run == 0
   actions do
-    github_new_repo s.name
     # github_delete_repo s.name
+    github_new_repo s.name
     run_command 'bundle gem --coc --test=rspec --mit {{name}}', command_creates_top_folder: true
+    run_command 'code .'
 
     new_blueprint :bootstrap_bin_hooks, definition_subfolder: 'ruby-gem'    , f: true
     new_blueprint :bootstrap_cmdlet   , definition_subfolder: 'ruby-cmdlet' , f: true
