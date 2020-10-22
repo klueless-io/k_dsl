@@ -1,0 +1,75 @@
+{
+  "settings": {
+    "klueless_features_title": "KlueLess Features",
+    "klueless_features_description": "The KlueLess ruby GEM .template provides the following features"
+  },
+  "features": {
+    "rows": [
+
+    ]
+  },
+  "klueless_features": {
+    "rows": [
+      {
+        "group": "code",
+        "section": "upgrade",
+        "title": "version",
+        "description": "Uses semantic version number"
+      },
+      {
+        "group": "testing",
+        "section": "unit-testing",
+        "title": "rspec",
+        "description": "RSpec is configured"
+      },
+      {
+        "group": "testing",
+        "section": "code-coverage",
+        "title": "rubocop",
+        "description": "Rubocop is configured with opinionated rules"
+      },
+      {
+        "group": "development",
+        "section": "extension",
+        "title": "guard",
+        "description": "Guard is configured for development"
+      },
+      {
+        "group": "development",
+        "section": "extension",
+        "title": "guard-rspec",
+        "description": "Guard is watching for code changes and running rspec automatically"
+      },
+      {
+        "group": "development",
+        "section": "extension",
+        "title": "guard-cop",
+        "description": "Rubocop is watching for code changes and checking code quality after green test pass"
+      },
+      {
+        "group": "development",
+        "section": "command line",
+        "title": "kgitsync",
+        "description": "Easily synchronize Dev & Master branches"
+      },
+      {
+        "group": "development",
+        "section": "command line",
+        "title": "khotfix",
+        "description": "Easily create a new versioned hotfix against master branch"
+      },
+      {
+        "group": "development",
+        "section": "hooks",
+        "title": "pre-commit",
+        "description": "Prevent debugging code from being deployed to git branch"
+      },
+      {
+        "group": "development",
+        "section": "hooks",
+        "title": "update-version",
+        "description": "Update the semantic version number in code, used by khotfix"
+      }
+    ]
+  }
+}

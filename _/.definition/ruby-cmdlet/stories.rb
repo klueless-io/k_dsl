@@ -1,10 +1,10 @@
 # ------------------------------------------------------------
-# MicroApp: Ruby Commandlet
+# Ruby Commandlet Stories
 # ------------------------------------------------------------
 
 KDsl.stories :{{snake name}} do
   s = settings do
-    main_story                    'As a XX, I should be able to , so that I'
+    main_story                    '{{settings.main_story}}'
   end
 
   actions do
@@ -16,7 +16,7 @@ KDsl.stories :{{snake name}} do
 
     row s.main_story,
         [
-          'Create new commandline tool', 
+          'Create new command line tool', 
           'Setup deployment pipeline',
           'Setup guard and unit tests'
         ]

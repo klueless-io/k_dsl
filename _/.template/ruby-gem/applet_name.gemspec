@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'lib/{{snake settings.application}}/version'
+require_relative 'lib/{{snake microapp.settings.application}}/version'
 
 Gem::Specification.new do |spec|
   spec.required_ruby_version  = '>= 2.5'
@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version                = {{camelU microapp.settings.application}}::VERSION
   spec.authors                = ['{{microapp.settings.author}}']
   spec.email                  = ['{{microapp.settings.author_email}}']
-          
+
   spec.summary                = '{{microapp.settings.description}}'
   spec.description            = '{{microapp.settings.description}}'
   spec.homepage               = '{{microapp.settings.website}}'
@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
-  spec.extensions    = ['ext/{{snake settings.application}}/extconf.rb']
+  spec.extensions    = ['ext/{{snake microapp.settings.application}}/extconf.rb']
 
   # spec.add_dependency 'tty-box',         '~> 0.5.0'
 end

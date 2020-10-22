@@ -99,7 +99,7 @@ namespace :k_dsl do
 
     manager = KDsl.project_manager
 
-    group = %i[xyz_commands k_dsl ideas play_loquacious].first
+    group = %i[play_loquacious xyz_commands k_dsl ideas].first
 
     case group
     when :xyz_commands
