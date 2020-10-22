@@ -10,7 +10,7 @@ KDsl.blueprint :{{snake name}} do
   end
 
   instructions do
-    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, 'open,open_template')]
+    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, '')] # 'open,open_template'
 
     # ADD EXE (executable)
     row 'exe/cmdlet_name', 'exe/{{settings.application}}'
@@ -46,11 +46,6 @@ KDsl.blueprint :{{snake name}} do
     row 'README.md'
     row 'Guardfile'
     row '.rubocop.yml'
-
-    row 'bin/runonce/hotfix-final.sh'     , command: 'execute'
-    row 'bin/runonce/setup.sh'            , after_write: 'open'
-
-    # row '', conflict: 'compare'
   end
 
   # instructions :custom do
@@ -63,5 +58,7 @@ KDsl.blueprint :{{snake name}} do
   L.warn 'set is_run to true if you want to run the action' if is_run == 0
   actions do
     run_blueprint microapp: microapp
+    run_command 'rubocop --auto-gen-config'
+    hf 'Bootstrap the Ruby Gem so it can be used as a Ruby Cmdlet'
   end if is_run == 1
 end

@@ -26,6 +26,7 @@ KDsl.microapp :{{snake name}} do
   actions do
     github_new_repo s.name
     run_command 'bundle gem --coc --test=rspec --mit {{name}}', command_creates_top_folder: true
+    run_command 'code .'
 
     new_blueprint :bootstrap_bin_hooks, definition_subfolder: 'ruby-gem', f: true
   end if is_run == 1

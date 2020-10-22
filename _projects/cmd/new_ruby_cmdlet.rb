@@ -13,7 +13,7 @@ KDsl.document :ruby_cmdlet do
       definition_subfolder: s.definition_subfolder,
       output_subfolder: "#{s.project_group}/#{s.name}",
       show_editor: true, 
-      f: true,
+      f: false,
       debug_only: false
 
     # write_json is_edit: true

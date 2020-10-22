@@ -57,6 +57,13 @@ module KDsl
           L.exception(error)
         end
       end
+
+      # REFACT: This is a script for running a git hotfix
+      #         location is all wrong, so it is just a quick fix for now
+      def hotfix(message)
+        run_command "./bin/khotfix '#{message}'"
+      end
+      alias hf hotfix
     end
   end
 end

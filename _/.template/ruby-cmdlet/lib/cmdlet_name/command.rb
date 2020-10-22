@@ -10,7 +10,6 @@ module {{camelU microapp.settings.application}}
     extend Forwardable
 
     attr_reader :pastel
-    # attr_reader :my_config_setting
 
     def_delegators :command, :run
 
@@ -26,11 +25,7 @@ module {{camelU microapp.settings.application}}
 
     # Commandlet Configuration
     def config
-      config = {{camelU microapp.settings.application}}::App.config
-
-      # @my_config_setting = config.fetch(:my_config_setting)
-
-      config
+      {{camelU microapp.settings.application}}::App.config
     end
 
     # Configuration set key/value
