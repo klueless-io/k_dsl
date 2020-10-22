@@ -1,10 +1,12 @@
 KDsl.document :idea_post do
   s = settings do
     name                    '13 Tips to writing an awesome Listicle, and generate thousands of new leads a day'
+    keyword                 :listicle
+    target_website          :ideasmen
+
     definition_subfolder    'idea-post'
     project_group           :idea_post
     website_slug            :idea_post
-    target_website          :ideasmen
     post_type               :listicle
   end
 
@@ -81,8 +83,6 @@ KDsl.document :idea_post do
     row 'Turning listicles into an animated gif'
   end
 
-  source_glean = 'https://glean.info/7-tips-to-write-better-listicles-for-content-marketing'
-
   table :research do
     fields %i[source title description]
 
@@ -94,13 +94,14 @@ KDsl.document :idea_post do
 
   actions do
     new_microapp s.name,
+      definition_name: s.post_type,
       definition_subfolder: s.definition_subfolder,
-      output_subfolder: "#{s.project_group.parameterize.underscore}/#{s.target_website.parameterize.underscore}/#{s.name.parameterize.underscore}",
-      show_editor: true, 
-      f: false,
+      output_subfolder: "#{f.snake s.project_group}/#{f.snake s.target_website}/#{f.snake s.name}",
+      show_editor: true,
+      f: true,
       debug_only: false
 
-    write_json is_edit: true
+    # write_json is_edit: true
   end
 end
 

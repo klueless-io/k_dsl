@@ -52,6 +52,12 @@ module KDsl
         snake(value).upcase
       end
 
+      def self.pluralize(value)
+        value = value.to_s
+
+        value.pluralize
+      end
+
       # ----------------------------------------------------------------------
       #  format symbols
       # ----------------------------------------------------------------------
