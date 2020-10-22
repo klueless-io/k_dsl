@@ -95,18 +95,6 @@ KDsl.microapp :youtube_channels_to_follow do
     row 'Programming with Mosh'  , url: 'https://www.youtube.com/c/programmingwithmosh'
     row 'NeuralNine'             , url: 'https://www.youtube.com/c/NeuralNine'
     row ''                       , url: ''
-    row ''                       , url: ''
-    row ''                       , url: ''
-    row ''                       , url: ''
-    row ''                       , url: ''
-    row ''                       , url: ''
-    row ''                       , url: ''
-    row ''                       , url: ''
-    row ''                       , url: ''
-    row ''                       , url: ''
-    row ''                       , url: ''
-    row ''                       , url: ''
-    row ''                       , url: ''
   end
 
   actions do

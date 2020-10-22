@@ -14,7 +14,7 @@ module {{camelU microapp.settings.application}}
     desc 'version', '{{snake microapp.settings.application}} version'
     def version
       require_relative 'version'
-      puts 'v' + {{camelU microapp.settings.application}}::VERSION
+      puts "v#{{curly-open 1}}{{camelU microapp.settings.application}}::VERSION}"
     end
     map %w[--version -v] => :version
   end

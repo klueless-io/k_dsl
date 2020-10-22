@@ -3,15 +3,16 @@
 require_relative 'lib/{{snake microapp.settings.application}}/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = '{{snake microapp.settings.application}}'
-  spec.version       = {{camelU microapp.settings.application}}::VERSION
-  spec.authors       = ['{{microapp.settings.author}}']
-  spec.email         = ['{{microapp.settings.author_email}}']
+  spec.required_ruby_version  = '>= 2.4'
+  spec.name                   = '{{snake microapp.settings.application}}'
+  spec.version                = {{camelU microapp.settings.application}}::VERSION
+  spec.authors                = ['{{microapp.settings.author}}']
+  spec.email                  = ['{{microapp.settings.author_email}}']
 
-  spec.summary       = '{{microapp.settings.description}}'
-  spec.description   = '{{microapp.settings.description}}'
-  spec.homepage      = '{{microapp.settings.website}}'
-  spec.license       = 'MIT'
+  spec.summary                = '{{microapp.settings.description}}'
+  spec.description            = '{{microapp.settings.description}}'
+  spec.homepage               = '{{microapp.settings.website}}'
+  spec.license                = 'MIT'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
