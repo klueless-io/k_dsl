@@ -53,4 +53,10 @@ RSpec.describe KDsl::Util::FileHelper do
 
     it { is_expected.to eq('THE_QUICK_BROWN_FOX') }
   end
+
+  describe '#pluralize' do
+    subject { instance.pluralize(value) }
+
+    it { is_expected.to eq('the quick brown foxes') }
+  end
 end

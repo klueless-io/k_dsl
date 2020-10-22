@@ -19,6 +19,9 @@ module KDsl
       attr_reader :options
       attr_reader :error
 
+      # Shortcut to formatter
+      attr_reader :f
+
       attr_accessor :resource
 
       def_delegator :resource, :project
@@ -42,6 +45,8 @@ module KDsl
         # Most documents live within a hash, some tabular documents such as
         # CSV will use an []
         set_data(default_data)
+
+        @f = KDsl::Util::format
 
         @block = block if block_given?
       end

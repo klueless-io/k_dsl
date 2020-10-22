@@ -13,81 +13,76 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsFormatter do
     let(:name5) { 'space   man' }
     let(:name6) { '  spaced out   ' }
 
-    context 'snake' do
-
+    describe '#snake' do
       it { expect(described_class.snake(name1)).to eq('activity') }
       it { expect(described_class.snake(name2)).to eq('achievement_badge') }
       it { expect(described_class.snake(name3)).to eq('hello_world') }
       it { expect(described_class.snake(name4)).to eq('the_quick_brown_fox') }
       it { expect(described_class.snake(name5)).to eq('space_man') }
       it { expect(described_class.snake(name6)).to eq('spaced_out') }
-
     end
 
-    context 'dashify' do
-
+    describe '#dashify' do
       it { expect(described_class.dashify(name1)).to eq('activity') }
       it { expect(described_class.dashify(name2)).to eq('achievement-badge') }
       it { expect(described_class.dashify(name3)).to eq('hello-world') }
       it { expect(described_class.dashify(name4)).to eq('the-quick-brown-fox') }
       it { expect(described_class.dashify(name5)).to eq('space-man') }
       it { expect(described_class.dashify(name6)).to eq('spaced-out') }
-
     end
 
-    context 'camel' do
-
+    describe '#camel' do
       it { expect(described_class.camel(name1)).to eq('Activity') }
       it { expect(described_class.camel(name2)).to eq('AchievementBadge') }
       it { expect(described_class.camel(name3)).to eq('HelloWorld') }
       it { expect(described_class.camel(name4)).to eq('TheQuickBrownFox') }
       it { expect(described_class.camel(name5)).to eq('SpaceMan') }
       it { expect(described_class.camel(name6)).to eq('SpacedOut') }
-
     end
 
-    context 'lamel' do
-
+    describe '#lamel' do
       it { expect(described_class.lamel(name1)).to eq('activity') }
       it { expect(described_class.lamel(name2)).to eq('achievementBadge') }
       it { expect(described_class.lamel(name3)).to eq('helloWorld') }
       it { expect(described_class.lamel(name4)).to eq('theQuickBrownFox') }
       it { expect(described_class.lamel(name5)).to eq('spaceMan') }
       it { expect(described_class.lamel(name6)).to eq('spacedOut') }
-
     end
 
-    context 'titleize' do
-
+    describe '#titleize' do
       it { expect(described_class.titleize(name1)).to eq('Activity') }
       it { expect(described_class.titleize(name2)).to eq('Achievement Badge') }
       it { expect(described_class.titleize(name3)).to eq('Hello World') }
       it { expect(described_class.titleize(name4)).to eq('The Quick Brown Fox') }
       it { expect(described_class.titleize(name5)).to eq('Space Man') }
       it { expect(described_class.titleize(name6)).to eq('Spaced Out') }
-
     end
 
-    context 'humanize' do
-
+    describe '#humanize' do
       it { expect(described_class.humanize(name1)).to eq('Activity') }
       it { expect(described_class.humanize(name2)).to eq('Achievement badge') }
       it { expect(described_class.humanize(name3)).to eq('Hello world') }
       it { expect(described_class.humanize(name4)).to eq('The quick brown fox') }
       it { expect(described_class.humanize(name5)).to eq('Space man') }
       it { expect(described_class.humanize(name6)).to eq('Spaced out') }
-
     end
 
-    context 'constantize' do
-
+    describe '#constantize' do
       it { expect(described_class.constantize(name1)).to eq('ACTIVITY') }
       it { expect(described_class.constantize(name2)).to eq('ACHIEVEMENT_BADGE') }
       it { expect(described_class.constantize(name3)).to eq('HELLO_WORLD') }
       it { expect(described_class.constantize(name4)).to eq('THE_QUICK_BROWN_FOX') }
       it { expect(described_class.constantize(name5)).to eq('SPACE_MAN') }
       it { expect(described_class.constantize(name6)).to eq('SPACED_OUT') }
+    end
 
+    describe '#pluralize' do
+      it { expect(described_class.pluralize(name1)).to eq('activities') }
+      it { expect(described_class.pluralize(name2)).to eq('achievement_badges') }
+      it { expect(described_class.pluralize(name3)).to eq('Hello Worlds') }
+      it { expect(described_class.pluralize(name4)).to eq('the quick brown foxes') }
+      it { expect(described_class.pluralize(name5)).to eq('space   men') }
+      it { expect(described_class.pluralize(name6.strip)).to eq('spaced outs') }
     end
 
   end
