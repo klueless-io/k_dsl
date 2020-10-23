@@ -38,8 +38,8 @@ module KDsl
       end
 
       def self.value_helpers(handlebars)
-        handlebars.register_helper(:safe) { 
-          Handlebars::SafeString.new("<pre>Totally Safe!<pre>") 
+        handlebars.register_helper(:safe) { |_context, value| 
+          Handlebars::SafeString.new(value) 
         }
 
         # hello world = hello_world
@@ -104,6 +104,20 @@ module KDsl
           Handlebars::SafeString.new(KDsl::TemplateRendering::HandlebarsFormatter.default(value, default_value)) 
         }
 
+        # JSON
+        # handlebars.register_helper(:json) { |_context, value|
+        #   Handlebars::SafeString.new(value.to_json)
+        # }
+        handlebars.register_helper(:keys) { |_context, value|
+          Handlebars::SafeString.new(value.keys)
+        }
+        # handlebars.register_helper(:values) { |context|
+        #   Handlebars::SafeString.new(context.values)
+        # }
+        # handlebars.register_helper(:bind) { |context|
+        #   bind----ing.pry
+        # }
+        
         # Curly Open
         handlebars.register_helper(:curly_open) { |_context, count|
           KDsl::TemplateRendering::HandlebarsFormatter.curly_open(count)

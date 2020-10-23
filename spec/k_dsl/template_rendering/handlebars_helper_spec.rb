@@ -129,13 +129,25 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsHelper do
   
       context 'default' do
         let(:data) { { name1: :activity } }
-        let(:template) { "{{default name1 'override name1'}} {{default unknown 'override unknown'}} {{default unknown '<pre>unkown as html</pre>'}}" }
+        let(:template) { "{{default name1 'override name1'}} {{default unknown 'override unknown'}} {{default unknown '<pre>unknown as html</pre>'}}" }
   
         it { expect(subject).to include('activity') }
         it { expect(subject).to include('override unknown') }
-        it { expect(subject).to include('<pre>unkown as html</pre>') }
+        it { expect(subject).to include('<pre>unknown as html</pre>') }
       end
+
+      context 'json' do
+        let(:data) { { name: :activity, rows: [{ key: 1, value: '11'}, { key: 2, value: '22'}] } }
+        let(:template) { "{{#each this}}{{@key}}: {{this}}{{/each}}" }
   
+        fit do
+          puts subject
+        end
+        # it { expect(subject).to include('activity') }
+        # it { expect(subject).to include('override unknown') }
+        # it { expect(subject).to include('<pre>unknown as html</pre>') }
+      end
+
       context 'curly-open' do
         let(:template) { "{{curly-open}} - {{curly-open 1}} - {{curly-open 4}}" }
   
