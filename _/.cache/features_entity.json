@@ -1,7 +1,7 @@
 {
   "settings": {
     "klueless_features_title": "KlueLess Features",
-    "klueless_features_description": "The KlueLess ruby GEM .template provides the following features"
+    "klueless_features_description": "This KlueLess ruby GEM .template provides the following features"
   },
   "features": {
     "rows": [

@@ -29,14 +29,14 @@ module KDsl
         file
       end
 
-      def write_html(is_edit: false, with_meta: false, template: nil, template_file: nil)
+      def write_html(is_edit: false, with_meta: false, template: nil, template_file: nil, output_file: nil)
         # Add support for namespace
         file = "#{project.config.base_cache_path}/#{key}_#{type}#{(with_meta ? '.meta' : '')}.html"
 
         o = (with_meta ? data : raw_data)
 
         # L.block "write_json #{file}"
-        write_as o, file, is_edit: is_edit, template: template, template_file: template_file
+        write_as o, file, is_edit: is_edit, template: template, template_file: template_file, output_file: output_file
 
         file
       end
@@ -45,15 +45,21 @@ module KDsl
       #
       # Output type can derived from the file extension (.yaml, .yml, .json)
       # or it can specified with the optional :as_type
-      def write_as(data, file, as_type: nil, is_edit: false, template: nil, template_file: nil)
+      def write_as(data, file, as_type: nil, is_edit: false, template: nil, template_file: nil, output_file: nil)
         return warn('Write As Skipped: Document not linked to a project') if !defined?(project) || project.nil?
 
         # L.kv 'file', file
         # L.kv 'as_type', as_type
         # L.kv 'is_edit', is_edit
-        # L.kv 'data', data
+        L.kv 'data', data
 
-        full_file = File.expand_path(file, project.config.base_cache_path)
+        full_file = if output_file.present?
+          output_file
+        else
+          File.expand_path(file, project.config.base_cache_path)
+        end
+
+        # full_file = File.expand_path(file, project.config.base_cache_path)
         # L.kv 'full_file', full_file
 
         if as_type.nil?
