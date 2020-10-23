@@ -4,13 +4,69 @@
 
 KDsl.document :features do
   s = settings do
-    klueless_features_title         'KlueLess Features'
-    klueless_features_description   'The KlueLess ruby GEM .template provides the following features'
+    gem_features_title              'Loquacious Features'
+    gem_features_description        'Descriptive configuration files for Ruby written in Ruby. <br /><br />Loquacious provides a very open configuration system written in ruby and descriptions for each configuration attribute. The attributes and descriptions can be iterated over allowing for helpful information about those attributes to be displayed to the user.'
+
+    klueless_features_title         'KlueLess Template Features'
+    klueless_features_description   'This KlueLess ruby GEM .template provides the following features'
   end
 
+  t = <<~HTML
+    <html>
+    <body>
+      <h1>{{settings.gem_features_title}}</h1>
+      <p>{{safe settings.gem_features_description}}</p>
+
+      <table>
+      <thead>
+      <tr>
+        {{#each gem_features.fields}}
+          <th>{{this.name}}</th>
+        {{/each}}
+      </tr>
+      </thead>
+      <tbody>
+        {{#each gem_features.rows}}
+        <tr>
+        <td>{{this.group}}</td>
+        <td>{{this.section}}</td>
+        <td>{{this.title}}</td>
+        <td>{{this.description}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+      </table>
+
+      <hr>
+      <h2>{{settings.klueless_features_title}}</h2>
+      <p>{{settings.klueless_features_description}}</p>
+
+      <table>
+      <thead>
+      <tr>
+        {{#each klueless_features.fields}}
+          <th>{{this.name}}</th>
+        {{/each}}
+      </tr>
+      </thead>
+      <tbody>
+        {{#each klueless_features.rows}}
+        <tr>
+        <td>{{this.group}}</td>
+        <td>{{this.section}}</td>
+        <td>{{this.title}}</td>
+        <td>{{this.description}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+      </table>
+    </body>
+    </html>
+  HTML
+
   actions do
-    write_json is_edit: true
-    # write
+    # write_json is_edit: true
+    write_html with_meta: true, is_edit: false, template: t, output_file: '/Users/davidcruwys/dev/kgems/playrb_loquacious/README-features.html'
   end
 
   table :features do

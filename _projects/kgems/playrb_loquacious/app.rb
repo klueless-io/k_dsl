@@ -31,7 +31,7 @@ KDsl.microapp :playrb_loquacious do
 
     # new_blueprint :bootstrap_bin_hook, definition_subfolder: 'ruby-gem', output_filename: 'bootstrap_01_bin_hook.rb', f: true
     # new_blueprint :bootstrap_upgrade , definition_subfolder: 'ruby-gem', output_filename: 'bootstrap_02_upgrade.rb' , f: true
-    # new_blueprint 'stories'            , definition_subfolder: 'ruby-gem'                                             , f: true, show_editor: true
+    # new_blueprint 'stories'            , definition_subfolder: 'ruby-gem'                                             , f: false, show_editor: true
     # new_blueprint 'features'            , definition_subfolder: 'ruby-gem'                                             , f: false, show_editor: true
   end if is_run == 1
 

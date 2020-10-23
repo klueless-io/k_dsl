@@ -37,6 +37,7 @@ module KDsl
         # microapp_settings = microapps.first.document.data_struct.settings
         # microapp_data = get_microapp_data(microapp)
 
+        # REFACT: This information is needed in write_html
         opts[:template] = {
           common_template_path: project.config.base_template_path,
           app_template_path: project.config.base_app_template_path
