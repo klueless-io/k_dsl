@@ -10,9 +10,9 @@ KDsl.document :stories do
   t = <<~HTML
     <html>
     <body>
-    <h1>Stories</h2>
+    <h2>Stories</h2>
 
-    <h3>Main Story</h3>
+    <h2>Main Story</h2>
     <p>{{settings.main_story}}</p>
 
     <h3>All Stories</h3>

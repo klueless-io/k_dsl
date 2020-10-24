@@ -50,6 +50,8 @@ RSpec.describe KDsl::Extensions::Writable do
       let(:json_file) { Tempfile.new(['','.json']) }
       let(:yaml_file) { Tempfile.new(['','.yaml']) }
       let(:html_file) { Tempfile.new(['','.html']) }
+      let(:rb_file) { Tempfile.new(['','.rb']) }
+      let(:abc_file) { Tempfile.new(['','.abc']) }
       
       before do
         document.execute_block
@@ -61,6 +63,8 @@ RSpec.describe KDsl::Extensions::Writable do
         json_file.unlink
         yaml_file.unlink
         html_file.unlink
+        rb_file.unlink
+        abc_file.unlink
       end
 
       let(:block) do
@@ -71,15 +75,23 @@ RSpec.describe KDsl::Extensions::Writable do
       describe '#write_as' do
         context 'error handling' do
           context 'when extension is unknown' do
-            subject { document.write_as(data, some_file.path) }
+            subject { document.write_as(data, some_file.path, template: 'david in somefile') }
     
-            it { expect { subject }.to raise_error 'Provide a valid extension or as_type. Supported types: [json, yaml]' }
+            it 'input should match output' do
+              subject
+              output = File.read(some_file.path)
+              expect(output).to start_with('david in somefile')
+            end
           end
     
           context 'when extension is known, but overridden as_type is unknown' do
-            subject { document.write_as(data, json_file.path, as_type: :abc) }
+            subject { document.write_as(data, json_file.path, as_type: :abc, template: 'david in abc file') }
     
-            it { expect { subject }.to raise_error 'Provide a valid extension or as_type. Supported types: [json, yaml]' }
+            it 'input should match output' do
+              subject
+              output = File.read(json_file.path)
+              expect(output).to start_with('david in abc file')
+            end
           end
         end
 
@@ -89,7 +101,6 @@ RSpec.describe KDsl::Extensions::Writable do
             
             it 'input should match output' do
               subject
-              expect(File.exist?(some_file.path)).to be_truthy
               output = JSON.parse File.read(some_file.path)
               expect(document.data).to eq(output)
             end
@@ -100,7 +111,6 @@ RSpec.describe KDsl::Extensions::Writable do
             
             it 'input should match output' do
               subject
-              expect(File.exist?(some_file.path)).to be_truthy
               output = YAML.load File.read(some_file.path)
               expect(document.data).to eq(output)
             end
@@ -111,9 +121,18 @@ RSpec.describe KDsl::Extensions::Writable do
             
             it 'input should match output' do
               subject
-              expect(File.exist?(some_file.path)).to be_truthy
               output = File.read(some_file.path)
-              expect(output).to start_with('<html></html>')
+              expect(output).to start_with('')
+            end
+          end
+
+          context 'and as_type: :rb' do
+            subject { document.write_as(data, rb_file.path, as_type: :rb, template: 'ruby dave') }
+            
+            it 'input should match output' do
+              subject
+              output = File.read(rb_file.path)
+              expect(output).to eq("ruby dave\n")
             end
           end
         end
@@ -124,7 +143,6 @@ RSpec.describe KDsl::Extensions::Writable do
             
             it 'write data as json' do
               subject
-              expect(File.exist?(json_file.path)).to be_truthy
               output = JSON.parse File.read(json_file.path)
               expect(document.data).to eq(output)
             end
@@ -135,7 +153,6 @@ RSpec.describe KDsl::Extensions::Writable do
             
             it 'write data as yaml' do
               subject
-              expect(File.exist?(yaml_file.path)).to be_truthy
               output =YAML.load File.read(yaml_file.path)
               expect(document.data).to eq(output)
             end
@@ -146,7 +163,6 @@ RSpec.describe KDsl::Extensions::Writable do
             
             it 'write data as html' do
               subject
-              expect(File.exist?(html_file.path)).to be_truthy
               output = File.read(html_file.path)
               expect(output).to start_with('<html>custom</html>')
             end
@@ -180,7 +196,6 @@ RSpec.describe KDsl::Extensions::Writable do
 
             it 'input should match output' do
               file = subject
-              expect(File.exist?(file)).to be_truthy
               output = JSON.parse File.read(file)
               expect(document.raw_data).to eq(output)
               expect(file).to end_with('key_entity.json')
@@ -192,7 +207,6 @@ RSpec.describe KDsl::Extensions::Writable do
 
             it 'input should match output' do
               file = subject
-              expect(File.exist?(file)).to be_truthy
               output = JSON.parse File.read(file)
               expect(document.data).to eq(output)
               expect(file).to end_with('key_entity.meta.json')
@@ -206,7 +220,6 @@ RSpec.describe KDsl::Extensions::Writable do
 
             it 'input should match output' do
               file = subject
-              expect(File.exist?(file)).to be_truthy
               output = YAML.load File.read(file)
               expect(document.raw_data).to eq(output)
               expect(file).to end_with('key_entity.yaml')
@@ -218,7 +231,6 @@ RSpec.describe KDsl::Extensions::Writable do
 
             it 'input should match output' do
               file = subject
-              expect(File.exist?(file)).to be_truthy
               output = YAML.load File.read(file)
               expect(document.data).to eq(output)
               expect(file).to end_with('key_entity.meta.yaml')
@@ -232,10 +244,22 @@ RSpec.describe KDsl::Extensions::Writable do
 
             it 'input should match output' do
               file = subject
-              expect(File.exist?(file)).to be_truthy
               output = File.read(file)
               expect(output).to start_with('<html>model: User</html>')
               expect(file).to end_with('key_entity.html')
+            end
+          end
+        end
+
+        describe '#write_as(as_type: :rb)' do
+          context 'using .raw_data via with_meta: false' do
+            subject { document.write_as(data, rb_file.path, as_type: :rb, template: 'class {{settings.model}} do end') }
+
+            it 'input should match output' do
+              file = subject
+              output = File.read(file)
+              expect(output).to eq("class User do end\n")
+              expect(file).to end_with('.rb')
             end
           end
         end

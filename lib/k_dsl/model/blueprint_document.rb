@@ -239,7 +239,6 @@ module KDsl
           fork { exec("/usr/local/bin/zsh #{output_file}") } if execution_context == :fork
         end
       end
-
     end
   end
 end

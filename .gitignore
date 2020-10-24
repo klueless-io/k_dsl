@@ -13,6 +13,7 @@
 k_dsl.yml
 
 /spec/.output/
+_/.cache/
 /.cache/
 /.bundle/
 /.history/
