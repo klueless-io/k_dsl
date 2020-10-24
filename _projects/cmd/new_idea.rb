@@ -1,11 +1,11 @@
 # KDsl.cmd :cmd do
 KDsl.document :idea do
   s = settings do
-    name                    'speechelo_automation'
+    name                    'spiders' # 'speechelo_automation'
     definition_subfolder    'idea'
     project_group           :idea
     website_slug            :idea
-    new_app_type            :spidy_robot
+    new_app_type            :cmdlet # :ruby_pattern :spidy_robot
   end
 
   actions do

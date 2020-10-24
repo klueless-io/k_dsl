@@ -51,7 +51,7 @@ module KDsl
         # L.kv 'file', file
         # L.kv 'as_type', as_type
         # L.kv 'is_edit', is_edit
-        L.kv 'data', data
+        # L.kv 'data', data
 
         full_file = if output_file.present?
           output_file
@@ -63,32 +63,37 @@ module KDsl
         # L.kv 'full_file', full_file
 
         if as_type.nil?
-          ext = File.extname(full_file)
-          as_type = :yaml if ext.casecmp('.yaml').zero? || ext.casecmp('.yml').zero?
-          as_type = :json if ext.casecmp('.json').zero?
-          as_type = :html if ext.casecmp('.html').zero?
+          ext = File.extname(full_file).strip.downcase[1..-1]
+          as_type = ext.to_sym if ext.present?
+          as_type = :yaml if as_type == :yml
         end
 
         # L.kv 'file', file
         # L.kv 'ext', ext
         # L.kv 'as_type', as_type
 
-        raise KDsl::Error, 'Provide a valid extension or as_type. Supported types: [json, yaml]' unless [:json, :yaml, :html].include?(as_type)
+        # raise KDsl::Error, 'Provide a valid extension or as_type. Supported types: [json, yaml]' unless [:json, :yaml, :html].include?(as_type)
 
         FileUtils.mkdir_p(File.dirname(full_file))
 
-        File.write(full_file, JSON.pretty_generate(data)) if as_type == :json
-        File.write(full_file, data.to_yaml)               if as_type == :yaml
-
-        if as_type == :html
-          template = '<html></html>' if template.nil?
-          template = File.read(template.file) if template_file.present? && File.exist?(template_file)
+        case as_type
+        when :json
+          File.write(full_file, JSON.pretty_generate(data))
+        when :yaml
+          File.write(full_file, data.to_yaml)
+        else
+          template = '' if template.nil?
+          if template_file.present? && File.exist?(template_file)
+            template = File.read(template.file)
+          end
 
           output = KDsl::TemplateRendering::TemplateHelper.process_template(template, data)
           File.write(full_file, output)
         end
 
         system("code #{full_file}")                       if is_edit
+
+        file
       end
 
       private

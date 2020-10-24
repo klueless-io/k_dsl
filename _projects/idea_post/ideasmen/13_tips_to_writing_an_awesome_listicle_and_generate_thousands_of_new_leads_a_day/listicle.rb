@@ -1,7 +1,7 @@
 # ------------------------------------------------------------
 # Idea for a 'Listicle' style blog post
 # ------------------------------------------------------------
-KDsl.blueprint :13_tips_to_writing_an_awesome_listicle_and_generate_thousands_of_new_leads_a_day do
+KDsl.blueprint :'13_tips_to_writing_an_awesome_listicle_and_generate_thousands_of_new_leads_a_day' do
   s = settings do
     name                          parent.key
     post_type                     'listicle'
