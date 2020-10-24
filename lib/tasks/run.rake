@@ -68,10 +68,10 @@ namespace :k_dsl do
     project_gem_kdsl = KDsl::Manage::Project.new('k_dsl', project_gem_kdsl_config)
     project_gem_kdsl.watch_path('**/*.rb')
 
-    project_idea = KDsl::Manage::Project.new('idea', get_config(relative_resource_path: 'idea/idea'))
+    project_idea = KDsl::Manage::Project.new('idea', get_config(relative_resource_path: 'idea'))
     project_idea.watch_path('**/*.rb')
 
-    project_idea_post = KDsl::Manage::Project.new('idea_post', get_config(relative_resource_path: 'idea_post/idea_post'))
+    project_idea_post = KDsl::Manage::Project.new('idea_post', get_config(relative_resource_path: 'idea_post'))
     project_idea_post.watch_path('**/*.rb')
 
     config_microapp = KDsl::Manage::ProjectConfig.new do
@@ -99,7 +99,7 @@ namespace :k_dsl do
 
     manager = KDsl.project_manager
 
-    group = %i[play_loquacious xyz_commands k_dsl ideas].first
+    group = %i[k_dsl ideas play_loquacious xyz_commands].first
 
     case group
     when :xyz_commands
