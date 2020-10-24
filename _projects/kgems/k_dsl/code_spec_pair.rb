@@ -7,9 +7,9 @@ KDsl.blueprint :code_spec_pair do
     output_base_name    'extension'
     output_rel_path     'extensions'
 
-    # name                'github_linkable'
+    name                'template_options'
     # output_base_name    'extension'
-    # output_rel_path     'template_rendering'
+    output_rel_path     'template_rendering'
   end
 
   instructions do
@@ -57,6 +57,9 @@ KDsl.blueprint :code_spec_pair do
 
   actions do
     # run_blueprint
+    of = "lib/k_dsl/#{s.output_rel_path}/#{s.name}.rb"
+    L.error of
+    write_as(self.pairs.rows, of)
     # write_json is_edit: true
   end
 end
