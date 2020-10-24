@@ -15,13 +15,13 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsHelper do
       end
   
       context 'safe helper' do
-        let(:template) { '{{safe}}' }
+        let(:template) { '{{safe "<pre>Totally Safe!</pre>"}}' }
   
-        it { expect(subject).to include('<pre>Totally Safe!<pre>') }
+        it { expect(subject).to include('<pre>Totally Safe!</pre>') }
       end
     end
   
-    describe 'format symbles' do
+    describe 'format symbols' do
   
       let(:data) { 
         { 
@@ -136,17 +136,17 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsHelper do
         it { expect(subject).to include('<pre>unknown as html</pre>') }
       end
 
-      context 'json' do
-        let(:data) { { name: :activity, rows: [{ key: 1, value: '11'}, { key: 2, value: '22'}] } }
-        let(:template) { "{{#each this}}{{@key}}: {{this}}{{/each}}" }
+      # context 'json' do
+      #   let(:data) { { name: :activity, rows: [{ key: 1, value: '11'}, { key: 2, value: '22'}] } }
+      #   let(:template) { "{{#each this}}{{@key}}: {{this}}{{/each}}" }
   
-        fit do
-          puts subject
-        end
-        # it { expect(subject).to include('activity') }
-        # it { expect(subject).to include('override unknown') }
-        # it { expect(subject).to include('<pre>unknown as html</pre>') }
-      end
+      #   fit do
+      #     puts subject
+      #   end
+      #   # it { expect(subject).to include('activity') }
+      #   # it { expect(subject).to include('override unknown') }
+      #   # it { expect(subject).to include('<pre>unknown as html</pre>') }
+      # end
 
       context 'curly-open' do
         let(:template) { "{{curly-open}} - {{curly-open 1}} - {{curly-open 4}}" }
@@ -177,7 +177,7 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsHelper do
       context '==' do
         let(:template) { "{{#ifx 'David' '==' name}}yes{{else}}no{{/ifx}}" }
       
-        context 'when case-sensistive equal' do
+        context 'when case-sensitive equal' do
           let(:data) { { name: 'David' } }
           it { is_expected.to include('yes')}
         end
