@@ -5,7 +5,7 @@ module KDsl
   module TemplateRendering
     class TemplateHelper
 
-      def self.process_template(template, opt)
+      def self.process_template(template, data)
         # L.block 'process template'
     
         handlebars = Handlebars::Context.new
@@ -14,15 +14,15 @@ module KDsl
         
         compiled_template = handlebars.compile(template)
     
-        # L.ostruct opt, skip_array: true
+        # L.ostruct data, skip_array: true
 
-        data = opt.to_h
+        obj = data.to_h
         begin
-          data.keys.each do |key|
-            data[key] = data[key].to_h if data[key].class == OpenStruct
+          obj.keys.each do |key|
+            obj[key] = obj[key].to_h if obj[key].class == OpenStruct
           end
     
-          output = compiled_template.call(data)
+          output = compiled_template.call(obj)
         rescue StandardError => e
           L.block 'Failed to process template', e.message
           L.exception e

@@ -4,7 +4,7 @@ module KDsl
       # Provides a list of factory methods for creating documents
       #
       # These factories help you to create documents for specific needs.
-      # A simple factory may just set the apropriate name for a factory
+      # A simple factory may just set the appropriate name for a factory
       # Or set the name and provide some extra options.
       # A more advanced factory may instantiate an extended Document class
       # with extra functionality or predefine the fields for a table
@@ -15,12 +15,6 @@ module KDsl
       def microapp(key, **options, &block)
         build_document(key, :microapp, **options, &block)
       end
-
-      # # Create a Structure for holding general blueprints, often used when initializing an application
-      # def structure(key, **options, &block)
-      #   # REFACT: Rename to StuctureDocument
-      #   build_document(key, :structure, document_class: KDsl::Model::BlueprintDocument, **options, &block)
-      # end
 
       def blueprint(key, **options, &block)
         build_document(key, :blueprint, document_class: KDsl::Model::BlueprintDocument, **options, &block)
@@ -47,7 +41,6 @@ module KDsl
       #   valid_types = nil
       #   build_document(key, :cmd, valid_types, **options, &block)
       # end
-
 
       # def data(key, **options, &block)
       #   valid_types = nil
