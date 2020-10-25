@@ -30,53 +30,54 @@ RSpec.describe 'Run Sample Applications' do
       manager.load_all_documents
     end
 
-    xdescribe 'cmds' do
-      context 'create new projects' do
-        let(:key) { :ruby_cmdlet }
-        let(:config) do
-          KDsl::Manage::ProjectConfig.new do
-            self.base_path = File.join(Dir.getwd, '_')
-            self.base_resource_path = File.join(Dir.getwd, '_projects')
-          end
-        end
-        let(:project) do
-          KDsl::Manage::Project.new('new_project', config) do
-            watch_path('cmd/**/*.rb')
-          end
-        end
+    # xdescribe 'cmds' do
+    #   context 'create new projects' do
+    #     let(:key) { :ruby_cmdlet }
+    #     let(:config) do
+    #       KDsl::Manage::ProjectConfig.new do
+    #         self.base_path = File.join(Dir.getwd, '_')
+    #         self.base_resource_path = File.join(Dir.getwd, '_projects')
+    #       end
+    #     end
+    #     let(:project) do
+    #       KDsl::Manage::Project.new('new_project', config) do
+    #         watch_path('cmd/**/*.rb')
+    #       end
+    #     end
     
-        context 'has valid document' do
-          subject { project.get_resource_document(key).document }
+    #     context 'has valid document' do
+    #       subject { project.get_resource_document(key).document }
     
-          it { run(key) }
-        end
-      end
-    end
+    #       it { run(key) }
+    #     end
+    #   end
+    # end
 
-    describe 'ruby commandlet applicaiton' do
-      context 'k_ymen project' do
-        let(:config) do
-          KDsl::Manage::ProjectConfig.new do
-            self.base_path = File.join(Dir.getwd, '_')
-            self.base_resource_path = File.join(Dir.getwd, '_projects', 'kcmd', 'k_ymen')
-          end
-        end
-        let(:project) do
-          KDsl::Manage::Project.new('k_ymen', config) do
-            watch_path('**/*.rb')
-          end
-        end
+    # May need a new sample project
+    # describe 'ruby commandlet application' do
+    #   context 'k_ymen project' do
+    #     let(:config) do
+    #       KDsl::Manage::ProjectConfig.new do
+    #         self.base_path = File.join(Dir.getwd, '_')
+    #         self.base_resource_path = File.join(Dir.getwd, '_projects', 'kcmd', 'k_ymen')
+    #       end
+    #     end
+    #     let(:project) do
+    #       KDsl::Manage::Project.new('k_ymen', config) do
+    #         watch_path('**/*.rb')
+    #       end
+    #     end
     
-        context 'has valid document' do
-          subject { project.get_resource_document(key, type).document }
+    #     context 'has valid document' do
+    #       subject { project.get_resource_document(key, type).document }
 
-          let(:doc) { OpenStruct.new(key: :k_ymen, type: :microapp) }
-          # let(:doc) { OpenStruct.new(key: :bootstrap, type: :blueprint) }
+    #       let(:doc) { OpenStruct.new(key: :k_ymen, type: :microapp) }
+    #       # let(:doc) { OpenStruct.new(key: :bootstrap, type: :blueprint) }
     
-          # it { debug }
-          it { run(doc.key, doc.type) }
-        end
-      end
-    end
+    #       # it { debug }
+    #       it { run(doc.key, doc.type) }
+    #     end
+    #   end
+    # end
   end
 end

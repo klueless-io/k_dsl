@@ -15,7 +15,7 @@ KDsl.microapp :spidy_expireddomains do
     data_path                     '_/.data'
   end
 
-  actions do
+  def on_action
     # I should move this into the test itself
     write_json is_edit: true
   end

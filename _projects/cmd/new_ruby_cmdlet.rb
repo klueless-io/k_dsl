@@ -8,7 +8,7 @@ KDsl.document :ruby_cmdlet do
     website_slug            'command-line-tool'
   end
 
-  actions do
+  def on_action
     new_microapp s.name,
       definition_subfolder: s.definition_subfolder,
       output_subfolder: "#{s.project_group}/#{s.name}",

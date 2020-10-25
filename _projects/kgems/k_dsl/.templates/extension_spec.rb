@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::Extensions::{{camel blueprint_settings.name}} do
+RSpec.describe KDsl::{{camel blueprint.settings.output_rel_path}}::{{camel blueprint.settings.name}} do
 
   context 'fake document' do
     class FakeDocument; attr_accessor :resource; end
@@ -12,15 +12,15 @@ RSpec.describe KDsl::Extensions::{{camel blueprint_settings.name}} do
 
       let(:document) { FakeDocument.new }
 
-      it { is_expected.not_to respond_to(:{{snake blueprint_settings.name}}) }
+      it { is_expected.not_to respond_to(:{{snake blueprint.settings.name}}) }
 
       context 'after extension loaded' do
-        before { FakeDocument.include(KDsl::Extensions::{{camel blueprint_settings.name}}) }
+        before { FakeDocument.include(KDsl::{{camel blueprint.settings.output_rel_path}}::{{camel blueprint.settings.name}}) }
 
-        it { is_expected.to respond_to(:{{snake blueprint_settings.name}}) }
+        it { is_expected.to respond_to(:{{snake blueprint.settings.name}}) }
 
-        describe '#{{snake blueprint_settings.name}}' do
-          subject { document.{{snake blueprint_settings.name}} nil }
+        describe '#{{snake blueprint.settings.name}}' do
+          subject { document.{{snake blueprint.settings.name}} nil }
     
           context 'when document not linked to a project' do
             it 'will print a warning log message' do

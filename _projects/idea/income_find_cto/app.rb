@@ -28,7 +28,7 @@ KDsl.microapp :income_find_cto do
   # Keep a record of these people and the fact that you have connected with them.
   # ************************************************************
 
-  actions do
+  def on_action
   end
 
 end

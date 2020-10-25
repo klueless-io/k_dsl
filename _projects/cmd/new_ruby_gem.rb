@@ -11,7 +11,7 @@ KDsl.document :ruby_gem do
   s.website_slug = s.name
   s.main_story   = "As a Developer, I should be able to, so that I"
   
-  actions do
+  def on_action
     new_microapp s.name,
       definition_subfolder: s.definition_subfolder,
       output_subfolder: "#{s.project_group}/#{s.name}",

@@ -24,7 +24,7 @@ KDsl.microapp :{{snake name}} do
   end
 
   L.warn 'set is_run to true if you want to run the action' if is_run == 0
-  actions do
+  def on_action
     # github_delete_repo s.name
     github_new_repo s.name
     run_command 'bundle gem --coc --test=rspec --mit {{name}}', command_creates_top_folder: true

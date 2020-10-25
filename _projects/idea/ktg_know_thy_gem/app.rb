@@ -57,7 +57,7 @@ KDsl.microapp :ktg_know_thy_gem do
 
   table :gem_list do
 
-  actions do
+  def on_action
     # write_json is_edit: true
   end
 

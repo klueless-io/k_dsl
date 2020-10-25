@@ -53,7 +53,7 @@ KDsl.blueprint :{{snake name}} do
   # end
 
   L.warn 'set is_run to true if you want to run the action' if is_run == 0
-  actions do
+  def on_action
     run_blueprint microapp: microapp
     run_command 'rubocop --auto-gen-config'
     hf 'Bootstrap the Ruby Gem so it can be used as a Ruby Cmdlet'

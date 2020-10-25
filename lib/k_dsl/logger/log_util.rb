@@ -124,11 +124,11 @@ class LogUtil
   def json(data)
     @logger.info(JSON.pretty_generate(data))
   end
+  alias j json
 
   def open_struct(data, indent = '', **opts)
     data.each_pair do |key, value|
       if value.is_a?(OpenStruct)
-
         if value['rows'].is_a?(Array)
           # L.subheading(key)
           opts[:subheading] = key
@@ -142,7 +142,8 @@ class LogUtil
         end
       elsif value.is_a?(Array)
         next if opts[:skip_array].present?
-        puts LogHelper.subheading(key, 88) if opts[:subheading].present?
+        # puts LogHelper.subheading(key, 88)# if opts[:subheading].present?
+        puts LogHelper.subheading(opts[:subheading], 88) if opts[:subheading].present?
         tp value, value.first.to_h.keys if value.length > 0
       else
         L.kv "#{indent}#{key}", value

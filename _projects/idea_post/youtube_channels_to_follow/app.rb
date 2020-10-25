@@ -97,7 +97,7 @@ KDsl.microapp :youtube_channels_to_follow do
     row ''                       , url: ''
   end
 
-  actions do
+  def on_action
     # write_html using: :listicle
 
   end

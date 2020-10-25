@@ -30,7 +30,7 @@ KDsl.blueprint :bootstrap_bin_hook do
   end
 
   L.warn 'set is_run to true if you want to run the action' if is_run == 0
-  actions do
+  def on_action
     run_blueprint microapp: microapp
   end if is_run == 1
 end

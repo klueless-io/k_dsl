@@ -45,7 +45,7 @@ KDsl.blueprint :{{snake name}} do
     row "Turning {{humanize settings.keyword}} into abc"
   end
 
-  actions do
+  def on_action
     # write_html 
     # write_json is_edit: true
   end

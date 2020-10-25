@@ -178,6 +178,7 @@ module KDsl
         FileUtils.mkdir_p(File.dirname(opt.output.file))
 
         template = File.read(opt.template.file)
+        opt.instruction = instruction
         output = KDsl::TemplateRendering::TemplateHelper.process_template(template, opt)
 
         is_exist = File.exist?(opt.output.file)
