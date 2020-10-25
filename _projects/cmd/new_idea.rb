@@ -8,7 +8,7 @@ KDsl.document :idea do
     new_app_type            :cmdlet # :ruby_pattern :spidy_robot
   end
 
-  actions do
+  def on_action
     new_microapp s.name,
       definition_subfolder: s.definition_subfolder,
       output_subfolder: "#{s.project_group}/#{s.name}",

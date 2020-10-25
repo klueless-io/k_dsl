@@ -30,7 +30,7 @@ KDsl.microapp :spiders do
   # Scraper
   # 
 
-  actions do
+  def on_action
   end
 
 end

@@ -7,7 +7,7 @@ KDsl.stories :{{snake name}} do
     main_story                    '{{settings.main_story}}'
   end
 
-  actions do
+  def on_action
     write_json is_edit: true
   end
 

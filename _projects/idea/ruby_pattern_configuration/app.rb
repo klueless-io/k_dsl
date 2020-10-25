@@ -25,7 +25,7 @@ KDsl.microapp :ruby_pattern_configuration do
   # ************************************************************
 
   
-  actions do
+  def on_action
   end
 
 end

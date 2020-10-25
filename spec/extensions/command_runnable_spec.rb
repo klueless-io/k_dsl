@@ -62,7 +62,7 @@ RSpec.describe KDsl::Extensions::CommandRunnable do
       context 'when command expects the folder to exist' do
         let(:document) do
           KDsl.document('run') do
-            actions do
+            def on_action
               run_command 'echo "david" > test1.txt'
             end
           end
@@ -85,7 +85,7 @@ RSpec.describe KDsl::Extensions::CommandRunnable do
       context 'when command manages its own folder creation' do
         let(:document) do
           KDsl.document('run') do
-            actions do
+            def on_action
               run_command 'mkdir abc && cd abc && echo "david" > test2.txt', command_creates_top_folder: true
             end
           end

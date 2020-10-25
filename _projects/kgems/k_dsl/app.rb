@@ -22,7 +22,7 @@ KDsl.microapp :k_dsl do
     app_path2                      '/k_dsl'
   end
 
-  actions do
+  def on_action
     new_blueprint 'extensions', definition_name: 'custom', definition_subfolder: 'ruby-gem', f: false, show_editor: true
   end
 

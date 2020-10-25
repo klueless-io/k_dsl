@@ -92,7 +92,7 @@ KDsl.document :idea_post do
     row src_url('backlinko'), 'Styles'                            , 'The Simple List, The Expanded List Post, “Best of” List Posts, Curated Influencer Quotes'
   end
 
-  actions do
+  def on_action
     new_microapp s.name,
       definition_name: s.post_type,
       definition_subfolder: s.definition_subfolder,

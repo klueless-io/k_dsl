@@ -29,7 +29,7 @@ Klue.microapp :k_dsl do
     bash_github_delete_env_key    '${GITHUB_DELETE_REPO_TOKEN}'
   end
 
-  actions do
+  def on_action
     # Support for
     #  - RuboCop
     #  - Guard

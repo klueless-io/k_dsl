@@ -14,7 +14,7 @@ KDsl.document :ruby_gem_playground do
   s.website_slug = gem_name
   s.main_story   = "As a Developer, I want to understand what the #{gem_name.titleize} GEM is doing via example, so that I improve my skills with Ruby"
 
-  actions do
+  def on_action
     # new_microapp s.name,
     #   definition_subfolder: s.definition_subfolder,
     #   output_subfolder: "#{s.project_group}/#{s.name}",

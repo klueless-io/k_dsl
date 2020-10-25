@@ -23,7 +23,7 @@ KDsl.document :my_name2 do
         target_path:  File.join(s.app_path, 'client')
   end
 
-  actions do
+  def on_action
     # write_json is_edit: true
     # puts
     # L.warn 'run action'

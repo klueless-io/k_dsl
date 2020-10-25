@@ -11,6 +11,10 @@ module KDsl
         data = project.get_data(key, type, namespace)
         result = KDsl::Util.data.to_struct(data)
 
+        if respond_to?(:on_import)
+          on_import(result)
+        end
+
         result
       end
     end

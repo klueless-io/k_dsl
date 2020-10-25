@@ -64,7 +64,7 @@ KDsl.document :features do
     </html>
   HTML
 
-  actions do
+  def on_action
     # write_json is_edit: true
     write_html with_meta: true, is_edit: false, template: t, output_file: '/Users/davidcruwys/dev/kgems/playrb_loquacious/README-features.html'
   end

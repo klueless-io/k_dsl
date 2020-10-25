@@ -134,42 +134,42 @@ RSpec.describe Github::GithubApi, :integration_tests do
 
   end
 
-  xdescribe 'repository hooks' do
+  # xdescribe 'repository hooks' do
 
-    it 'get list of hooks on repository' do
+  #   it 'get list of hooks on repository' do
 
-      hooks = api.hooks(sample_repo)
+  #     hooks = api.hooks(sample_repo)
 
-      if hooks.count == 0
-        L.info 'No webhooks found for repository'
-      else
-        Github::GithubPrinter::p_hooks_as_table hooks
-      end
+  #     if hooks.count == 0
+  #       L.info 'No webhooks found for repository'
+  #     else
+  #       Github::GithubPrinter::p_hooks_as_table hooks
+  #     end
 
-      # L.json hooks.first.config
-    end
+  #     # L.json hooks.first.config
+  #   end
 
-    it 'remove repository hooks' do
-      hooks = api.remove_hooks(sample_repo)
-    end
+  #   it 'remove repository hooks' do
+  #     hooks = api.remove_hooks(sample_repo)
+  #   end
 
-    it 'remove repository hooks one by one' do
+  #   it 'remove repository hooks one by one' do
 
-      hooks = api.hooks(sample_repo)
+  #     hooks = api.hooks(sample_repo)
 
-      # L.heading 'before'
-      # Github::GithubPrinter::p_hooks_as_table hooks
+  #     # L.heading 'before'
+  #     # Github::GithubPrinter::p_hooks_as_table hooks
 
-      hooks.each do |hook|
-        api.remove_hook(repo, hook.id)
-      end
+  #     hooks.each do |hook|
+  #       api.remove_hook(repo, hook.id)
+  #     end
 
-      # L.heading 'after'
-      # hooks = api.hooks(repo)
-      # Github::GithubPrinter::p_hooks_as_table hooks
+  #     # L.heading 'after'
+  #     # hooks = api.hooks(repo)
+  #     # Github::GithubPrinter::p_hooks_as_table hooks
 
-    end
+  #   end
 
-  end
+  # end
 
 end

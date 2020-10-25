@@ -57,7 +57,11 @@ module KDsl
         # The DSL actions method will only run on run_actions: true
         @run_actions = run_actions
 
-        self.instance_eval(&@block)
+        instance_eval(&@block)
+
+        if run_actions && respond_to?(:my_actions)
+          self.my_actions
+        end
      rescue KDsl::Error => exception1
         L.error("KDsl::Error in document")
         L.kv 'key', unique_key

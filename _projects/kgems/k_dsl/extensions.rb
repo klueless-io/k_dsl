@@ -1,5 +1,5 @@
-KDsl.blueprint :{{snake name}} do
-  microapp     = import(:{{settings.name}}, :microapp)
+KDsl.blueprint :extensions do
+  microapp     = import(:k_dsl, :microapp)
 
   settings do
     name                parent.key
