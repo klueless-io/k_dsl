@@ -37,7 +37,7 @@ KDsl.blueprint :spidy_expireddomains do
     row '.rubocop.yml'
   end
 
-  actions do
+  def on_action
     if is_app_initialize == 1
       run_command 'npm init -y'
       run_command 'npm i google-spreadsheet moment node-fetch cheerio --save'

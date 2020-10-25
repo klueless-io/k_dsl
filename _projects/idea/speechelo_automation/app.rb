@@ -45,7 +45,7 @@ KDsl.microapp :speechelo_automation do
 
   end
 
-  actions do
+  def on_action
   end
 
 end

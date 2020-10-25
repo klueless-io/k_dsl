@@ -14,7 +14,7 @@ module KDsl
         
         compiled_template = handlebars.compile(template)
     
-        # L.ostruct data, skip_array: true
+        # L.ostruct data#, skip_array: true
 
         obj = data.to_h
         begin

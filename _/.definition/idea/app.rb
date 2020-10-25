@@ -44,7 +44,7 @@ KDsl.microapp :{{snake name}} do
     # row 'delete_voice_over'       , 'Given a voice_over_id, this will delete the generated voice'
   end
 
-  actions do
+  def on_action
   end
 
 end

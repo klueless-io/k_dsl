@@ -34,6 +34,8 @@ require 'k_dsl/extensions/document_factories'
 require 'k_dsl/template_rendering/handlebars_formatter'
 require 'k_dsl/template_rendering/handlebars_helper'
 require 'k_dsl/template_rendering/template_helper'
+require 'k_dsl/template_rendering/template_options'
+require 'k_dsl/template_rendering/template_renderer'
 
 # Project management for DSLs and other resources
 require 'k_dsl/manage/project'

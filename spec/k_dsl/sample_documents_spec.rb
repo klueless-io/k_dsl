@@ -69,7 +69,7 @@
 #         output_folder         '~/projects/#{project}/images'
 #       end
 
-#       actions do
+#       def on_action
 #         listen_to_clipboard if active_listener
 
 #         if action_write
@@ -110,7 +110,7 @@
 #         search_location           'en_au'
 #       end
 
-#       actions do
+#       def on_action
 #         search
 #         write_graphs style: :answer_the_public
 #       end
@@ -159,7 +159,7 @@
 #         row 'CSS in Roam'                 , 3.49, 'http://youtube/xxxx'
 #       end
 
-#       actions do
+#       def on_action
 #         build_timeline
 #         add_call_to_action
 #       end
@@ -192,7 +192,7 @@
 #         output_video          '~/somepath/intro-video-with-sound.mp4'
 #       end
 
-#       actions do
+#       def on_action
 #         merge_soundtrack soundtrack: settings.soundtrack,
 #                          input_video: settings.input_video,
 #                          output_video: settings.output_video
@@ -227,7 +227,7 @@
 #         template              :green_square
 #       end
 
-#       actions do
+#       def on_action
 #         generate_video s.title.snakecase, :mp4
 #       end
 #     end
@@ -266,7 +266,7 @@
 #         row 'Make Bed'                    , todo, todo, todo, todo, todo, skip, todo
 #       end
 
-#       actions do
+#       def on_action
 #         copy_to_clipboard
 #       end
 #     end

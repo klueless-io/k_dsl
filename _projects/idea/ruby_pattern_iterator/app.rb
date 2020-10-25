@@ -24,7 +24,7 @@ KDsl.microapp :ruby_pattern_iterator do
   # GEM: loquacious/lib/loquacious/configuration/iterator.rb
   # ************************************************************
   
-  actions do
+  def on_action
   end
 
 end

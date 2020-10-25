@@ -6,7 +6,7 @@ KDsl.document :my_name do
     b 2
   end
 
-  actions do
+  def on_action
     write_json is_edit: true
   end
 end

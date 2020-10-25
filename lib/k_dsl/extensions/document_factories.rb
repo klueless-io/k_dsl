@@ -22,6 +22,16 @@ module KDsl
 
       alias structure blueprint
 
+      def artifact(key, type = :entity, **options, &block)
+        valid_types = [:entity, :value_object, :app_settings, :command]
+
+        build_document(key, type, valid_types: valid_types, **options, &block)
+      end
+
+      # def artifact(key, type: :entity, **options, &block)
+      #   build_document(key, type, valid_types, **options, &block)
+      # end
+
       # def artifact(key, type: :entity, **options, &block)
       #   valid_types = [:entity, :value_object, :app_settings, :command]
       #   build_document(key, type, valid_types, **options, &block)

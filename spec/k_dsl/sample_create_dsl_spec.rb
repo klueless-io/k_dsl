@@ -61,7 +61,7 @@ RSpec.describe 'Sample for creating a New DSL' do
       describe 'new microapp' do
         let(:document) do
           KDsl.document(key) do
-            actions do
+            def on_action
               new_microapp 'k_swimtracker',
                            definition_subfolder: :ruby_cmdlet,
                            show_editor: true, 
@@ -78,7 +78,7 @@ RSpec.describe 'Sample for creating a New DSL' do
       describe 'new blueprint: bootstrap' do
         let(:document) do
           KDsl.document(key) do
-            actions do
+            def on_action
               settings do
                 name 'k_swimtracker'
               end

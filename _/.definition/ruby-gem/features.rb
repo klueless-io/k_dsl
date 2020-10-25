@@ -6,7 +6,7 @@ KDsl.document :{{snake name}} do
   s = settings do
   end
 
-  actions do
+  def on_action
     # write_json is_edit: true
   end
 

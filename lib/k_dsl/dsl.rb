@@ -78,7 +78,7 @@ module KDsl
       # I think it is ok to have NO key when you dopn't need to import, instead you can have a random guid
 
       # raise ::KDsl::Error, 'key must be a string or symbol' unless key.is_a?(String) || key.is_a?(Symbol)
-      raise ::KDsl::Error, "Type is not supported: #{type}" if !valid_types.nil? && valid_types.include?(type)
+      raise ::KDsl::Error, "Type is not supported: #{type}" if !valid_types.nil? && !valid_types.include?(type)
 
       key ||= SecureRandom.uuid.to_s
 

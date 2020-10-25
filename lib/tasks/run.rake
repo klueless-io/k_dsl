@@ -18,7 +18,7 @@ namespace :k_dsl do
 
     10.times { puts '' }
 
-    KDsl.setup(log_level: KDsl::LOG_INFO)
+    KDsl.setup(log_level: KDsl::LOG_NONE) # LOG_INFO
 
     # Add any extra extensions that you require on documents
     KDsl::Model::Document.include(KDsl::Extensions::CommandRunnable) # Documents can run command line programs
@@ -122,26 +122,8 @@ namespace :k_dsl do
     manager.register_all_resource_documents
     manager.load_all_documents
     
-    2.times { puts '' }
-    manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
-
-    # dsl1 = project_sample.get_dsl('my_name1')
-    # document1 = dsl1[:document]
-    # document1.debug(include_header: true)
-
-    # resource_document = project_sample.get_resource_document('my_name').document
-    # resource_document.debug(include_header: true)
-    # resource_document.execute_block(run_actions: true)
-
-
-    # resource_document1 = project_sample.get_resource_document('my_name1').document
-    # resource_document1.debug(include_header: true)
-    # resource_document1.execute_block(run_actions: true)
-
-    # resource_document2 = project_sample.get_resource_document('my_name2').document
-    # resource_document2.debug(include_header: true)
-    # resource_document2.execute_block(run_actions: true)
-    # manager.debug(format: :simple, project_formats: [:resource_document])
+    # 2.times { puts '' }
+    # manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
 
     manager.watch
 

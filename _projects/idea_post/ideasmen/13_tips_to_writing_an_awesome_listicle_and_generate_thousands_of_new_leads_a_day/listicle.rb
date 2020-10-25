@@ -98,7 +98,7 @@ KDsl.blueprint :'13_tips_to_writing_an_awesome_listicle_and_generate_thousands_o
     row 'Turning listicles into an animated gif'
   end
 
-  actions do
+  def on_action
     # write_html 
     # write_json is_edit: true
   end

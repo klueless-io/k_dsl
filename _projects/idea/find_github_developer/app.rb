@@ -22,7 +22,7 @@ KDsl.microapp :find_github_developer do
   # As a Developer, I want to search for great repositories on GitHub based a tag, e.g. Rails
   # I could use GPT3 for this
 
-  actions do
+  def on_action
   end
 
 end
