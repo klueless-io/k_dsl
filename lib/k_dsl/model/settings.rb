@@ -49,13 +49,17 @@ module KDsl
         # puts "respond_to_missing: #{name}"
         n = name.to_s
         n = n[0..-2] if n.end_with?('=')
-        my_data.key?(n.to_s) || super
+        my_data.key?(n.to_s) || (@parent.present? && @parent.respond_to?(name, include_all)) || super
       end
 
       def method_missing(name, *missing_method_args, &_block)
         # puts "method_missing: #{name}"
         raise KDsl::Error, 'Multiple setting values is not supported' if missing_method_args.length > 1
-        
+
+        if @parent.present? && @parent.respond_to?(name)
+          return @parent.public_send(name, *args, &block)
+        end
+
         add_getter_or_param_method(name)
         add_setter_method(name)
                 
@@ -64,7 +68,7 @@ module KDsl
         super unless self.class.method_defined?(name)
       end
 
-      # Handles Getter method and method with single paramater
+      # Handles Getter method and method with single parameter
       # object.my_name
       # object.my_name('david')
       def add_getter_or_param_method(name)

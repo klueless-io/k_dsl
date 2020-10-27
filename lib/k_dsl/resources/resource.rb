@@ -215,6 +215,7 @@ module KDsl
           when :resource
             L.kv 'project.name', project.name
             L.kv 'document_factory.class', document_factory.class.name
+            L.kv 'status', status
             L.kv 'error', error&.message
             L.kv 'source', source
             L.kv 'resource_type', resource_type

@@ -19,12 +19,31 @@ module KDsl
       attr_reader :options
       attr_reader :error
 
+      # State of document
+      # - :initializing
+      # - :initialized
+      # - :loading
+      # - :loaded
+      # - :executing
+      # - :executed
+      attr_reader :state
+
       # Shortcut to formatter
       attr_reader :f
 
       attr_accessor :resource
 
       def_delegator :resource, :project
+
+      def state=(state)
+        @state = state
+        # if [:initialized, :loaded, :executed].include?(state) &&
+        #   (project.nil? || project.name == 'k_dsl')
+        #   # pname = project.nil? ? '' : "#{project&.name} "
+        #   L.kv "#{unique_key} - state", state
+        # end
+        @state
+      end
 
       # Create document
       #
@@ -42,6 +61,8 @@ module KDsl
         @namespace = @namespace.to_s
         @error = nil
 
+        self.state = :initializing
+
         # Most documents live within a hash, some tabular documents such as
         # CSV will use an []
         set_data(default_data)
@@ -49,6 +70,8 @@ module KDsl
         @f = KDsl::Util::format
 
         @block = block if block_given?
+
+        self.state = :initialized
       end
 
       def execute_block(run_actions: nil)
@@ -57,10 +80,21 @@ module KDsl
         # The DSL actions method will only run on run_actions: true
         @run_actions = run_actions
 
-        instance_eval(&@block)
+        # if unique_key == 'template_options_entity'
+        #   L.kv '2:CLASS_ID', object_id
+        # end
+        if self.initialized?
+          self.state = :loading
+          instance_eval(&@block)
+          self.state = :loaded
+        end
+        # if unique_key == 'template_options_entity'
+        #   L.kv '3:CLASS_ID', resource_document.object_id
+        # end
 
-        if run_actions && respond_to?(:my_actions)
-          self.my_actions
+        if loaded? && run_actions && respond_to?(:on_action)
+          @state = :executed
+          self.on_action
         end
      rescue KDsl::Error => exception1
         L.error("KDsl::Error in document")
@@ -84,30 +118,18 @@ module KDsl
         return
       end
 
-      # REFACT: This is not really part of the document, so how could it be refactored
-      #         and used as some sort of decorator or actionable module
-      def actions(&action_block)
-        return unless @run_actions
-
-        instance_eval(&action_block)
-      rescue KDsl::Error => exception1
-        L.error("KDsl::Error in action")
-        # L.kv 'key', unique_key
-        # L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
-        # L.error(exception1.message)
-        @error = exception1
-        # L.exception exception1
-        raise
-      rescue StandardError => exception2
-        L.error("Standard error in action")
-        # L.kv 'key', unique_key
-        # L.kv 'file', KDsl::Util.data.console_file_hyperlink(resource.file, resource.file)
-        # L.error(exception2.message)
-        @error = exception2
-        # L.exception exception2
-        raise
+      def initialized?
+        @state == :initialized
       end
-  
+
+      def loaded?
+        @state == :loaded
+      end
+
+      def executed?
+        @state == :executed
+      end
+
       def unique_key
         @unique_key ||= KDsl::Util.dsl.build_unique_key(key, type, namespace)
       end
@@ -190,7 +212,7 @@ module KDsl
 
         # tp dsls.values, :k_key, :k_type, :state, :save_at, :last_at, :data, :last_data, :source, { :file => { :width => 150 } } 
         # puts JSON.pretty_generate(data)
-        L.ostruct(raw_data_struct)
+        L.o(raw_data_struct)
       end
 
       def debug_header
@@ -198,6 +220,15 @@ module KDsl
         L.kv 'key', key
         L.kv 'type', type
         L.kv 'namespace', namespace
+        L.kv 'error', error
+        L.kv 'state', state
+        L.kv 'respond_to?(:on_import)', self.respond_to?(:on_import)
+        L.kv 'respond_to?(:david)', self.respond_to?(:david)
+        if self.respond_to?(:david)
+          self.david
+        end
+        # L.kv 'INITALIZED', resource_document.initialized?
+        # L.kv 'EXECUTED', resource_document.executed?
 
         options&.keys.reject { |k| k == :namespace }&.each do |key|
           L.kv key, options[key]
