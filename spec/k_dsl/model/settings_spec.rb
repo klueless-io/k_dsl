@@ -40,6 +40,25 @@ RSpec.describe KDsl::Model::Settings do
         it { expect(subject.key).to eq(:x) }
         it { expect(subject.type).to eq(:entity) }
       end
+      
+      context 'when accessing dynamic method on parent' do
+        subject { document }
+        let(:document) do
+          KDsl::Model::Document.new do
+            def its
+              'crazy'
+            end
+
+            settings do
+              sanity its
+            end
+          end
+        end
+
+        before { subject.execute_block }            
+
+        it { is_expected.to have_attributes(settings: have_attributes(its: 'crazy'))}
+      end
     end
   end
 

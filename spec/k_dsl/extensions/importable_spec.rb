@@ -51,7 +51,7 @@ RSpec.describe KDsl::Extensions::Importable do
 
         before { resource.add_document(document1)}
 
-        it { expect { subject }.to raise_error('Could not get data for missing DSL: ymen_entity') }
+        it { expect { subject }.to raise_error('Could not import DSL: ymen_entity') }
 
         context 'when importing a document does not exist' do
           subject { document.import(document2.key, document2.type, document2.namespace) }

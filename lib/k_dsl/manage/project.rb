@@ -162,11 +162,11 @@ module KDsl
       end
 
       def get_data(key, type = :entity, namespace = nil)
-        resoure_document = get_resource_document(key, type, namespace)
+        resource_document = get_resource_document(key, type, namespace)
 
-        raise "Could not get data for missing DSL: #{KDsl::Util.dsl.build_unique_key(key, type, namespace)}" if resoure_document.nil?
+        raise "Could not get data for missing DSL: #{KDsl::Util.dsl.build_unique_key(key, type, namespace)}" if resource_document.nil?
 
-        resoure_document.document.data
+        resource_document.document.data
         # load_data_from_dsl(dsl)
       end
 
@@ -204,44 +204,44 @@ module KDsl
         resource
       end
 
-      # REACT: This method may not belong to project, it should be in it's own class
-      def process_code(code, source_file = nil)
-        guard_source_file(source_file)
+      # # REACT: This method may not belong to project, it should be in it's own class
+      # def process_code(code, source_file = nil)
+      #   guard_source_file(source_file)
 
-        # L.kv 'process_code.file', file
-        current_processing_file = source_file
+      #   # L.kv 'process_code.file', file
+      #   current_processing_file = source_file
 
-        # print_main_properties
-        # L.block code
-        begin
-          # Anything can potentially run, but generally one of the Klue.factory_methods
-          # should run such as Klue.structure or Klue.artifact
-          # When they run they can figure out for themselves what file called them by
-          # storing @current_processing_file into a document propert
-          # rubocop:disable Security/Eval
+      #   # print_main_properties
+      #   # L.block code
+      #   begin
+      #     # Anything can potentially run, but generally one of the Klue.factory_methods
+      #     # should run such as Klue.structure or Klue.artifact
+      #     # When they run they can figure out for themselves what file called them by
+      #     # storing @current_processing_file into a document propert
+      #     # rubocop:disable Security/Eval
 
-          # This code is not thread safe
-          # SET self as the current project so that we can register within in the document
+      #     # This code is not thread safe
+      #     # SET self as the current project so that we can register within in the document
 
-          eval(code)
+      #     eval(code)
 
-          # Clear self as the current project
-          # rubocop:enable Security/Eval
-        rescue KDsl::Error => e
-          puts "__FILE__: #{__FILE__}"
-          puts "__LINE__: #{__LINE__}"
-          L.error e.message
-          raise
-        rescue StandardError => e
-          L.kv '@current_processing_file', @current_processing_file
-          L.kv '@current_state', current_state
-          L.kv '@current_register_file', @current_register_file
+      #     # Clear self as the current project
+      #     # rubocop:enable Security/Eval
+      #   rescue KDsl::Error => e
+      #     puts "__FILE__: #{__FILE__}"
+      #     puts "__LINE__: #{__LINE__}"
+      #     L.error e.message
+      #     raise
+      #   rescue StandardError => e
+      #     L.kv '@current_processing_file', @current_processing_file
+      #     L.kv '@current_state', current_state
+      #     L.kv '@current_register_file', @current_register_file
 
-          L.exception(e)
-        end
+      #     L.exception(e)
+      #   end
 
-        @current_processing_file = nil
-      end
+      #   @current_processing_file = nil
+      # end
 
       def managed?
         !self.manager.nil?
@@ -316,7 +316,7 @@ module KDsl
           resource.load
           resource.documents.each { |d| d.execute_block(run_actions: true) }
 
-          resource.debug
+          # resource.debug
 
           2.times { puts '' }
           debug(formats: [:watch_path_patterns, :resource, :resource_document])
@@ -384,6 +384,7 @@ module KDsl
             { resource_id: { display_method: lambda { |r| r.resource.object_id } } },
             { document_id: { display_method: lambda { |r| r.document.object_id } } },
             :status,
+            { state: { display_method: lambda { |r| r.document.state } } },
             { namespace: { width: 20, display_name: 'Namespace' } },
             { key: { width: 20, display_name: 'Key' } },
             { type: { width: 20, display_name: 'Type' } },
