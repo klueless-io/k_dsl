@@ -49,15 +49,17 @@ RSpec.describe KDsl::Model::Document do
       let(:instance) { described_class.new }
 
       it {
-        puts subject.key
-        expect(subject).to have_attributes(
+        is_expected.to have_attributes(
           key: match(/^[A-Za-z0-9]{8}$/),
           type: KDsl.config.default_document_type,
           namespace: '',
           options: {},
-          data: {}
+          data: {},
+          state: :initialized,
         )
       }
+
+      it { is_expected.to be_initialized }
     end
 
     context 'with key only' do
@@ -140,9 +142,31 @@ RSpec.describe KDsl::Model::Document do
       context 'when given a block' do
         it { expect(subject.data).to eq({}) }
 
+        it { is_expected.to be_initialized }
+
         context 'after execute_block' do
           before { subject.execute_block }            
           it { expect(subject.data).to eq(thunder_birds: :are_go) }
+
+          it { is_expected.to be_loaded }
+        end
+
+        context 'after multiple calls' do
+          before do
+            allow(subject).to receive(:state=).and_call_original
+
+            subject.execute_block
+            subject.execute_block
+            subject.execute_block
+          end
+
+          it do
+            expect(subject).to be_loaded
+            expect(subject).not_to have_received(:state=).with(:initialized)
+            expect(subject).to have_received(:state=).with(:loading).ordered
+            expect(subject).to have_received(:state=).with(:loaded).ordered
+          end
+
         end
       end
     end

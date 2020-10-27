@@ -122,8 +122,8 @@ namespace :k_dsl do
     manager.register_all_resource_documents
     manager.load_all_documents
     
-    # 2.times { puts '' }
-    # manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
+    2.times { puts '' }
+    manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
 
     manager.watch
 

@@ -28,6 +28,8 @@ module KDsl
       def_delegator :document, :type
       def_delegator :document, :namespace
       def_delegator :document, :options
+      def_delegator :document, :executed?
+      def_delegator :document, :initialized?
 
       def_delegator :document, :data
 

@@ -1,37 +1,37 @@
-def template_option_properties(dsl)
-  data = template_option_data(dsl)
-  template = template_option_template
+# def template_option_properties(dsl)
+#   data = template_option_data(dsl)
+#   template = template_option_template
 
-  output = KDsl::TemplateRendering::TemplateHelper.process_template(template, data)
-end
+#   output = KDsl::TemplateRendering::TemplateHelper.process_template(template, data)
+# end
 
-def template_option_data(dsl)
-  data = dsl.raw_data_struct
+# def template_option_data(dsl)
+#   data = dsl.raw_data_struct
 
-  data.active_props = OpenStruct.new(rows: data.props.rows.select { |p| p.active == 1 })
+#   data.active_props = OpenStruct.new(rows: data.props.rows.select { |p| p.active == 1 })
 
-  grouped_rows = data.active_props
-                     .rows
-                     .group_by { |x| x.group }
-                     .map { |g,rows| { group: g, props: rows.map { |r| r.to_h } } }
+#   grouped_rows = data.active_props
+#                      .rows
+#                      .group_by { |x| x.group }
+#                      .map { |g,rows| { group: g, props: rows.map { |r| r.to_h } } }
   
-  data.grouped_rows = OpenStruct.new(rows: KDsl::Util.data.to_struct(grouped_rows))
+#   data.grouped_rows = OpenStruct.new(rows: KDsl::Util.data.to_struct(grouped_rows))
 
-  L.o data
-  data
-end
+#   L.o data
+#   data
+# end
 
-def template_option_template
-  template = <<~RUBY
-    {{#each grouped_rows.rows}}
-    # {{titleize this.group}}
+# def template_option_template
+#   template = <<~RUBY
+#     {{#each grouped_rows.rows}}
+#     # {{titleize this.group}}
     
-    {{#each this.props}}
-    attr_accessor :{{this.field}}
-    {{/each}}
-    {{/each}}
-  RUBY
-end
+#     {{#each this.props}}
+#     attr_accessor :{{this.field}}
+#     {{/each}}
+#     {{/each}}
+#   RUBY
+# end
 
 KDsl.blueprint :code_spec_pair do
   microapp          = import(:k_dsl, :microapp)
@@ -47,13 +47,18 @@ KDsl.blueprint :code_spec_pair do
     name                'template_options'
     template_base_name  'code'
     output_rel_path     'template_rendering'
+
+    # xx template_options.fuckit
+    # attributes          template_options.attributes.rows.select { |r| r.active == 1 }.map { |r| r.to_h }
+    # attributes_active   template_options.attributes_active.map { |r| r.to_h }
+    # output              template_options.settings.output
   end
 
   instructions do
-    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, 'Xopen')]
+    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, 'open')]
 
     row "#{s.template_base_name}.rb"      , "lib/k_dsl/#{s.output_rel_path}/#{s.name}.rb"
-    # row "#{s.template_base_name}_spec.rb" , "spec/k_dsl/#{s.output_rel_path}/#{s.name}_spec.rb"
+    row "#{s.template_base_name}_spec.rb" , "spec/k_dsl/#{s.output_rel_path}/#{s.name}_spec.rb"
    end
 
   # table :props do
@@ -97,10 +102,10 @@ KDsl.blueprint :code_spec_pair do
     
     # self.raw_data['instructions']['rows'][0]['properties'] = '# template_options.settings.template '
 
-    run_blueprint
+    # run_blueprint
     # of = "lib/k_dsl/#{s.output_rel_path}/#{s.name}.rb"
     # L.error of
     # write_as(data, of, is_edit: true, template: template, output_file: of)
-    # write_json is_edit: true
+    write_json #is_edit: true
   end
 end
