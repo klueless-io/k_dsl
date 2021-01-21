@@ -6,6 +6,74 @@ RSpec.describe KDsl::Model::Table do
   let(:data) { {} }
   let(:instance) { described_class.new(data) }
 
+  describe '.name' do
+    context 'when no name' do
+      subject { described_class.new(data).name }
+
+      it { expect(subject).to eq('table') }
+    end
+
+    context 'when name supplied' do
+      subject { described_class.new(data, 'my-name').name }
+
+      it { expect(subject).to eq('my-name') }
+    end
+  end
+
+  describe '.parent' do
+    subject { described_class.new(data, parent: parent).parent }
+
+    context 'when not attached to parent' do
+      let(:parent) { nil }
+
+      it 'parent is nil' do
+        expect(subject).to be_nil
+      end
+    end
+
+    context 'when parent supplied' do
+      subject { described_class.new(data, parent: parent).parent }
+
+      context 'when attached to a parent object' do
+        let(:parent) { KDsl::Model::Document.new(:x) }
+
+        it { expect(subject).not_to be_nil }
+        it { expect(subject.key).to eq(:x) }
+        it { expect(subject.type).to eq(:entity) }
+      end
+      
+      context 'when accessing dynamic method on parent' do
+        subject { document }
+        let(:document) do
+          KDsl::Model::Document.new do
+            def its
+              'crazy'
+            end
+
+            table do
+              fields %i[name]
+              row its
+              row type
+            end
+          end
+        end
+
+        before { subject.execute_block }            
+
+        it do
+          expect(subject.data).to eq(
+            'table' => {
+              'fields' => [
+                { 'name' => 'name', 'type' => 'string', 'default' => nil },
+              ],
+              'rows' => [{'name'=>'crazy'}, {'name'=>'entity'}]
+            }
+          )
+        end
+      end
+    end
+  end
+
   describe '#field' do
     context '@name of field' do
       context 'when name is string' do
@@ -35,9 +103,9 @@ RSpec.describe KDsl::Model::Table do
       end
 
       context 'when default value parsed in named argument' do
-        subject { instance.field('xmen', default: 'are excelent') }
+        subject { instance.field('xmen', default: 'are excellent') }
 
-        it { is_expected.to include('default' => 'are excelent') }
+        it { is_expected.to include('default' => 'are excellent') }
       end
     end
 
@@ -62,21 +130,21 @@ RSpec.describe KDsl::Model::Table do
     end
 
     context '@name, @default_value, @type combinations' do
-      context '2 x positional paramaters' do
+      context '2 x positional parameters' do
         subject { instance.field('xmen', 'are excellent', 'decimal') }
 
         it { is_expected.to include('name' => 'xmen', 'default' => 'are excellent', 'type' => 'decimal') }
       end
 
-      context '2 x named paramaters' do
+      context '2 x named parameters' do
         subject { instance.field('xmen', type: 'text', default: 'are awesome') }
 
         it { is_expected.to include('name' => 'xmen', 'default' => 'are awesome', 'type' => 'text') }
       end
 
       # Often fields are defined using positional args
-      # But a named default value may be introduced for override/specitivity reasons
-      context 'edge cases when using 3 positional paramaters + :default' do
+      # But a named default value may be introduced for override/specificity reasons
+      context 'edge cases when using 3 positional parameters + :default' do
         subject { instance.field('xmen', nil, type, default: default) }
 
         let(:type) { 'string' }
@@ -228,7 +296,7 @@ RSpec.describe KDsl::Model::Table do
       )
     end
 
-    it 'fields with custom type & default value in column2 using named paramaters' do
+    it 'fields with custom type & default value in column2 using named parameters' do
       described_class.new(data, :rows) do
         fields [:column1, f(:column2, default: 'CUSTOM VALUE', type: 'customtype')]
       end

@@ -16,10 +16,25 @@ module KDsl
     
         # L.ostruct data#, skip_array: true
 
-        obj = data.to_h
         begin
-          obj.keys.each do |key|
-            obj[key] = obj[key].to_h if obj[key].class == OpenStruct
+
+          # REFACT: Array and Hash need to be looked at
+          if data.is_a?(Array)
+            obj = data.map do |item|
+              o = item.to_h
+
+              o.keys.each do |key|
+                o[key] = o[key].to_h if o[key].class == OpenStruct
+              end
+
+              o
+            end
+          else
+            obj = data.to_h
+
+            obj.keys.each do |key|
+              obj[key] = obj[key].to_h if obj[key].class == OpenStruct
+            end
           end
     
           output = compiled_template.call(obj)

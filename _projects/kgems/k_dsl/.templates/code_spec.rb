@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe KDsl::{{camel blueprint.settings.output_rel_path}}::{{camel blueprint.settings.name}} do
+RSpec.describe Peaky::{{camel blueprint.settings.output_rel_path}}::{{camel blueprint.settings.name}} do
   subject { instance }
 
   let(:instance) { described_class.new }

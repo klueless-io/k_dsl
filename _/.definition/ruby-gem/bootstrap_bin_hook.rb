@@ -1,8 +1,4 @@
 KDsl.blueprint :{{snake name}} do
-  microapp     = import(:{{settings.name}}, :microapp)
-
-  is_run = 0
-
   settings do
     name                parent.key
     type                parent.type
@@ -29,8 +25,11 @@ KDsl.blueprint :{{snake name}} do
     row 'bin/runonce/setup-git.sh'  , command: 'execute'
   end
 
-  L.warn 'set is_run to true if you want to run the action' if is_run == 0
+  is_run = 0
+
   def on_action
-    run_blueprint microapp: microapp
+    run_blueprint microapp: import(:{{settings.name}}, :microapp)
   end if is_run == 1
+
+  L.warn 'set is_run to true if you want to run the action' if is_run == 0
 end

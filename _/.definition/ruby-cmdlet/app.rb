@@ -11,15 +11,15 @@ KDsl.microapp :{{snake name}} do
     name                          parent.key
     app_type                      'Ruby Commandlet'
     description                   '{{titleize name}} is a command line tool for '
-    application                   '{{snake name}}'
+    application                   '{{dashify name}}'
     avatar                        'Developer'
     main_story                    '{{settings.main_story}}'
     author                        'David'
     author_email                  'david@ideasmen.com.au'
     shortcut                      '{{snake name}}'
-    website                       'http://appydave.com/{{settings.website_slug}}/{{snake name}}'
+    website                       'http://appydave.com/{{settings.website_slug}}/{{dashify name}}'
     template_rel_path             'ruby-cmdlet'
-    app_path                      '~/dev/cmdlets/{{snake name}}'
+    app_path                      '~/dev/cmdlets/{{dashify name}}'
     data_path                     '_/.data'
   end
 

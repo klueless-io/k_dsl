@@ -43,6 +43,9 @@ require 'k_dsl/manage/project_config'
 require 'k_dsl/manage/project_manager'
 require 'k_dsl/manage/register'
 
+require 'k_dsl/peaky/method_signature'
+require 'k_dsl/peaky/parameter_info'
+
 # Artifact
 require 'k_dsl/artifacts/artifact'
 

@@ -135,7 +135,7 @@ class LogUtil
           open_struct(value, indent, **opts)
           opts.delete(:subheading)
         else
-          L.kv "#{indent}#{key}:", ''
+          L.kv "#{indent}#{key}", ''
           indent = "#{indent}  "
           open_struct(value, indent, **opts)
           indent = indent.chomp('  ')
@@ -144,7 +144,13 @@ class LogUtil
         next if opts[:skip_array].present?
         # puts LogHelper.subheading(key, 88)# if opts[:subheading].present?
         puts LogHelper.subheading(opts[:subheading], 88) if opts[:subheading].present?
-        tp value, value.first.to_h.keys if value.length > 0
+        if value.length > 0
+          if value.first.is_a?(String)
+            L.kv "#{indent}#{key}", value.join(', ')
+          else
+            tp value, value.first.to_h.keys
+          end
+        end
       else
         L.kv "#{indent}#{key}", value
       end

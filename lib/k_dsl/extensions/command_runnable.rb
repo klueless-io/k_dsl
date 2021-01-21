@@ -2,19 +2,23 @@ module KDsl
   module Extensions
     module CommandRunnable
       # Run command line program
-      def run_command(command, command_creates_top_folder: false)
+      def run_command(command, command_creates_top_folder: false, microapp: nil)
         return warn('Run command skipped: Document not linked to a project') if !defined?(project) || project.nil?
 
         L.kv 'Run command', command
 
-        microapps = project.get_resource_documents_by_type(:microapp)
+        if microapp.nil?
+          microapps = project.get_resource_documents_by_type(:microapp)
 
-        raise KDsl::Error, 'Run command requires a microapp with target path' if microapps.empty?
-        # Not sure if I will ever have multi-app projects, but if I do, then
-        # a simple parameter to specify the key or namespace or pass in the microapp will suffice
-        raise KDsl::Error, 'Run command currently supports single MicroApp projects only' if microapps.length > 1
+          raise KDsl::Error, 'Run command requires a microapp with target path' if microapps.empty?
+          # Not sure if I will ever have multi-app projects, but if I do, then
+          # a simple parameter to specify the key or namespace or pass in the microapp will suffice
+          raise KDsl::Error, 'Run command currently supports single MicroApp projects only' if microapps.length > 1
 
-        microapp_settings = microapps.first.document.data_struct.settings
+          microapp = microapps.first.document
+        end
+
+        microapp_settings = microapp.data_struct.settings
 
         output_path = File.expand_path(microapp_settings.app_path)
 

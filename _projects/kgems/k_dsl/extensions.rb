@@ -1,5 +1,5 @@
 KDsl.blueprint :extensions do
-  microapp     = import(:k_dsl, :microapp)
+    microapp     = import(:k_dsl, :microapp)
 
   settings do
     name                parent.key
@@ -15,6 +15,6 @@ KDsl.blueprint :extensions do
   end
 
   def on_action
-    # write_json is_edit: true
+    write_json is_edit: true
   end
 end
