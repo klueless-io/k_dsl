@@ -38,6 +38,7 @@ module KDsl
         # microapp_data = get_microapp_data(microapp)
 
         # REFACT: This information is needed in write_html
+        # REFACT: definition also needs an application specific definitions, this was found in the handlebars project
         opts[:template] = {
           common_template_path: project.config.base_template_path,
           app_template_path: project.config.base_app_template_path
@@ -179,11 +180,13 @@ module KDsl
 
         template = File.read(opt.template.file)
         opt.instruction = instruction
+        L.o opt
         output = KDsl::TemplateRendering::TemplateHelper.process_template(template, opt)
 
         is_exist = File.exist?(opt.output.file)
         is_write = false
         is_new   = false
+        is_update= false
 
         if is_exist
           if instruction.conflict.casecmp('skip').zero?
@@ -195,8 +198,8 @@ module KDsl
             file.write(output)
             file.close
             L.kv 'temp file', file.path
-            is_write = true
-            is_new = true
+            # is_write = true # THESE DON'T MAKE SENSE?
+            # is_new = true
 
             if File.read(opt.output.file) != output
               L.kv 'ACTION WHEN FILE EXISTS', 'COMPARE'
@@ -208,16 +211,27 @@ module KDsl
 
           if instruction.conflict.casecmp('overwrite').zero?
             is_write = true
+            is_update = true
             L.kv 'ACTION WHEN FILE EXISTS', 'OVER WRITING'
             File.write(opt.output.file, output)
           end
 
         else
+          is_write = true
+          is_new = true
           File.write(opt.output.file, output)
         end
 
         after_write = instruction.after_write.split(',')
         
+        if after_write.include?('format') || after_write.include?('cop') && is_write
+          run_command "rubocop -a #{opt.output.file}"
+        end
+
+        if after_write.include?('prettier') && is_write
+          run_command "prettier --check #{opt.output.file} --write #{opt.output.file}"
+        end
+  
         if after_write.include?('open') ||
           (is_write && after_write.include?('open_if_write')) ||
           (is_new && after_write.include?('open_if_new'))

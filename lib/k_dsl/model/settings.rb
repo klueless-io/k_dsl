@@ -21,10 +21,10 @@ module KDsl
           # rubocop:disable Style/RescueStandardError
         rescue # => e
           # rubocop:enable Style/RescueStandardError
-          # puts "Invalid code block in settings_dsl: #{@key}"
-          # puts e.message
-          # L.heading "Invalid code block in settings_dsl: #{@key}"
-          # L.exception e
+          puts "Invalid code block in settings_dsl: #{@key}"
+          puts e.message
+          L.heading "Invalid code block in settings_dsl: #{@key}"
+          L.exception e
           raise
         end
       end
@@ -45,25 +45,27 @@ module KDsl
       end
 
       def respond_to_missing?(name, *_args, &_block)
-        # puts 'respond_to_missing?'
-        # puts "respond_to_missing: #{name}"
+        puts 'respond_to_missing?'
+        puts "respond_to_missing: #{name}"
         n = name.to_s
         n = n[0..-2] if n.end_with?('=')
-        my_data.key?(n.to_s) || (@parent.present? && @parent.respond_to?(name, include_all)) || super
+        my_data.key?(n.to_s) || (@parent.present? && @parent.respond_to?(name, true)) || super
       end
 
-      def method_missing(name, *missing_method_args, &_block)
-        # puts "method_missing: #{name}"
-        raise KDsl::Error, 'Multiple setting values is not supported' if missing_method_args.length > 1
+      def method_missing(name, *args, &_block)
+        L.warn "method_missing: #{name}"
+        L.warn "args.length   : #{args.length}"
 
-        if @parent.present? && @parent.respond_to?(name)
+        if name != :type && @parent.present? && @parent.respond_to?(name)
+          L.kv 'NAME', name
           return @parent.public_send(name, *args, &block)
         end
+        # raise KDsl::Error, 'Multiple setting values is not supported' if args.length > 1
 
         add_getter_or_param_method(name)
         add_setter_method(name)
                 
-        send(name, missing_method_args[0]) if missing_method_args.length === 1 #name.end_with?('=')
+        send(name, args[0]) if args.length === 1 #name.end_with?('=')
         
         super unless self.class.method_defined?(name)
       end
@@ -72,9 +74,14 @@ module KDsl
       # object.my_name
       # object.my_name('david')
       def add_getter_or_param_method(name)
+        # L.progress(1, 'add_getter_or_param_method')
         self.class.class_eval do
+          # L.progress(2, 'add_getter_or_param_method')
           name = name.to_s.gsub(/\=$/, '')
+          # L.progress(3, 'add_getter_or_param_method')
           define_method(name) do |*args|
+            # L.progress(4, 'add_getter_or_param_method')
+            # L.kv 'add_getter_or_param_method', name
             raise KDsl::Error, 'Multiple setting values is not supported' if args.length > 1
 
             if args.length.zero?
@@ -89,9 +96,15 @@ module KDsl
       # Handles Setter method
       # object.my_name = 'david'
       def add_setter_method(name)
+        # L.progress(1, 'add_setter_method')
         self.class.class_eval do
+          # L.progress(2, 'add_setter_method')
           name = name.to_s.gsub(/\=$/, '')
+          # L.progress(3, 'add_setter_method')
+          # L.kv 'add_setter_method', name
           define_method("#{name}=") do |value|
+            # L.progress(4, 'add_setter_method')
+            # L.kv 'value', value
             my_data[name.to_s] = value
           end
         end

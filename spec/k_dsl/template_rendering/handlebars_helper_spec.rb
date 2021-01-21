@@ -19,8 +19,15 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsHelper do
   
         it { expect(subject).to include('<pre>Totally Safe!</pre>') }
       end
+
+      context 'raw helper' do
+        let(:data) { { inside: 'David' } }
+        let(:template) { '{{{{raw}}}}<p>Nothing {{ inside }} this block will be parsed as Handlebars.</p>{{{{/raw}}}}' }
+
+        it { expect(subject).to include('<p>Nothing {{ inside }} this block will be parsed as Handlebars.</p>') }
+      end
     end
-  
+
     describe 'format symbols' do
   
       let(:data) { 
@@ -29,7 +36,7 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsHelper do
           name2: :achievement_badge, 
           name3: 'Hello World', 
           name4: 'the quick brown fox',
-          name5: 'space   man',
+          name5: 'SPACE   MAN',
           name6: '  spaced out   '
         } 
       }
@@ -110,8 +117,49 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsHelper do
         it { expect(subject).to include('SPACE_MAN') }
         it { expect(subject).to include('SPACED_OUT') }
       end
+
+      # name1: :activity, 
+      # name2: :achievement_badge, 
+      # name3: 'Hello World', 
+      # name4: 'the quick brown fox',
+      # name5: 'space   man',
+      # name6: '  spaced out   '
+
+      context 'slash' do
+        let(:template) { '{{slash name1}} {{forward_slash name2}} {{slash_forward name3}} {{slash name4}} {{slash name5}} {{slash name6}}' }
+  
+        it { expect(subject).to include('activity') }
+        it { expect(subject).to include('achievement/badge') }
+        it { expect(subject).to include('Hello/World') }
+        it { expect(subject).to include('the/quick/brown/fox') }
+        it { expect(subject).to include('SPACE/MAN') }
+        it { expect(subject).to include('spaced/out') }
+      end
+  
+      context 'back_slash' do
+        let(:template) { '{{back_slash name1}} {{slash_back name2}} {{backward_slash name3}} {{back_slash name4}} {{back_slash name5}} {{back_slash name6}}' }
+  
+        it { expect(subject).to include('activity') }
+        it { expect(subject).to include('achievement\badge') }
+        it { expect(subject).to include('Hello\World') }
+        it { expect(subject).to include('the\quick\brown\fox') }
+        it { expect(subject).to include('SPACE\MAN') }
+        it { expect(subject).to include('spaced\out') }
+      end
+
+      context 'double_colon' do
+        let(:template) { '{{double_colon name1}} {{double_colon name2}} {{namespace name3}} {{double_colon name4}} {{double_colon name5}} {{double_colon name6}}' }
+  
+        it { expect(subject).to include('activity') }
+        it { expect(subject).to include('achievement::badge') }
+        it { expect(subject).to include('Hello::World') }
+        it { expect(subject).to include('the::quick::brown::fox') }
+        it { expect(subject).to include('SPACE::MAN') }
+        it { expect(subject).to include('spaced::out') }
+      end
   
       context 'humanize, then pluralize' do
+        # See format below for multi-formats
         let(:template) { '{{pluralize (humanize name1)}} {{pluralize (humanize name2)}} {{pluralize (humanize name3)}} {{pluralize (humanize name4)}} {{pluralize (humanize name5)}} {{pluralize (humanize name6)}}' }
   
         it { expect(subject).to include('Activities') }
@@ -122,7 +170,43 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsHelper do
         it { expect(subject).to include('Spaced outs') }
       end
     end
+
+    describe 'multi format' do
+      let(:data) { 
+        { 
+          name1: :activity, 
+          name2: :achievement_badge, 
+          name3: 'Hello World', 
+          name4: 'the quick brown fox',
+          name5: 'space   man',
+          name6: '  spaced out   '
+        } 
+      }
   
+      context 'combinations' do
+        # REFACTOR: THIS NEEDS A LOT OF WORK THAT MAY NEED ME to refactor the internals
+        # let(:template) { '{{snake name1}} {{snake name2}} {{snake name3}} {{snake name4}} {{snake name5}} {{snake name6}}' }
+        let(:template) do <<~TEMPLATE
+          {{format_as name2 'titleize,slash_forward'}}
+          {{format_as name2 'humanize,slash_forward'}}
+          {{format_as name2 'titleize,back_slash'}}
+          {{format_as name2 'humanize,slash_backward'}}
+          {{format_as name2 'constant,namespace'}}
+          {{format_as name2 'titleize,double_colon'}}
+          {{format_as name2 'humanize,double_colon'}}
+          TEMPLATE
+        end
+  
+        it { expect(subject).to include('Achievement/Badge') }
+        it { expect(subject).to include('Achievement/badge') }
+        it { expect(subject).to include('Achievement\Badge') }
+        it { expect(subject).to include('Achievement\badge') }
+        it { expect(subject).to include('ACHIEVEMENT::BADGE') }
+        it { expect(subject).to include('Achievement::Badge') }
+        it { expect(subject).to include('Achievement::badge') }
+      end
+    end
+
     describe 'common helpers' do
   
       let(:data) { {} }
@@ -136,18 +220,209 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsHelper do
         it { expect(subject).to include('<pre>unknown as html</pre>') }
       end
 
-      # context 'json' do
-      #   let(:data) { { name: :activity, rows: [{ key: 1, value: '11'}, { key: 2, value: '22'}] } }
-      #   let(:template) { "{{#each this}}{{@key}}: {{this}}{{/each}}" }
-  
-      #   fit do
-      #     puts subject
-      #   end
-      #   # it { expect(subject).to include('activity') }
-      #   # it { expect(subject).to include('override unknown') }
-      #   # it { expect(subject).to include('<pre>unknown as html</pre>') }
-      # end
+      context 'repeat' do
+        let(:template) do
+          <<~TEXT
+          [{{repeat 10 ' ' }}]
+          [{{repeat 5 '-+'}}]
+          TEXT
+        end
 
+        fit do
+          puts subject
+        end
+        it { is_expected.to include('[          ]') }
+        it { is_expected.to include('[-+-+-+-+-+]') }
+      end
+
+      context 'padr' do
+        let(:data) { { field1: 'First Name', field2: 'Second Name' } }
+        let(:template) do
+          <<~TEXT
+          {{padr field1 20}}: David
+          {{padr field2 20}}: Programer
+          {{padr 'Age' 20}}: 20
+          TEXT
+        end
+
+        it do
+          expect(subject).to eq <<~TEXT
+            First Name          : David
+            Second Name         : Programer
+            Age                 : 20
+          TEXT
+        end
+      end
+
+      context 'padl' do
+        let(:data) { { field1: 'First Name', field2: 'Second Name' } }
+        let(:template) do
+          <<~TEXT
+          |{{padl field1 20}}: David
+          |{{padl field2 20}}: Programer
+          |{{padl 'Age' 20}}: 20
+          TEXT
+        end
+
+        it do
+          expect(subject).to eq <<~TEXT
+            |          First Name: David
+            |         Second Name: Programer
+            |                 Age: 20
+          TEXT
+        end
+      end
+
+      context 'surround' do
+        let(:data) { { value: 'hello world' } }
+        let(:template) do
+          <<~TEXT
+          {{surround_if_value value '(' ')'}}]
+          TEXT
+        end
+
+        it { expect(subject).to include('(hello world)') }
+
+        context 'with format' do
+          let(:data) { { value: 'the quick brown fox' } }
+          let(:template) do
+            <<~TEXT
+            {{surround_if_value value '(' ')'}}
+            {{surround_if_value value '(' ')' 'snake' }}
+            {{surround_if_value value '(' ')' 'dashify' }}
+            {{surround_if_value value '(' ')' 'camel' }}
+            {{surround_if_value value '(' ')' 'lamel' }}
+            {{surround_if_value value '(' ')' 'titleize' }}
+            {{surround_if_value value '(' ')' 'humanize' }}
+            {{surround_if_value value '(' ')' 'constantize' }}
+            {{surround_if_value value '(' ')' 'pluralize' }}
+            TEXT
+          end
+  
+          it { expect(subject).to include('(the quick brown fox)') }
+          it { expect(subject).to include('(the_quick_brown_fox)') }
+          it { expect(subject).to include('(the-quick-brown-fox)') }
+          it { expect(subject).to include('(TheQuickBrownFox)') }
+          it { expect(subject).to include('(theQuickBrownFox)') }
+          it { expect(subject).to include('(The Quick Brown Fox)') }
+          it { expect(subject).to include('(The quick brown fox)') }
+          it { expect(subject).to include('(THE_QUICK_BROWN_FOX)') }
+          it { expect(subject).to include('(the quick brown foxes)') }
+        end
+      end
+
+      context 'prepend / prefix' do
+        let(:data) { { value: :some_folder, empty_value: nil } }
+        let(:template) do
+          <<~TEXT
+          prepend_with_valid_folder [{{prepend_if_value value '/'}}]
+          prefix_with_valid_folder  [{{prefix_if_value value '/'}}]
+          prepend_with_empty_folder [{{prepend_if_value empty_value '/'}}]
+          prefix_with_empty_folder  [{{prefix_if_value empty_value '/'}}]
+          TEXT
+        end
+
+        it { expect(subject).to include('prepend_with_valid_folder [/some_folder]') }
+        it { expect(subject).to include('prefix_with_valid_folder  [/some_folder]') }
+        it { expect(subject).to include('prepend_with_empty_folder []') }
+        it { expect(subject).to include('prefix_with_empty_folder  []') }
+
+        context 'with format' do
+          let(:data) { { value: 'the quick brown fox' } }
+          let(:template) do
+            <<~TEXT
+            {{prepend_if_value value '[' }}
+            {{prepend_if_value value '[' 'snake' }}
+            {{prepend_if_value value '[' 'dashify' }}
+            {{prepend_if_value value '[' 'camel' }}
+            {{prepend_if_value value '[' 'lamel' }}
+            {{prepend_if_value value '[' 'titleize' }}
+            {{prepend_if_value value '[' 'humanize' }}
+            {{prepend_if_value value '[' 'constantize' }}
+            {{prepend_if_value value '[' 'pluralize' }}
+            TEXT
+          end
+  
+          it { expect(subject).to include('[the quick brown fox') }
+          it { expect(subject).to include('[the_quick_brown_fox') }
+          it { expect(subject).to include('[the-quick-brown-fox') }
+          it { expect(subject).to include('[TheQuickBrownFox') }
+          it { expect(subject).to include('[theQuickBrownFox') }
+          it { expect(subject).to include('[The Quick Brown Fox') }
+          it { expect(subject).to include('[The quick brown fox') }
+          it { expect(subject).to include('[THE_QUICK_BROWN_FOX') }
+          it { expect(subject).to include('[the quick brown foxes') }
+        end
+      end
+
+      context 'append / suffix' do
+        let(:data) { { value: :some_folder, empty_value: nil } }
+        let(:template) do
+          <<~TEXT
+          append_with_valid_folder [{{append_if_value value '/'}}]
+          suffix_with_valid_folder [{{suffix_if_value value '/'}}]
+          append_with_empty_folder [{{append_if_value empty_value '/'}}]
+          suffix_with_empty_folder [{{suffix_if_value empty_value '/'}}]
+          TEXT
+        end
+
+        it { expect(subject).to include('append_with_valid_folder [some_folder/]') }
+        it { expect(subject).to include('suffix_with_valid_folder [some_folder/]') }
+        it { expect(subject).to include('append_with_empty_folder []') }
+        it { expect(subject).to include('suffix_with_empty_folder []') }
+
+        context 'with format' do
+          let(:data) { { value: 'the quick brown fox' } }
+          let(:template) do
+            <<~TEXT
+            {{append_if_value value ']' }}
+            {{suffix_if_value value ']' 'snake' }}
+            {{append_if_value value ']' 'dashify' }}
+            {{suffix_if_value value ']' 'camel' }}
+            {{append_if_value value ']' 'lamel' }}
+            {{suffix_if_value value ']' 'titleize' }}
+            {{append_if_value value ']' 'humanize' }}
+            {{suffix_if_value value ']' 'constantize' }}
+            {{append_if_value value ']' 'pluralize' }}
+            TEXT
+          end
+  
+          it { expect(subject).to include('the quick brown fox]') }
+          it { expect(subject).to include('the_quick_brown_fox]') }
+          it { expect(subject).to include('the-quick-brown-fox]') }
+          it { expect(subject).to include('TheQuickBrownFox]') }
+          it { expect(subject).to include('theQuickBrownFox]') }
+          it { expect(subject).to include('The Quick Brown Fox]') }
+          it { expect(subject).to include('The quick brown fox]') }
+          it { expect(subject).to include('THE_QUICK_BROWN_FOX]') }
+          it { expect(subject).to include('the quick brown foxes]') }
+        end
+      end
+      
+      context 'json' do
+        let(:template) { "{{json this}}" }
+        let(:data) { { name: :activity, rows: [{ key: 1, value: '11'}, { key: 2, value: '22', x: true, y: false}] } }
+
+        context 'when root is array' do
+          it { is_expected.to start_with('{"name":"activity","rows":[{"key":1,"value":"11"},{"key":2,"value":"22","x":true,"y":false}]}') }
+        end
+
+        context 'when root is hash' do
+          let(:data) { [{ key: 1, value: '11'}, { key: 2, value: '22', x: true, y: false}] }
+          it { is_expected.to start_with('[{"key":1,"value":"11"},{"key":2,"value":"22","x":true,"y":false}]') }
+        end
+        
+        # it { expect(subject).to include('activity') }
+        # it { expect(subject).to include('override unknown') }
+        # it { expect(subject).to include('<pre>unknown as html</pre>') }
+      end
+
+      context 'hash' do
+        let(:template) { "{{hash}} - {{hash 1}} - {{hash 4}}" }
+  
+        it { expect(subject).to include('# - # - ####') }
+      end
+  
       context 'curly-open' do
         let(:template) { "{{curly-open}} - {{curly-open 1}} - {{curly-open 4}}" }
   

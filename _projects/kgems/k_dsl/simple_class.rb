@@ -48,6 +48,9 @@ KDsl.blueprint :code_spec_pair do
     template_base_name  'code'
     output_rel_path     'template_rendering'
 
+    name                'parameter_info'
+    output_rel_path     'peaky'
+
     # xx template_options.fuckit
     # attributes          template_options.attributes.rows.select { |r| r.active == 1 }.map { |r| r.to_h }
     # attributes_active   template_options.attributes_active.map { |r| r.to_h }
@@ -102,10 +105,10 @@ KDsl.blueprint :code_spec_pair do
     
     # self.raw_data['instructions']['rows'][0]['properties'] = '# template_options.settings.template '
 
-    # run_blueprint
+    run_blueprint
     # of = "lib/k_dsl/#{s.output_rel_path}/#{s.name}.rb"
     # L.error of
     # write_as(data, of, is_edit: true, template: template, output_file: of)
-    write_json #is_edit: true
+    # write_json is_edit: true
   end
 end

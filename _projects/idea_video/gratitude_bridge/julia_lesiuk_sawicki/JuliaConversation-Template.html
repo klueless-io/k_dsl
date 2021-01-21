@@ -1,0 +1,89 @@
+<html>
+<head>
+    <style>
+        body {
+            background-color: #e4f1fe;
+        }
+
+        .chat {
+            margin-left: 100px;
+            width: 500px;
+        }
+
+        .bubble {
+            background-color: #F2F2F2;
+            border-radius: 5px;
+            box-shadow: 0 0 6px #B2B2B2;
+            display: inline-block;
+            padding: 18px 18px;
+            position: relative;
+            vertical-align: top;
+            font-size: 20px;
+        }
+
+            .bubble::before {
+                box-shadow: 0 0 1px;
+                content: "\00a0";
+                display: block;
+                height: 16px;
+                position: absolute;
+                top: 11px;
+                transform: rotate( 29deg ) skew( -35deg );
+                -moz-transform: rotate( 29deg ) skew( -35deg );
+                -ms-transform: rotate( 29deg ) skew( -35deg );
+                -o-transform: rotate( 29deg ) skew( -35deg );
+                -webkit-transform: rotate( 29deg ) skew( -35deg );
+                width: 20px;
+            }
+
+        .david {
+            float: left;
+            margin: 5px 45px 5px 20px;
+        }
+
+        .david, .bubble.david::before {
+            background-color: cornflowerblue;
+            color: ffffff;
+        }
+
+            .david::before {
+                box-shadow: 2px -2px 2px 0 rgba( 178, 178, 178, .4 );
+                right: -9px;
+            }
+
+        .julia {
+            float: right;
+            margin: 5px 20px 5px 45px;
+            left: 440px;
+        }
+
+            .julia::before {
+                box-shadow: -2px 2px 2px 0 rgba( 178, 178, 178, .4 );
+                left: -9px;
+            }
+
+        .julia, .bubble.julia::before {
+            background-color: #26a65b;
+            color: ffffff;
+        }
+
+        .heart, .bubble.heart::before {
+            background-color: #D2527F;
+            color: ffffff;
+        }
+
+        h2 {
+            color: #2c3e50;
+            clear: both;
+            padding: 10px 500px;
+        }
+        .logo {
+            margin-left: 200px;
+        }
+    </style>
+</head>
+<body>
+    <img src="Life Tourists.png" class="logo" />
+    ${Conversation}
+</body>
+</html>

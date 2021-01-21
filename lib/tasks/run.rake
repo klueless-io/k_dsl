@@ -62,6 +62,26 @@ namespace :k_dsl do
     project_playrb_loquacious = KDsl::Manage::Project.new('playrb_loquacious', get_config(relative_resource_path: 'kgems/playrb_loquacious'))
     project_playrb_loquacious.watch_path('**/*.rb')
 
+    # Peeky
+    project_peeky_config = get_config(relative_resource_path: 'kgems/peeky',
+                                      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/peeky/.templates')
+    project_peeky = KDsl::Manage::Project.new('peeky', project_peeky_config)
+    project_peeky.watch_path('**/*.rb', ignore: /.template/)
+
+    # rspec-usecases
+    project_rspec_usecases_config = get_config(relative_resource_path: 'kgems/rspec-usecases',
+                                               app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/rspec-usecases/.templates')
+    project_rspec_usecases = KDsl::Manage::Project.new('rspec-usecases', project_rspec_usecases_config)
+    project_rspec_usecases.watch_path('**/*.rb', ignore: /.template/)
+
+
+    # handlebars-helpers
+    project_handlebars_helpers_config = get_config(relative_resource_path: 'kgems/handlebars-helpers',
+                                                   app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/handlebars-helpers/.templates')
+    project_handlebars_helpers = KDsl::Manage::Project.new('handlebars-helpers', project_handlebars_helpers_config)
+    project_handlebars_helpers.watch_path('**/*.rb', ignore: /.template/)
+
+    # KDSL
     project_gem_kdsl_config = get_config(relative_resource_path: 'kgems/k_dsl',
                                          app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_dsl/.templates')
 
@@ -73,6 +93,9 @@ namespace :k_dsl do
 
     project_idea_post = KDsl::Manage::Project.new('idea_post', get_config(relative_resource_path: 'idea_post'))
     project_idea_post.watch_path('**/*.rb')
+
+    project_idea_video = KDsl::Manage::Project.new('idea_video', get_config(relative_resource_path: 'idea_video'))
+    project_idea_video.watch_path('**/*.rb')
 
     config_microapp = KDsl::Manage::ProjectConfig.new do
       self.base_path = BASE_PATH
@@ -99,21 +122,30 @@ namespace :k_dsl do
 
     manager = KDsl.project_manager
 
-    group = %i[k_dsl ideas play_loquacious xyz_commands].first
+    group = %i[current handlebars_helpers rspec_usecases peeky k_dsl ideas play_loquacious xyz_commands].first
 
     case group
+    when :current
+      manager.add_projects(project_command, 
+                           project_handlebars_helpers)
     when :xyz_commands
       manager.add_projects(project_command,
-                          project_k_xmen_command,
-                          project_k_ymen_command,
-                          project_k_zmen_command,
-                          project_gem_kdsl)
+                           project_k_xmen_command,
+                           project_k_ymen_command,
+                           project_k_zmen_command,
+                           project_gem_kdsl)
     when :k_dsl
       manager.add_projects(project_command, project_gem_kdsl)
     when :ideas
-      manager.add_projects(project_command, project_idea, project_idea_post)
+      manager.add_projects(project_command, project_idea, project_idea_post, project_idea_video)
     when :play_loquacious
       manager.add_projects(project_command, project_playrb_loquacious)
+    when :peeky
+      manager.add_projects(project_command, project_peeky)
+    when :rspec_usecases
+      manager.add_projects(project_command, project_rspec_usecases)
+    when :handlebars_helpers
+      manager.add_projects(project_command, project_handlebars_helpers)
     end
     # manager.add_projects(project_microapp1,
     #                      project_microapp2,

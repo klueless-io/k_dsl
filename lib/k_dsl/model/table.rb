@@ -4,11 +4,14 @@ module KDsl
   module Model
     # Build rows (aka DataTable) with field definitions and rows of data
     class Table
+      attr_reader :parent
       attr_reader :name
 
-      def initialize(data, name = nil, &block)
+      def initialize(data, name = nil, **options, &block)
         @data = data
         @name = (name || KDsl.config.default_table_key.to_s).to_s
+
+        @parent = options[:parent] if !options.nil? && options.key?(:parent)
 
         @data[@name] = { 'fields' => [], 'rows' => [] }
 
@@ -93,6 +96,18 @@ module KDsl
         }
       end
       alias f field
+
+      private
+
+      def respond_to_missing?(name, *_args, &_block)
+        (@parent.present? && @parent.respond_to?(name, true)) || super
+      end
+
+      def method_missing(name, *args, &_block)
+        return super unless @parent.respond_to?(name)
+
+        @parent.public_send(name, *args, &_block)
+      end
     end
   end
 end

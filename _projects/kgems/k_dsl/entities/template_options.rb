@@ -5,7 +5,7 @@ KDsl.artifact :template_options do
   def david
     L.line
     L.warn 'david was called'
-    'was here fuckit'
+    
   end
 
   def ben
