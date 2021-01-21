@@ -44,6 +44,9 @@ KDsl.microapp :ktg_know_thy_gem do
 
     fields %i[group gem title source rubygems description]
 
+    # OVERCOMMIT - Why, because it is one of the first things we need to do when creating a gem
+    # but is it usable in other types of projects (Javascript, Plain)
+
     row 'version', 'semantic', 'semantic versioning', 'https://github.com/jlindsey/semantic', 'https://rubygems.org/gems/semantic', 'Semantic Version utility class for parsing, storing, and comparing versions. See: http://semver.org'
 
     row 'logging', 'logging', 'logging', 'https://rubygems.org/gems/logging', 'https://rubygems.org/gems/logging','Logging is a flexible logging library for use in Ruby programs based on the design of Javas log4j library.'

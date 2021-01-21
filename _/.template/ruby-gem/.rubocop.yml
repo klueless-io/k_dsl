@@ -1,11 +1,17 @@
+require: rubocop-rake
 AllCops:
+  TargetRubyVersion: 2.5
   DisplayCopNames: true
   ExtraDetails: true
+  NewCops: enable
+  Exclude:
+    - "_/**/*"
 
 Metrics/BlockLength:
   Exclude:
-    - "**/spec/*"
-  ExcludedMethods:
+    - "**/spec/**/*"
+    - "*.gemspec"
+  IgnoredMethods:
     - configure
     - context
     - define
@@ -41,5 +47,33 @@ Style/BlockComments:
   Enabled: false
   Include:
     - "**/spec/*"
-    
-inherit_from: .rubocop_todo.yml
+
+# My Preferences - Start
+Metrics/ClassLength:
+  Enabled: false
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+Naming/VariableNumber:
+  Exclude:
+    - "**/spec/**/*"
+Style/EmptyMethod:    
+  Exclude:
+    - "**/spec/**/*"
+Metrics/ParameterLists:
+  Exclude:
+    - "**/spec/**/*"
+Layout/EmptyLineBetweenDefs:
+  Exclude:
+    - "**/spec/**/*"
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - "**/spec/**/*"
+
+Style/AccessorGrouping:
+  Enabled: false
+
+Layout/SpaceBeforeComma:
+  Enabled: false
+# My Preferences - End
+

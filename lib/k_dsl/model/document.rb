@@ -146,8 +146,8 @@ module KDsl
       end
 
       def table(key = :table, &block)
-        # NEED to add support for parent and run_decorators I think
-        table = table_instance(@data, key, &block)
+        # NEED to add support for run_decorators I think
+        table = table_instance(@data, key, parent: self, &block)
 
         table
       end
@@ -170,6 +170,7 @@ module KDsl
       def data_struct
         KDsl::Util.data.to_struct(data)
       end
+      alias d data_struct 
 
       def raw_data_struct
         KDsl::Util.data.to_struct(raw_data)
@@ -255,8 +256,8 @@ module KDsl
         KDsl.config.settings_class.new(data, key, **options, &block)
       end
 
-      def table_instance(data, key, &block)
-        KDsl.config.table_class.new(data, key, &block)
+      def table_instance(data, key, **options, &block)
+        KDsl.config.table_class.new(data, key, **options, &block)
       end
     end
   end

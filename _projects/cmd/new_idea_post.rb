@@ -1,5 +1,9 @@
 KDsl.document :idea_post do
   s = settings do
+    a 'How to get argument names using reflection'
+    b 'Reverse engineer exact method signatures in ruby'
+    c 'Extract detailed method signatures from ruby class'
+    old '13 Tips to writing an awesome Listicle, and generate thousands of new leads a day'
     name                    '13 Tips to writing an awesome Listicle, and generate thousands of new leads a day'
     keyword                 :listicle
     target_website          :ideasmen

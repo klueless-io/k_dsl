@@ -13,6 +13,46 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsFormatter do
     let(:name5) { 'space   man' }
     let(:name6) { '  spaced out   ' }
 
+    describe '#format' do
+      subject { described_class.format(name4, format) }
+      let(:format) {}
+      context 'no format' do
+        it { is_expected.to eq('the quick brown fox') }
+      end
+      context ':snake' do
+        let(:format) { :snake }
+        it { is_expected.to eq('the_quick_brown_fox') }
+      end
+      context ':dashify' do
+        let(:format) { :dashify }
+        it { is_expected.to eq('the-quick-brown-fox') }
+      end
+      context ':camel' do
+        let(:format) { :camel }
+        it { is_expected.to eq('TheQuickBrownFox') }
+      end
+      context ':lamel' do
+        let(:format) { :lamel }
+        it { is_expected.to eq('theQuickBrownFox') }
+      end
+      context ':titleize' do
+        let(:format) { :titleize }
+        it { is_expected.to eq('The Quick Brown Fox') }
+      end
+      context ':humanize' do
+        let(:format) { :humanize }
+        it { is_expected.to eq('The quick brown fox') }
+      end
+      context ':constantize' do
+        let(:format) { :constantize }
+        it { is_expected.to eq('THE_QUICK_BROWN_FOX') }
+      end
+      context ':pluralize' do
+        let(:format) { :pluralize }
+        it { is_expected.to eq('the quick brown foxes') }
+      end
+    end
+
     describe '#snake' do
       it { expect(described_class.snake(name1)).to eq('activity') }
       it { expect(described_class.snake(name2)).to eq('achievement_badge') }
@@ -95,6 +135,266 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsFormatter do
 
       it { expect(described_class.default(name, 'override name1')).to eq('activity') }
       it { expect(described_class.default(xyz, 'override unknown')).to eq('override unknown') }
+    end
+
+    context 'repeat' do
+      subject { described_class.repeat(count)}
+      context 'when value is not set' do
+        let(:count) { 2 }
+        it { is_expected.to eq('  ') }
+
+        context 'when value is set' do
+          subject { described_class.repeat(count, value)}
+
+          let(:value) { '-' }
+          it { is_expected.to eq('--') }
+        end
+      end
+    end
+
+    context 'padr' do
+      subject { described_class.padr(value, count)}
+      context 'when count is not set' do
+        let(:count) { }
+        context 'when value is nil' do
+          let(:value) { }
+          it { is_expected.to eq('                              ') }
+        end
+        context 'when value is empty' do
+          let(:value) { '' }
+          it { is_expected.to eq('                              ') }
+        end
+        context 'when value is supplied' do
+          let(:value) { 'some text' }
+          it { is_expected.to eq('some text                     ') }
+
+          context 'when count is set' do
+            let(:count) { 15 }
+            it { is_expected.to eq('some text      ') }
+          end
+        end
+      end
+    end
+
+    context 'padl' do
+      subject { described_class.padl(value, count)}
+      context 'when count is not set' do
+        let(:count) { }
+        context 'when value is nil' do
+          let(:value) { }
+          it { is_expected.to eq('                              ') }
+        end
+        context 'when value is empty' do
+          let(:value) { '' }
+          it { is_expected.to eq('                              ') }
+        end
+        context 'when value is supplied' do
+          let(:value) { 'some text' }
+          it { is_expected.to eq('                     some text') }
+
+          context 'when count is set' do
+            let(:count) { 15 }
+            it { is_expected.to eq('      some text') }
+          end
+        end
+      end
+    end
+
+    context 'surround_if_value' do
+      subject { described_class.surround_if_value(value, '(', ')', format)}
+      let(:value) { }
+      let(:format) {}
+
+      context 'when value is nil' do
+        it { expect(subject).to eq('') }
+
+        context 'and value must be formatted' do
+          let(:format) { :snake }
+          context 'no format' do
+            it { is_expected.to eq('') }
+          end
+        end
+      end
+      context 'when value is empty' do
+        let(:value) { '' }
+        it { expect(subject).to eq('') }
+      end
+      context 'when value is supplied' do
+        let(:value) { 'some-folder' }
+        it { expect(subject).to eq('(some-folder)') }
+      end
+      context 'and format' do
+        subject { described_class.surround_if_value(value, '[', ']', format)}
+        let(:value) { 'the quick brown fox' }
+        context 'no format' do
+          it { is_expected.to eq('[the quick brown fox]') }
+        end
+        context ':snake' do
+          let(:format) { :snake }
+          it { is_expected.to eq('[the_quick_brown_fox]') }
+        end
+        context ':dashify' do
+          let(:format) { :dashify }
+          it { is_expected.to eq('[the-quick-brown-fox]') }
+        end
+        context ':camel' do
+          let(:format) { :camel }
+          it { is_expected.to eq('[TheQuickBrownFox]') }
+        end
+        context ':lamel' do
+          let(:format) { :lamel }
+          it { is_expected.to eq('[theQuickBrownFox]') }
+        end
+        context ':titleize' do
+          let(:format) { :titleize }
+          it { is_expected.to eq('[The Quick Brown Fox]') }
+        end
+        context ':humanize' do
+          let(:format) { :humanize }
+          it { is_expected.to eq('[The quick brown fox]') }
+        end
+        context ':constantize' do
+          let(:format) { :constantize }
+          it { is_expected.to eq('[THE_QUICK_BROWN_FOX]') }
+        end
+        context ':pluralize' do
+          let(:format) { :pluralize }
+          it { is_expected.to eq('[the quick brown foxes]') }
+        end
+      end
+    end
+
+    context 'prepend_if_value' do
+      subject { described_class.prepend_if_value(value, '/', format)}
+      let(:value) { }
+      let(:format) {}
+
+      context 'when value is nil' do
+        it { expect(subject).to eq('') }
+
+        context 'and value must be formatted' do
+          let(:format) { :snake }
+          context 'no format' do
+            it { is_expected.to eq('') }
+          end
+        end
+      end
+      context 'when value is empty' do
+        let(:value) { '' }
+        it { expect(subject).to eq('') }
+      end
+      context 'when value is supplied' do
+        let(:value) { 'some-folder' }
+        it { expect(subject).to eq('/some-folder') }
+      end
+      context 'and format' do
+        subject { described_class.prepend_if_value(value, '::', format)}
+        let(:value) { 'the quick brown fox' }
+        context 'no format' do
+          it { is_expected.to eq('::the quick brown fox') }
+        end
+        context ':snake' do
+          let(:format) { :snake }
+          it { is_expected.to eq('::the_quick_brown_fox') }
+        end
+        context ':dashify' do
+          let(:format) { :dashify }
+          it { is_expected.to eq('::the-quick-brown-fox') }
+        end
+        context ':camel' do
+          let(:format) { :camel }
+          it { is_expected.to eq('::TheQuickBrownFox') }
+        end
+        context ':lamel' do
+          let(:format) { :lamel }
+          it { is_expected.to eq('::theQuickBrownFox') }
+        end
+        context ':titleize' do
+          let(:format) { :titleize }
+          it { is_expected.to eq('::The Quick Brown Fox') }
+        end
+        context ':humanize' do
+          let(:format) { :humanize }
+          it { is_expected.to eq('::The quick brown fox') }
+        end
+        context ':constantize' do
+          let(:format) { :constantize }
+          it { is_expected.to eq('::THE_QUICK_BROWN_FOX') }
+        end
+        context ':pluralize' do
+          let(:format) { :pluralize }
+          it { is_expected.to eq('::the quick brown foxes') }
+        end
+      end
+    end
+
+    context 'append_if_value' do
+      subject { described_class.append_if_value(value, '/', format)}
+      let(:value) { }
+      let(:format) {}
+    
+      context 'when value is nil' do
+        it { expect(subject).to eq('') }
+    
+        context 'and value must be formatted' do
+          let(:format) { :snake }
+          context 'no format' do
+            it { is_expected.to eq('') }
+          end
+        end
+      end
+      context 'when value is empty' do
+        let(:value) { '' }
+        it { expect(subject).to eq('') }
+      end
+      context 'when value is supplied' do
+        let(:value) { 'some-folder' }
+        it { expect(subject).to eq('some-folder/') }
+      end
+      context 'and format' do
+        subject { described_class.append_if_value(value, '::', format)}
+        let(:value) { 'the quick brown fox' }
+        context 'no format' do
+          it { is_expected.to eq('the quick brown fox::') }
+        end
+        context ':snake' do
+          let(:format) { :snake }
+          it { is_expected.to eq('the_quick_brown_fox::') }
+        end
+        context ':dashify' do
+          let(:format) { :dashify }
+          it { is_expected.to eq('the-quick-brown-fox::') }
+        end
+        context ':camel' do
+          let(:format) { :camel }
+          it { is_expected.to eq('TheQuickBrownFox::') }
+        end
+        context ':lamel' do
+          let(:format) { :lamel }
+          it { is_expected.to eq('theQuickBrownFox::') }
+        end
+        context ':titleize' do
+          let(:format) { :titleize }
+          it { is_expected.to eq('The Quick Brown Fox::') }
+        end
+        context ':humanize' do
+          let(:format) { :humanize }
+          it { is_expected.to eq('The quick brown fox::') }
+        end
+        context ':constantize' do
+          let(:format) { :constantize }
+          it { is_expected.to eq('THE_QUICK_BROWN_FOX::') }
+        end
+        context ':pluralize' do
+          let(:format) { :pluralize }
+          it { is_expected.to eq('the quick brown foxes::') }
+        end
+      end
+    end
+    
+    context 'curly_open' do
+      it { expect(described_class.hash).to include('#') }
+      it { expect(described_class.hash(3)).to include('###') }
     end
 
     context 'curly_open' do

@@ -25,11 +25,17 @@ module KDsl
       end
 
       def self.struct_to_hash(data)
+        # No test yet
+        if data.is_a?(Array)
+          return data.map { |v| v.is_a?(OpenStruct) ? struct_to_hash(v) : v }
+        end
+
         data.each_pair.with_object({}) do |(key, value), hash|
           if value.is_a?(OpenStruct)
             hash[key] = struct_to_hash(value)
           elsif value.is_a?(Array)
-            values = value.map { |v| struct_to_hash(v) }
+            # No test yet
+            values = value.map { |v| v.is_a?(OpenStruct) ? struct_to_hash(v) : v }
             hash[key] = values
           else
             hash[key] = value

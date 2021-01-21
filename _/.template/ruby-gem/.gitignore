@@ -12,6 +12,7 @@
 /bin/runonce/
 {{snake microapp.settings.application}}.yml
 
+/_/
 /.bundle/
 /.history/
 /.yardoc

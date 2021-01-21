@@ -190,6 +190,7 @@ module KDsl
       def register_file_resource(file, watch_path: nil, path_expansion: true, ignore: nil)
         file = KDsl::Util.file.expand_path(file, config.base_resource_path) if path_expansion
 
+        puts "Fucking: #{file}"
         return if ignore && file.match(ignore)
         return unless File.exist?(file)
 
@@ -285,6 +286,13 @@ module KDsl
       end
 
       def add_resource(file)
+        if file.start_with?(template_path)
+          # Resources are ignorable when  in the application .template path
+          # this is reserved for templates only
+          puts "\rSkipping template #{file}\r"
+          return
+        end
+
         puts "\rAdding #{file}\r"
 
         puts @watch_paths
@@ -321,7 +329,9 @@ module KDsl
           2.times { puts '' }
           debug(formats: [:watch_path_patterns, :resource, :resource_document])
         else
-          puts 'resource not registered'
+          # Resources are ignorable when  in the application .template path
+          # this is reserved for templates only
+          puts 'resource not registered' unless file.start_with?(template_path)
         end
       end
 
@@ -411,6 +421,11 @@ module KDsl
           # end
         end
 
+      end
+
+      # TODO: tests
+      def template_path
+        @template_path ||= File.expand_path(config.base_app_template_path)
       end
 
       # def self.create(base_resource_path, base_cache_path: nil, base_definition_path: nil, base_template_path: nil, &block)

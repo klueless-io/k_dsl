@@ -42,4 +42,3 @@ Style/BlockComments:
   Include:
     - "**/spec/*"
 
-inherit_from: .rubocop_todo.yml

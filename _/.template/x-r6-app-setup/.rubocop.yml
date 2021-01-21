@@ -78,5 +78,3 @@ Naming/MemoizedInstanceVariableName:
 
 Naming/RescuedExceptionsVariableName:
   Enabled: false
-
-inherit_from: .rubocop_todo.yml
