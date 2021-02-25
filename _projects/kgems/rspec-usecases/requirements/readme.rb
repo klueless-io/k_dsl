@@ -18,7 +18,8 @@ KDsl.blueprint :readme do
     all = rows.select { |row| row.type == 'story' }
     done = all.select { |row| row.status == 'done' }
     current = all.select { |row| row.status == 'current' }
-    featured = done.select { |row| row.featured_position.to_i > 0 }.sort { |row| row.featured_position }
+    featured = done.select { |row| row.featured_position.to_i > 0 }
+                   .sort { |row, _| row.featured_position }
 
     OpenStruct.new(all: all, done: done, current: current, feature: featured)
   end

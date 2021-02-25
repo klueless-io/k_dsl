@@ -54,7 +54,7 @@ module Github
       end
 
       # Fetch the current user
-      # L.kv 'GitHub User', client.user.name
+      L.kv 'GitHub User', client.user.name
 
     end
 
@@ -73,15 +73,15 @@ module Github
     # create repository
     #
     # @param [String] repository_name e.g. klueless-io/z-test-aerial.com
-    def create_repository(repository_name)
-      @client.create_repository(repository_name)
+    def create_repository(repository_name, **options)
+      @client.create_repository(repository_name, options)
     end
 
     # delete repository
     #
     # @param [String] repository_name e.g. klueless-io/z-test-aerial.com
-    def delete_repository(repository_name)
-      @client.delete_repository(repository_name)
+    def delete_repository(repository_name, **options)
+      @client.delete_repository(repository_name, **options)
     end
 
     # list of hooks for repository

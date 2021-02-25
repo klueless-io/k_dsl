@@ -25,7 +25,7 @@ KDsl.blueprint :bootstrap_bin_hook do
     row 'bin/runonce/setup-git.sh'  , command: 'execute'
   end
 
-  is_run = 0
+  is_run = 1
 
   def on_action
     run_blueprint microapp: import(:rspec_usecases, :microapp)

@@ -23,22 +23,22 @@ KDsl.blueprint :how_i_planned_for_my_new_ruby_gem_handlebars_helpers do
     fields %i[group h1_fit h2_fit h3_fit h1 h2 h3 p p1 p2 p3 i bo bsize t tspeed points fragments aka code code_format raw animate]
 
     row :intro, animate: :auto, t: 'none',
-      h1_fit: 'Creating a 12 step process'
+      h1_fit: 'Creating a new ruby GEM'
 
     row :intro, animate: :auto, t: 'none',
-      h1_fit: 'Creating a 12 step process',
+      h1_fit: 'Creating a new ruby GEM',
       h2: 'is easy'
 
     row :intro, animate: :auto, t: 'none',
-      h1_fit: 'Creating a 12 step process',
+      h1_fit: 'Creating a new ruby GEM',
       code: '<a>bundle gem</a> --coc --test=rspec --mit my-cool-new-gem'
 
     row :intro, animate: :auto, t: 'none',
-      h1_fit: 'Creating a 12 step process',
+      h1_fit: 'Creating a new ruby GEM',
       code: 'bundle gem --coc --mit --test=rspec <a>my-cool-new-gem</a>'
 
     row :intro, animate: :auto, t: 'none',
-      h1_fit: 'Creating a 12 step process',
+      h1_fit: 'Creating a new ruby GEM',
       h2: 'then write some code ... <a>easy</a> peasy'
 
     row :intro, i: 1, bsize: '75% auto'
@@ -191,10 +191,10 @@ TEXT
       slide.code_format = 'ruby' if slide.code_format.nil?
     end
 
-    write_html(is_edit: false,
-               custom_data: custom_data,
-               template_file: template_file,
-               output_file: test_file)
+    # write_html(is_edit: false,
+    #            custom_data: custom_data,
+    #            template_file: template_file,
+    #            output_file: test_file)
 
     write_html(is_edit: true,
                custom_data: custom_data,

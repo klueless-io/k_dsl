@@ -7,8 +7,15 @@ BASE_PATH = '~/dev/kgems/k_dsl/_'
 BASE_PATH_RESOURCES = '~/dev/kgems/k_dsl/_projects'
 
 namespace :k_dsl do
-  desc 'Execute the KLUE DSL'
+  def build_project(relative_resource_path)
+    project_config = get_config(relative_resource_path: relative_resource_path)
+    project = KDsl::Manage::Project.new(relative_resource_path, project_config)
+    project.watch_path('**/*.rb')
+    project
+  end
 
+  desc 'Execute the KLUE DSL'
+  
   # WHY did I have environnement?
   # task :run, [:dsl_file] => :environment do |_task, args|
   task :run, [:dsl_file] do |_task, args|
@@ -22,10 +29,11 @@ namespace :k_dsl do
 
     # Add any extra extensions that you require on documents
     KDsl::Model::Document.include(KDsl::Extensions::CommandRunnable) # Documents can run command line programs
-    KDsl::Model::Document.include(KDsl::Extensions::CreateDsl)      # Documents can create a new DSL from their relative position
-    KDsl::Model::Document.include(KDsl::Extensions::GithubLinkable) # Documents can add, delete or open repos
-    KDsl::Model::Document.include(KDsl::Extensions::Importable)     # Documents can import data from other documents
-    KDsl::Model::Document.include(KDsl::Extensions::Writable)       # Documents can write their contents out to the cache path in JSON or YAML
+    KDsl::Model::Document.include(KDsl::Extensions::CreateDsl)       # Documents can create a new DSL from their relative position
+    KDsl::Model::Document.include(KDsl::Extensions::GithubLinkable)  # Documents can add, delete or open repos
+    KDsl::Model::Document.include(KDsl::Extensions::HttpResourceful) # Documents can connect to HTTP resources
+    KDsl::Model::Document.include(KDsl::Extensions::Importable)      # Documents can import data from other documents
+    KDsl::Model::Document.include(KDsl::Extensions::Writable)        # Documents can write their contents out to the cache path in JSON or YAML
     
     # Add any extra extensions for factory methods
     KDsl.extend(KDsl::Extensions::DocumentFactories)
@@ -80,6 +88,42 @@ namespace :k_dsl do
                                                    app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/handlebars-helpers/.templates')
     project_handlebars_helpers = KDsl::Manage::Project.new('handlebars-helpers', project_handlebars_helpers_config)
     project_handlebars_helpers.watch_path('**/*.rb', ignore: /.template/)
+    project_handlebars_helpers.watch_path('~/dev/kgems/handlebars-helpers/.handlebars*.json')
+
+    # C# - Samples (Programs)
+    project_cs_p02_config = get_config(relative_resource_path: 'c#/P02Ef4')
+    project_cs_p02 = KDsl::Manage::Project.new('c#/P02Ef4', project_cs_p02_config)
+    project_cs_p02.watch_path('**/*.rb')
+
+    project_cs_p03 = build_project('c#/p03_domain_models')
+    project_cs_p04_domain_monopoly_v1 = build_project('c#/p04_domain_monopoly_v1')
+    current_cs = project_cs_p04_domain_monopoly_v1
+
+    # HTML - Samples (Lessons)
+    project_html_l01_config = get_config(relative_resource_path: 'html/l01_ux_design_principals')
+    project_html_l01 = KDsl::Manage::Project.new('html/l01_ux_design_principals', project_html_l01_config)
+    project_html_l01.watch_path('**/*.rb')
+
+    project_html_l02 = build_project('html/l02_bootstrap_getting_started')
+    project_html_l03 = build_project('html/l03_sample_app')
+    
+    # project_html_l04 = build_project('html/l04_transpiler_babel')
+    project_html_l04 = build_project('html/l04_transpiler_swc')
+
+    # Webpack (By Example)
+    project_webpack5_transpiler_babel = build_project('webpack5/transpiler_babel')
+    project_webpack5_transpiler_swc = build_project('webpack5/transpiler_swc')
+    project_webpack5_transpiler_typescript = build_project('webpack5/transpiler_typescript')
+    project_webpack5_html_multi_page = build_project('webpack5/html_multi_page')
+
+    current_webpack5 = project_webpack5_html_multi_page
+
+    # REACT - Samples (React)
+
+    project_react_l02 = build_project('react/r02_component_state_function')
+    project_react_l03 = build_project('react/r03_props')
+
+    current_react = project_react_l03
 
     # KDSL
     project_gem_kdsl_config = get_config(relative_resource_path: 'kgems/k_dsl',
@@ -126,8 +170,14 @@ namespace :k_dsl do
 
     case group
     when :current
-      manager.add_projects(project_command, 
-                           project_handlebars_helpers)
+      manager.add_projects(project_command,
+                           # project_rspec_usecases,
+                           # project_idea_video,
+                           # project_html_l04,
+                           #  current_react,
+                          #  current_cs,
+                            current_webpack5
+                          )
     when :xyz_commands
       manager.add_projects(project_command,
                            project_k_xmen_command,
@@ -146,6 +196,9 @@ namespace :k_dsl do
       manager.add_projects(project_command, project_rspec_usecases)
     when :handlebars_helpers
       manager.add_projects(project_command, project_handlebars_helpers)
+
+    when :cs_p02
+      manager.add_projects(project_command, project_cs_p02)
     end
     # manager.add_projects(project_microapp1,
     #                      project_microapp2,
@@ -158,6 +211,5 @@ namespace :k_dsl do
     manager.debug(format: :detail, project_formats: [:watch_path_patterns, :resource, :resource_document])
 
     manager.watch
-
   end
 end

@@ -40,6 +40,9 @@ mkmf.log
 # Gems should not use a Gemfile.lock
 Gemfile.lock
 
+# RubyGem definitions
+*.gem
+
 # rspec failure tracking
 .rspec_status
 

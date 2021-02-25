@@ -10,15 +10,15 @@ KDsl.document :idea_video do
     # video_type              :thought
     # video_theme             :gratitude_bridge
 
-    name                    'Change journal, Tim Jaudszims'
-    keyword                 :change_journal
-    target_website          :gratitude_bridge
-    definition_subfolder    'idea-video'
-    project_group           :idea_video
-    website_slug            :video
-    author                  :gratitude_bridge
-    video_type              :thought
-    video_theme             :gratitude_bridge
+    # name                    'Change journal, Tim Jaudszims'
+    # keyword                 :change_journal
+    # target_website          :gratitude_bridge
+    # definition_subfolder    'idea-video'
+    # project_group           :idea_video
+    # website_slug            :video
+    # author                  :gratitude_bridge
+    # video_type              :thought
+    # video_theme             :gratitude_bridge
 
     # name                    'How I planned for my new Ruby Gem. Handlebars-Helpers'
     # keyword                 :ruby_gem
@@ -28,6 +28,15 @@ KDsl.document :idea_video do
     # website_slug            :video
     # video_type              :thought
     # video_theme             :appy_dave
+
+    name                    'UX Design Principals'
+    keyword                 :ux_design_principal
+    target_website          :appy_dave
+    definition_subfolder    'idea-video'
+    project_group           :idea_video
+    website_slug            :video
+    video_type              :thought
+    video_theme             :appy_dave
   end
 
   def on_action

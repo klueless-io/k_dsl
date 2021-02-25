@@ -3,12 +3,13 @@
 # ------------------------------------------------------------
 
 KDsl.microapp :handlebars_helpers do
+
   settings do
     ruby_version                  '2.7.2'
 
     name                          parent.key
     app_type                      'Ruby Gem'
-    description                   'Handlebars Helpers is a library that provides (x) handlebars helpers across (y) categories, it was built to complement [cowboyd/handlebars.rb](https://github.com/cowboyd/handlebars.rb) with Ruby helpers commonly found in the Javascript community'
+    description                   "Handlebars Helpers is a library that provides <b>$HELPER_COUNT$</b> handlebars helpers across <b>$HELPER_CATEGORY_COUNT$</b> categories, it was built to complement [cowboyd/handlebars.rb](https://github.com/cowboyd/handlebars.rb) with Ruby helpers commonly found in the Javascript community"
     application                   'handlebars-helpers'
     avatar                        'Developer'
     main_story                    'As a Ruby Developer, I want to use HandlebarsJS with useful helpers, so that I have a rich templating experience'
@@ -27,7 +28,7 @@ KDsl.microapp :handlebars_helpers do
   is_run = 1
 
   def on_action
-    s = d.settings
+    # s = d.settings
     # github_new_repo s.application
     # run_command 'bundle gem --coc --test=rspec --mit handlebars-helpers', command_creates_top_folder: true
     # run_command 'code .'

@@ -1,10 +1,14 @@
 KDsl.blueprint :_generate_helper do
 
   s = settings do
-    name                  'tableize'
-    category              'code_ruby'
-    category_description  'Ruby code handling routines'
-    # category              'string-case-formatting'
+    name                  'noop'
+    # category              'inflection'
+    # category_description  'Inflection handling routines, eg. pluralize, singular, ordinalize'
+    category              'misc'
+    category_description  'Miscellaneous handling routines'
+    # category              'code_ruby'
+    # category_description  'Ruby code handling routines'
+    # category              'string-formatting'
     # category_description  'String manipulation methods for case formatting'
     # category              'comparison'
     # category_description  'Comparison helpers, eg. or, and, equal, not equal, less than, greater than etc.'
