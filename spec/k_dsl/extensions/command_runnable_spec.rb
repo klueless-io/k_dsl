@@ -36,7 +36,7 @@ RSpec.describe KDsl::Extensions::CommandRunnable do
   context 'real document' do
     let(:config) do
       KDsl::Manage::ProjectConfig.new do
-        base_resource_path = File.join(Dir.getwd, 'spec', 'factories', 'dlls')
+        base_resource_path = File.join(Dir.getwd, 'spec', 'factories', 'dsls')
       end
     end
     let(:project) { KDsl::Manage::Project.new('app_name', config) }

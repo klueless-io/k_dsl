@@ -6,7 +6,7 @@ RSpec.describe {{microapp.settings.application_lib_namespace}} do
   end
 
   it 'has a standard error' do
-    expect { raise {{microapp.settings.application_lib_namespace}}::Error, 'some message'}.
-      to raise_error('some message')
+    expect { raise {{microapp.settings.application_lib_namespace}}::Error, 'some message' }
+      .to raise_error('some message')
   end
 end

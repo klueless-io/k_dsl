@@ -9,6 +9,7 @@ module KDsl
       #  format symbols
       # ----------------------------------------------------------------------
 
+      # TODO
       def self.format_as(value, formats: [])
         formats.each do |format|
           value = format(value, format)
@@ -16,6 +17,7 @@ module KDsl
         value
       end
 
+      # TODO
       def self.format(value, format = nil)
         case format.to_s.to_sym
         when :snake
@@ -139,6 +141,9 @@ module KDsl
         out = value.rjust(count)
       end
 
+      # STRING CASE
+      # & 
+      # STRING
       def self.surround_if_value(value, prepend, append, format = :none)
         # L.kv 'value', value
         # L.kv 'prepend', prepend
@@ -146,15 +151,9 @@ module KDsl
         value.present? ? "#{prepend}#{format(value, format)}#{append}" : ''
       end
 
-      # surround_if_value - will surround value if the value is not empty
-      # optionally can be formatted
-      def self.surround_if_value(value, prepend, append, format = :none)
-        # L.kv 'value', value
-        # L.kv 'prepend', prepend
-        # L.kv 'format', format
-        value.present? ? "#{prepend}#{format(value, format)}#{append}" : ''
-      end
-      
+      # STRING CASE
+      # & 
+      # STRING
       # prepend_if_value - will prepend a prepend to a value if the value is not empty
       def self.prepend_if_value(value, prepend, format = :none)
         # L.kv 'value', value
@@ -170,6 +169,7 @@ module KDsl
         value.present? ? "#{format(value, format)}#{append}" : ''
       end
 
+      # STRING
       # append_if_value - will add a append to a value if the value is not empty
       def self.repeat(count, value = ' ')
         # L.kv 'value', value
@@ -177,6 +177,7 @@ module KDsl
         value * count
       end
       
+      # STRING (LINE_HASH LINE_DASH LINE_UNDERSCORE)
       # hash
       def self.hash(count = 1)
         # L.kv 'count', count.class.name
@@ -187,6 +188,7 @@ module KDsl
         '#' * count
       end
       
+      # TEMPLATE
       # curly_open
       def self.curly_open(count = 1)
         # L.kv 'count', count.class.name

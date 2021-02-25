@@ -13,8 +13,8 @@ KDsl.blueprint :{{snake name}} do
   instructions do
     fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, 'open')]
 
-    row "#{s.template_base_name}.rb"      , "lib/peeky#{out_path}/#{s.name}.rb"
-    row "#{s.template_base_name}_spec.rb" , "spec/peeky#{out_path}/#{s.name}_spec.rb"
+    row "#{s.template_base_name}.rb"      , "lib/{{settings.application_lib_path}}#{out_path}/#{s.name}.rb"
+    row "#{s.template_base_name}_spec.rb" , "spec/{{settings.application_lib_path}}#{out_path}/#{s.name}_spec.rb"
   end
 
   table :attributes do

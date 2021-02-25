@@ -114,8 +114,13 @@ module KDsl
         @status = :content_loading
         @content = nil
         if source === SOURCE_FILE
+          L.kv 'SOURCE_FILE', SOURCE_FILE
           if File.exist?(file)
+            begin
             @content = File.read(file)
+            rescue => ex
+              L.error ex
+            end
           else
             @error = KDsl::Error.new("Source file not found: #{file}")
           end

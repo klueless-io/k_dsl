@@ -95,7 +95,7 @@ RSpec.describe Github::GithubApi, :integration_tests do
 
       expect(repos.count).to be > 0
 
-      # Github::GithubPrinter::p_repositories_as_table repos
+      Github::GithubPrinter::p_repositories_as_table repos
     end
 
     it 'create a repositories' do
@@ -109,6 +109,27 @@ RSpec.describe Github::GithubApi, :integration_tests do
       # puts repo.inspect
 
       # Github::GithubPrinter::p_repositories_as_table api.repositories
+    end
+
+    context 'organization repo' do
+      let(:test_repo_full_key) { 'klueless-csharp-samples/z-test-kdsl' }
+      # let(:test_repo_full_key) { 'klueless-csharp-samples/p02_ef4' }
+
+      fit 'delete a repositories' do
+
+        # Github::GithubPrinter::p_repositories_as_table api.repositories
+
+        # klueless-csharp-samples/p02_ef4
+
+        api_delete.delete_repository(test_repo_full_key, organization: 'klueless-csharp-samples')
+        repo = api.create_repository(test_repo, organization: 'klueless-csharp-samples')
+
+        expect(repo).to_not be_nil
+
+        api_delete.delete_repository(test_repo_full_key, organization: 'klueless-csharp-samples')
+  
+        # Github::GithubPrinter::p_repositories_as_table api.repositories
+      end
     end
 
     # it "creates a repository for an organization" do
@@ -127,11 +148,24 @@ RSpec.describe Github::GithubApi, :integration_tests do
 
       # Github::GithubPrinter::p_repositories_as_table api.repositories
 
-      repo = api_delete.delete_repository(test_repo_full_key)
+      api_delete.delete_repository(test_repo_full_key)
 
       # Github::GithubPrinter::p_repositories_as_table api.repositories
     end
 
+    context 'organization repo' do
+      let(:test_repo_full_key) { 'klueless-csharp-samples/z-test-kdsl' }
+
+      it 'delete a repositories' do
+
+        # Github::GithubPrinter::p_repositories_as_table api.repositories
+  
+        puts api_delete.delete_repository(test_repo_full_key, organization: 'klueless-csharp-samples')
+  
+        # Github::GithubPrinter::p_repositories_as_table api.repositories
+      end
+    end
+  
   end
 
   # xdescribe 'repository hooks' do

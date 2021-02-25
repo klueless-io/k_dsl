@@ -1,0 +1,16 @@
+# Browsers that we support
+
+> 1% in AU
+
+[legacy]
+defaults
+
+# How to run from command line
+# for the current list
+# npx browserslist@latest --config=.browserslistrc
+#
+# for the legacy list
+# npx browserslist@latest --config=.browserslistrc --env=legacy
+#
+# readmore: https://dev.to/dangreen/speed-up-with-browserslist-30lh
+

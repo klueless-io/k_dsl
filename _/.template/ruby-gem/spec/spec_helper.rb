@@ -3,7 +3,7 @@
 require 'pry'
 require 'bundler/setup'
 require '{{microapp.settings.application_lib_path}}'
-require 'k_usecases'
+# require 'k_usecases'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

@@ -16,7 +16,7 @@ KDsl.blueprint :{{blueprint.settings.name}} do
     # test_input_value      'the quick brown fox'
     # test_output_value     'TheQuickBrownFox'
     test_case(            { params: [
-                              {name: 'lhs', type: 'String', sample_value: 'aaa', description: 'left hand side value'},
+                              {name: 'value', type: 'String', sample_value: 'aaa', description: 'left hand side value'},
                               {name: 'rhs', type: 'String', sample_value: 'aaa', description: 'right hand side value'}
                             ],
                             example_output_value: 'Truthy'

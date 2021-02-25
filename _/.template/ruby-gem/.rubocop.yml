@@ -6,6 +6,7 @@ AllCops:
   NewCops: enable
   Exclude:
     - "_/**/*"
+    - "spec/samples/**/*"
 
 Metrics/BlockLength:
   Exclude:
@@ -51,6 +52,9 @@ Style/BlockComments:
 # My Preferences - Start
 Metrics/ClassLength:
   Enabled: false
+Metrics/ModuleLength:
+  Exclude:
+    - "**/spec/**/*"
 Naming/MemoizedInstanceVariableName:
   Enabled: false
 Naming/VariableNumber:

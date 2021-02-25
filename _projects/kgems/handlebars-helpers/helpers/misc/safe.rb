@@ -1,26 +1,26 @@
-KDsl.blueprint :singularize do
+KDsl.blueprint :safe do
   microapp = import(:handlebars_helpers, :microapp)
 
   s = settings do
-    name                  'singularize'
-    description           "The reverse of #pluralize, returns the singular form of a word in a string"
-    result                "plural value turned to singular value"
-    category              'string-formatting'
-    category_description  'General purpose string manipulation helpers'
-    # base_class_require    'handlebars/helpers/string_case_formatting/base_helper'
-    # base_class            'Handlebars::Helpers::StringCaseFormatting::BaseHelper'
+    name                  'safe'
+    description           "Safe will return the value with <> and single and double quotes left as is"
+    result                "value in safe string format"
+    category              'misc'
+    category_description  'Miscellaneous handling routines'
     base_class_require    'handlebars/helpers/base_helper'
     base_class            'Handlebars::Helpers::BaseHelper'
-    example_input_value   'names'
-    example_output_value  'name'
-    test_input_value      'octopi'
-    test_output_value     'octopus'
-
+    # base_class_require    'handlebars/helpers/misc/base_helper'
+    # base_class            'Handlebars::Helpers::Misc::BaseHelper'
     # example_input_value   'the quick brown fox 99'
     # example_output_value  'TheQuickBrownFox99'
     # test_input_value      'the quick brown fox'
     # test_output_value     'TheQuickBrownFox'
-  end
+    test_case(            { params: [
+                              {name: 'value', type: 'String', sample_value: '<hello>', description: 'value that is considered a safe string'}
+                            ],
+                            example_output_value: '<hello>'
+                          })
+end
 
   instructions do
     fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'skip'), f(:after_write, 'open')]

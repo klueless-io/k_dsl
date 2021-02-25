@@ -51,11 +51,17 @@ end
 {{#*inline "simple_def_handlebars_helper"}}
 # Sample handlebars registration helper
 # def handlebars_helper
-#   proc { |_context, value| parse(value) }
+#   proc { |_context, value| wrapper(parse(value)) }
 # end
 {{/inline}}
 {{#*inline "smart_def_handlebars_helper"}}
 def handlebars_helper
-  proc { |_context, {{#each blueprint.settings.test_case.params}}{{name}}{{#if @last}}{{else}}, {{/if}}{{/each}}| parse({{#each blueprint.settings.test_case.params}}{{name}}{{#if @last}}{{else}}, {{/if}}{{/each}}) }
+  proc do |_context, {{#each blueprint.settings.test_case.params}}{{name}}{{#if @last}}{{else}}, {{/if}}{{/each}}|
+    # Handle optional: {{#each blueprint.settings.test_case.params}}{{name}}{{#if @last}}{{else}}, {{/if}}{{/each}}
+    {{#each blueprint.settings.test_case.params}}
+    # {{name}} = nil if value.is_a?(V8::Object)
+    {{/each}}
+    wrapper(parse({{#each blueprint.settings.test_case.params}}{{name}}{{#if @last}}{{else}}, {{/if}}{{/each}}))
+  end
 end
 {{/inline}}
