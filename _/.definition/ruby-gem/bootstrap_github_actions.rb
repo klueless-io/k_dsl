@@ -9,7 +9,7 @@ KDsl.blueprint :{{snake name}} do
     fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, '')]
 
     # Setup CLI and command execution
-    row '.github/workflows/ruby.yml'
+    row '.github/workflows/main.yml'
   end
 
   is_run = 1

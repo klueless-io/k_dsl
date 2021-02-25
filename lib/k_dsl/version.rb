@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module KDsl
-  VERSION = '0.0.79'
+  VERSION = '0.0.81'
 end

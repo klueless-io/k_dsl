@@ -18,22 +18,74 @@ KDsl.document :stories do
     # [
     #   'xxxx'
     # ]
-    
-    row :story, :current, 'As a Developer, I can have string case formatting helpers, so that I can generate code and documentation using handlebars',
+
+    #----------------------------------------------------------------------
+    # CURRENT
+    #----------------------------------------------------------------------
+
+    row :task, :current, 'add support for string_formatter usage via STRING_FORMATTER.md',
     [
+    ]
+
+    row :task, :current, 'add gem release rake task',
+    [
+    ]
+
+    row :story, :current, 'As a Documentor, I can create usage examples for this GEM, so that I can document the project',
+    [
+      'setup rspec-usage for the project',
+      'create templates for generating slide decks',
+      'record videos on how to use'
+    ]
+
+    row :story, :current, 'As a Developer, I can release a new version of the GEM, so that the updated Gem appears on rubygems and rubydoc',
+    [
+      'gem release',
+      'research automated solution, eg. rake',
+      'implement the solution'
     ]
 
     row :story, :current, 'As a Developer, I have flexible and modular formatters, so that I can format data into a new format',
     [
       'Define formatter categories, https://github.com/helpers/handlebars-helpers has 20 categories',
-      'Create modular formatters with tests',
-      'Provide a lazy loading technique to load formatters on an as needed basis'
+      'Create modular formatters with tests'
     ], featured_position: 1
+
+    #----------------------------------------------------------------------
+    # DONE
+    #----------------------------------------------------------------------
+
+    row :task, :done, 'check camel P02E04 has correct formatting',
+    [
+      'tested alpha-numeric coded value with word separation (p02_ef4 > P02Ef4)',
+      'tested alpha-numeric coded value without word separation (p02ef4 > P02ef4)'
+    ]
+
+    row :task, :current, 'add support for category and helper count to readme.md',
+    [
+    ]
 
     row :story, :done, 'As a Developer, I can easily render Handlebar Templates, so that I am more efficient',
     [
       'Build simplified API for rendering templates'
     ], featured_position: 1
+
+    row :story, :done, 'As a Developer, I can have string case formatting helpers, so that I can generate code and documentation using handlebars',
+    [
+    ]
+
+    row :task, :done, 'add support for misc helper category',
+    [
+      'add noop/raw helper',
+      'add safe helper'
+    ]
+
+    row :task, :done, 'refactor inflections namespace',
+    [
+      'Move pluralize and singularize to inflections',
+      'Add support for ordinalize case, eg. 1st, 2nd, 3rd, 4th',
+      'Add support for ordinal case, eg. st, nd, rd, th',
+    ]
 
     row :story, :done, 'As a Developer, I can alias existing helpers, so that I have helper names that make sense to me',
     [

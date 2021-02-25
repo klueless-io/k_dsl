@@ -40,8 +40,8 @@ end
 describe '{{safe ./description}}' do
   {{#each tests}}
   {{#if @first}}
-  let(:expected) { '{{expected_value}}' }
-  let(:data) { { {{#each params}}{{name}}: {{#if value}}'{{value}}'{{^}}nil{{/if}}{{#if @last}}{{else}}, {{/if}}{{/each}} } }
+  let(:expected) { '{{safe expected_value}}' }
+  let(:data) { { {{#each params}}{{name}}: {{#if value}}'{{safe value}}'{{^}}nil{{/if}}{{#if @last}}{{else}}, {{/if}}{{/each}} } }
   {{/if}}
 
   context '{{alias}}' do

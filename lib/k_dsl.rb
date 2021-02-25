@@ -26,6 +26,7 @@ require 'table_print' # Debugging code needs to be decoupled from k_dsl
 require 'k_dsl/extensions/create_dsl'
 require 'k_dsl/extensions/command_runnable'
 require 'k_dsl/extensions/github_linkable'
+require 'k_dsl/extensions/http_resourceful'
 require 'k_dsl/extensions/importable'
 require 'k_dsl/extensions/writable'
 require 'k_dsl/extensions/document_factories'

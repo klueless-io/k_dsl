@@ -1,24 +1,28 @@
-KDsl.blueprint :pluralize do
+KDsl.blueprint :padr do
   microapp = import(:handlebars_helpers, :microapp)
 
   s = settings do
-    name                  'pluralize'
-    description           "Returns the plural form of the word in the string"
-    result                "value in plural form"
+    name                  'padr'
+    description           "Add padding to the right of the value."
+    result                "value with padding to right"
     category              'string-formatting'
-    category_description  'General purpose string manipulation helpers'
+    category_description  'String manipulation methods for case formatting'
     base_class_require    'handlebars/helpers/base_helper'
     base_class            'Handlebars::Helpers::BaseHelper'
-    example_input_value   'the quick brown fox 99'
-    example_output_value  'TheQuickBrownFox99'
-    test_input_value      'the quick brown fox'
-    test_output_value     'TheQuickBrownFox'
-
+    # base_class_require    'handlebars/helpers/string_formatting/base_helper'
+    # base_class            'Handlebars::Helpers::StringFormatting::BaseHelper'
     # example_input_value   'the quick brown fox 99'
     # example_output_value  'TheQuickBrownFox99'
     # test_input_value      'the quick brown fox'
     # test_output_value     'TheQuickBrownFox'
-  end
+    test_case(            { params: [
+                              {name: 'value', type: 'String', sample_value: 'aaa', description: 'value to apply padding to'},
+                              {name: 'count', type: 'Integer', sample_value: '10', description: 'how much padding to apply. defaults to configuration.padr_count'},
+                              {name: 'char', type: 'String', sample_value: '-', description: 'character to pad with. defaults to configuration.padr_char'}
+                            ],
+                            example_output_value: 'aaa-------'
+                          })
+end
 
   instructions do
     fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'skip'), f(:after_write, 'open')]

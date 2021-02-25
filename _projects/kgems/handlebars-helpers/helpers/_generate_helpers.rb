@@ -34,19 +34,6 @@ KDsl.blueprint :_generate_helpers do
 
   table :helper_groups do
     fields %i[key active name base_require base_namespace description examples]
-
-    row :string, true,
-        :string_formatting,
-        'handlebars/helpers/string_formatting',
-        'Handlebars::Helpers::StringFormatting',
-        'String formatting and manipulation methods'
-
-    row :ruby, true,
-        :code_ruby,
-        'handlebars/helpers/code_ruby',
-        'Handlebars::Helpers::CodeRuby',
-        'Ruby code handling routines',
-        examples: ['https://github.com/helpers/handlebars-helpers/blob/master/lib/code.js', 'https://github.com/helpers/handlebars-helpers/blob/master/test/code.js']
   
     row :comparison, true,
         :comparison,
@@ -54,65 +41,232 @@ KDsl.blueprint :_generate_helpers do
         'Handlebars::Helpers::Comparison',
         'Comparison helpers, eg. or, and, equal, not equal, less than, greater than etc.',
         examples: ['https://github.com/helpers/handlebars-helpers/blob/master/lib/comparison.js', 'https://github.com/helpers/handlebars-helpers/blob/master/test/comparison.js']
+
+    row :inflection, true,
+        :inflection,
+        'handlebars/helpers/inflection',
+        'Handlebars::Helpers::Inflection',
+        'Inflection handling routines, eg. pluralize, singular, ordinalize',
+        examples: ['https://github.com/helpers/handlebars-helpers/blob/master/lib/inflection.js', 'https://github.com/helpers/handlebars-helpers/blob/master/test/inflection.js']
+
+    row :misc, true,
+        :misc,
+        'handlebars/helpers/misc',
+        'Handlebars::Helpers::Misc',
+        'Miscellaneous handling routines',
+        examples: ['https://github.com/helpers/handlebars-helpers/blob/master/lib/misc.js', 'https://github.com/helpers/handlebars-helpers/blob/master/test/misc.js']
+          
+    row :ruby, true,
+        :code_ruby,
+        'handlebars/helpers/code_ruby',
+        'Handlebars::Helpers::CodeRuby',
+        'Ruby code handling routines',
+        examples: ['https://github.com/helpers/handlebars-helpers/blob/master/lib/code.js', 'https://github.com/helpers/handlebars-helpers/blob/master/test/code.js']
+
+    row :string, true,
+        :string_formatting,
+        'handlebars/helpers/string_formatting',
+        'Handlebars::Helpers::StringFormatting',
+        'String formatting and manipulation methods'
+
     end
 
-  # ----------------------------------------------------------------------
-  # :string_formatting
-  # ----------------------------------------------------------------------
+  # Add format 
   table :helpers do
-    fields %i[group names description test_in test_out tests template]
+    fields %i[group names description test_in test_out test_case template is_string_formatter]
+
+    # ----------------------------------------------------------------------
+    # :inflections
+    # ----------------------------------------------------------------------
+
+    row :inflection, %i[ordinalize]                                              , 'number value turned to 1st, 2nd, 3rd, 4th etc.',
+        '1',
+        '1st',
+        is_string_formatter: true
+
+
+    row :inflection, %i[ordinal]                                                , 'ordinal suffix that would be required for a number, eg. st, nd, rd, th',
+        '1',
+        'st',
+        is_string_formatter: true
+
+    row :inflection, %i[pluralize_by_number]                                    , 'use number/count to determine pluralization',
+        test_case: {
+          expected_value: '3 people',
+          params: [
+            {name: 'value', value: 'person'},
+            {name: 'count', value: '3'},
+            {name: 'format', value: 'number_word'}
+          ],
+          template: '{{$ALIAS$ value count format}}'
+        }
+
+    row :inflection, %i[pluralize plural]                                        , 'singular value is converted to plural form',
+      'category',
+        'categories',
+        is_string_formatter: true
+
+    row :inflection, %i[singularize singular]                                    , 'plural value is converted to singular from',
+        'categories',
+        'category',
+        is_string_formatter: true
+
+    row :misc, %i[safe]                                                         , 'value in safe string format',
+        test_case: {
+          expected_value: '"hello"',
+          params: [
+            {name: 'value', value: '"hello"'}
+          ],
+          template: '{{$ALIAS$ value}}'
+        }
+
+    row :misc, %i[noop raw]                                                     , 'NoOp is a wrapper for blocks that does nothing, it is useful with the raw output operator',
+        test_case: {
+          expected_value: '{{no_parse}}',
+          params: [ ],
+          template: '{{{{$ALIAS$}}}}{{no_parse}}{{{{/$ALIAS$}}}}'
+        }
+    # ----------------------------------------------------------------------
+    # :misc
+    # ----------------------------------------------------------------------
+    
+    # ----------------------------------------------------------------------
+    # :string_formatting
+    # ----------------------------------------------------------------------
+    row :string, %i[format_as]                                                , 'returns a value that has been processed by multiple formatters',
+        test_case: {
+          expected_value: 'the-quick-brown-foxes',
+          params: [
+            {name: 'value', value: 'the quick brown fox'},
+            {name: 'format', value: 'pluralize,dashify'}
+          ],
+          template: '{{$ALIAS$ value format}}'
+        }
 
     row :string, %i[back_slash backward_slash slash_backward]                , 'convert to back slash notation',
         'the quick brown fox',
-        'the\quick\brown\fox'
+        'the\quick\brown\fox',
+        is_string_formatter: true
     row :string, %i[camel camel_upper camelUpper camelU pascalcase]          , 'convert to camel case with first word uppercase and following words uppercase',
         'the quick brown fox',
-        'TheQuickBrownFox'
+        'TheQuickBrownFox',
+        is_string_formatter: true
     row :string, %i[constantize constant]                                    , 'convert to constant case',
         'the quick brown fox',
-        'THE_QUICK_BROWN_FOX'
+        'THE_QUICK_BROWN_FOX',
+        is_string_formatter: true
     row :string, %i[dasherize dashify dashcase hyphenate]                    , 'convert to dash notation',
         'the quick brown fox',
-        'the-quick-brown-fox'
+        'the-quick-brown-fox',
+        is_string_formatter: true
     row :string, %i[dotirize dotify dotcase]                                 , 'convert to dash notation',
         'the quick brown fox',
-        'the.quick.brown.fox'
+        'the.quick.brown.fox',
+        is_string_formatter: true
     row :string, %i[double_colon]                                            , 'double_colon notation, similar to ruby namespace',
         'the quick brown fox',
-        'the::quick::brown::fox'
+        'the::quick::brown::fox',
+        is_string_formatter: true
     row :string, %i[downcase lowercase]                                      , 'convert all characters to lower case',
         'THE QUICK BROWN FOX',
-        'the quick brown fox'
+        'the quick brown fox',
+        is_string_formatter: true
     row :string, %i[humanize capitalize]                                     , 'convert text to human case, aka capitalize',
         'the Quick Brown Fox',
-        'The quick brown fox'
+        'The quick brown fox',
+        is_string_formatter: true
     row :string, %i[lamel camel_lower camelLower camelL]                     , 'convert to lamel case with first word lowercase and following words uppercase',
         'The quick brown fox',
-        'theQuickBrownFox'
+        'theQuickBrownFox',
+        is_string_formatter: true
     row :string, %i[pluserize plusify pluscase]                              , 'convert to plus notation',
         'the quick brown fox',
-        'the+quick+brown+fox'
+        'the+quick+brown+fox',
+        is_string_formatter: true
     row :string, %i[slash forward_slash slash_forward]                       , 'convert to slash notation, aka forward slash',
         'the Quick brown Fox',
-        'the/Quick/brown/Fox'
+        'the/Quick/brown/Fox',
+        is_string_formatter: true
     row :string, %i[snake]                                                   , 'convert to snake notation',
         'the quick brown fox',
-        'the_quick_brown_fox'
+        'the_quick_brown_fox',
+        is_string_formatter: true
     row :string, %i[titleize heading capitalize_all]                         , 'value converted to titleize case, aka heading case',
         'the quick brown fox',
-        'The Quick Brown Fox'
+        'The Quick Brown Fox',
+        is_string_formatter: true
     row :string, %i[upcase uppercase]                                        , 'convert all characters to lower case',
         'The quick brown fox',
-        'THE QUICK BROWN FOX'
+        'THE QUICK BROWN FOX',
+        is_string_formatter: true
 
-    row :string, %i[pluralize plural]                                        , 'singular value is converted to plural form',
-        'category',
-        'categories'
+    row :string, %i[padr pad_right ljust]                                              , 'returns value with padding to right',
+        test_case: {
+          expected_value: 'pad-me....',
+          params: [
+            {name: 'value', value: 'pad-me'},
+            {name: 'count', value: 10},
+            {name: 'char', value: '.'}
+          ],
+          template: '{{$ALIAS$ value count char}}'
+        }
 
-    row :string, %i[singularize singular]                                    , 'plural value is converted to singular from',
-        'categories',
-        'category'
+    row :string, %i[padl pad_left rjust]                                              , 'returns value with padding to left',
+        test_case: {
+          expected_value: '....pad-me',
+          params: [
+            {name: 'value', value: 'pad-me'},
+            {name: 'count', value: 10},
+            {name: 'char', value: '.'}
+          ],
+          template: '{{$ALIAS$ value count char}}'
+        }
 
+    row :string, %i[prepend_if prefix_if]                                              , 'returns value with prefix if the value is present?',
+        test_case: {
+          expected_value: '# product_categories',
+          params: [
+            {name: 'value', value: 'product category'},
+            {name: 'prefix', value: '# '},
+            {name: 'formats', value: 'pluralize,snake'}
+          ],
+          template: '{{$ALIAS$ value prefix formats}}'
+        }
+
+    row :string, %i[append_if suffix_if]                                              , 'returns value with suffix if the value is present?',
+        test_case: {
+          expected_value: 'product_categories:',
+          params: [
+            {name: 'value', value: 'product category'},
+            {name: 'suffix', value: ':'},
+            {name: 'formats', value: 'pluralize,snake'}
+          ],
+          template: '{{$ALIAS$ value suffix formats}}'
+        }
+
+      row :string, %i[surround_if surround_if_value]                                              , 'returns value with surrounding prefix/suffix if the value is present?',
+        test_case: {
+          expected_value: '(product_categories)',
+          params: [
+            {name: 'value', value: 'product category'},
+            {name: 'prefix', value: '('},
+            {name: 'suffix', value: ')'},
+            {name: 'formats', value: 'pluralize,snake'}
+          ],
+          template: '{{$ALIAS$ value prefix suffix formats}}'
+        }
+
+      row :string, %i[surround]                                                         , 'returns value with surrounding prefix/suffix',
+        test_case: {
+          expected_value: '()',
+          params: [
+            {name: 'value', value: nil},
+            {name: 'prefix', value: '('},
+            {name: 'suffix', value: ')'},
+            {name: 'formats', value: ''}
+          ],
+          template: '{{$ALIAS$ value prefix suffix formats}}'
+        }
     # ----------------------------------------------------------------------
     # :comparison
     # ----------------------------------------------------------------------
@@ -294,13 +448,15 @@ KDsl.blueprint :_generate_helpers do
             {name: 'model_name', value: 'product_category'}
           ],
           template: '{{$ALIAS$ model_name}}'
-        }
+        },
+        is_string_formatter: true
   end
 
   instructions do
     fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, 'open')]
 
     row '.handlebars_helpers.json', after_write: 'prettier,open'
+    row '.handlebars_string_formatters.json', after_write: 'prettier,open'
     row 'all_helper_spec.rb', 'spec/handlebars/helpers/$TEMPLATE_NAME$', after_write: 'prettier,open'
   end
 
@@ -309,18 +465,21 @@ KDsl.blueprint :_generate_helpers do
   def on_action
     x = raw_data_struct
 
-    # UNCOMMENT if you want to turn new_groups into helper_groups
-    # write_clipboard template: <<~TEXT
-    # {{#each new_groups.rows}}
-    #   row :{{key}}, true,
-    #       :{{name}},
-    #       'handlebars/helpers/{{name}}',
-    #       'Handlebars::Helpers::{{camelU name}}',
-    #       '{{description}}',
-    #       examples: [{{#each examples}}'{{.}}'{{#if @last}}{{else}}, {{/if}}{{/each}}]
-    # {{/each}}
-    # TEXT
-    
+    if false
+      L.error 'convert new groups to helper groups'
+      write_clipboard template: <<~TEXT
+      {{#each new_groups.rows}}
+        row :{{key}}, true,
+            :{{name}},
+            'handlebars/helpers/{{name}}',
+            'Handlebars::Helpers::{{camelU name}}',
+            '{{description}}',
+            examples: [{{#each examples}}'{{.}}'{{#if @last}}{{else}}, {{/if}}{{/each}}]
+      {{/each}}
+      TEXT
+      return
+    end
+
     groups = x.helper_groups.rows.map do |group|
       {
         **group.to_h.except(:key),
@@ -334,16 +493,32 @@ KDsl.blueprint :_generate_helpers do
             tests: build_tests(helper),
             aliases: helper.names,
             require_path: "#{group[:base_require]}/#{name}",
-            class_namespace: "#{group[:base_namespace]}::#{name.to_s.camelize}"
+            class_namespace: "#{group[:base_namespace]}::#{name.to_s.camelize}",
+            is_string_formatter: helper.is_string_formatter
           }
         end
       }
     end
 
-    # write_json is_edit: true
+    string_formatters = []
+
+    groups.each do |group|
+      formatters = group[:helpers].select { |helper| helper[:is_string_formatter] }
+                                  .map { |helper| helper.slice(:name, :description, :aliases, :class_namespace, :require_path) }
+
+      formatters.each do |formatter|
+        string_formatters.push formatter
+      end
+    end
+
+    string_formatters = KDsl::Util.data.struct_to_hash(KDsl::Util.data.to_struct(string_formatters))
+
+    # write_json is_edit: true, custom_data: string_formatters
+    # write_json is_edit: true, custom_data: groups
 
     run_blueprint microapp: import(:handlebars_helpers, :microapp),
-                  helper_groups: groups
+                  helper_groups: groups,
+                  string_formatters: string_formatters
   end if is_run == 1
 
   def build_tests(helper)

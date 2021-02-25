@@ -190,7 +190,6 @@ module KDsl
       def register_file_resource(file, watch_path: nil, path_expansion: true, ignore: nil)
         file = KDsl::Util.file.expand_path(file, config.base_resource_path) if path_expansion
 
-        puts "Fucking: #{file}"
         return if ignore && file.match(ignore)
         return unless File.exist?(file)
 
@@ -290,6 +289,11 @@ module KDsl
           # Resources are ignorable when  in the application .template path
           # this is reserved for templates only
           puts "\rSkipping template #{file}\r"
+          return
+        end
+
+        if File.directory?(file)
+          puts "\rSkipping directory #{file}\r"
           return
         end
 
@@ -396,7 +400,7 @@ module KDsl
             :status,
             { state: { display_method: lambda { |r| r.document.state } } },
             { namespace: { width: 20, display_name: 'Namespace' } },
-            { key: { width: 20, display_name: 'Key' } },
+            { key: { width: 30, display_name: 'Key' } },
             { type: { width: 20, display_name: 'Type' } },
             # :state,
             { source: { } },

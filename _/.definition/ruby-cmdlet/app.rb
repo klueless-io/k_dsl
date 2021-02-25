@@ -31,7 +31,7 @@ KDsl.microapp :{{snake name}} do
     run_command 'code .'
 
     new_blueprint :bootstrap_01_bin_hook    , definition_subfolder: 'ruby-gem'    , f: true
-    new_blueprint :bootstrap_cmdlet , definition_subfolder: 'ruby-cmdlet' , f: true
+    new_blueprint :bootstrap_cmdlet         , definition_subfolder: 'ruby-cmdlet' , f: true
     
     # ToDo: Definition and Template folders should come from specific settings areas within the microap
     # new_structure 'stories'   , definition_subfolder: 'ruby-cmdlet', f: false, show_editor: true

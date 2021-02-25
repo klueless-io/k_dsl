@@ -45,6 +45,8 @@ module KDsl
         system(build_command)
         # fork { exec(build_command) } 
       end
+      alias rc run_command
+
     end
   end
 end

@@ -16,11 +16,13 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  KDsl::Model::Document.include(KDsl::Extensions::CommandRunnable)
-  KDsl::Model::Document.include(KDsl::Extensions::CreateDsl)
-  KDsl::Model::Document.include(KDsl::Extensions::GithubLinkable)
-  KDsl::Model::Document.include(KDsl::Extensions::Importable)
-  KDsl::Model::Document.include(KDsl::Extensions::Writable)
-
+  # Add any extra extensions that you require on documents
+  KDsl::Model::Document.include(KDsl::Extensions::CommandRunnable) # Documents can run command line programs
+  KDsl::Model::Document.include(KDsl::Extensions::CreateDsl)       # Documents can create a new DSL from their relative position
+  KDsl::Model::Document.include(KDsl::Extensions::GithubLinkable)  # Documents can add, delete or open repos
+  KDsl::Model::Document.include(KDsl::Extensions::HttpResourceful) # Documents can connect to HTTP resources
+  KDsl::Model::Document.include(KDsl::Extensions::Importable)      # Documents can import data from other documents
+  KDsl::Model::Document.include(KDsl::Extensions::Writable)        # Documents can write their contents out to the cache path in JSON or YAML
+  
   KDsl.extend(KDsl::Extensions::DocumentFactories)
 end
