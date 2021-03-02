@@ -1,6 +1,6 @@
 # {{titleize microapp.settings.application}}
 
-> {{safe description}}
+> {{safe microapp.settings.description}}
 
 {{main_story}}
 
