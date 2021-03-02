@@ -90,6 +90,12 @@ namespace :k_dsl do
     project_handlebars_helpers.watch_path('**/*.rb', ignore: /.template/)
     project_handlebars_helpers.watch_path('~/dev/kgems/handlebars-helpers/.handlebars*.json')
 
+    # webpack5-builder
+    project_webpack5_builder_config = get_config(relative_resource_path: 'kgems/webpack5-builder',
+                                               app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/webpack5-builder/.templates')
+    project_webpack5_builder = KDsl::Manage::Project.new('webpack5-builder', project_webpack5_builder_config)
+    project_webpack5_builder.watch_path('**/*.rb', ignore: /.template/)
+
     # C# - Samples (Programs)
     project_cs_p02_config = get_config(relative_resource_path: 'c#/P02Ef4')
     project_cs_p02 = KDsl::Manage::Project.new('c#/P02Ef4', project_cs_p02_config)
@@ -109,6 +115,8 @@ namespace :k_dsl do
     
     # project_html_l04 = build_project('html/l04_transpiler_babel')
     project_html_l04 = build_project('html/l04_transpiler_swc')
+    project_html_l05 = build_project('html/l05_bootstrap_components')
+    current_html = project_html_l05
 
     # Webpack (By Example)
     project_webpack5_transpiler_babel = build_project('webpack5/transpiler_babel')
@@ -166,17 +174,18 @@ namespace :k_dsl do
 
     manager = KDsl.project_manager
 
-    group = %i[current handlebars_helpers rspec_usecases peeky k_dsl ideas play_loquacious xyz_commands].first
+    group = %i[current rspec_usecases peeky k_dsl ideas play_loquacious xyz_commands].first
 
     case group
     when :current
       manager.add_projects(project_command,
                            # project_rspec_usecases,
+                          #  project_webpack5_builder,
                            # project_idea_video,
-                           # project_html_l04,
+                           current_html
                            #  current_react,
                           #  current_cs,
-                            current_webpack5
+                            # current_webpack5
                           )
     when :xyz_commands
       manager.add_projects(project_command,

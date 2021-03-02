@@ -111,6 +111,19 @@ KDsl.blueprint :_generate_helpers do
         'category',
         is_string_formatter: true
 
+    # ----------------------------------------------------------------------
+    # :miscellaneous
+    # ----------------------------------------------------------------------
+
+    row :misc, %i[json]                                                         , 'value as JSON string',
+        test_case: {
+          expected_value: '{ "david": "was here" }',
+          params: [
+            {name: 'value', value: '{ "david": "was here" }'}
+          ],
+          template: '{{$ALIAS$ value}}'
+        }
+
     row :misc, %i[safe]                                                         , 'value in safe string format',
         test_case: {
           expected_value: '"hello"',

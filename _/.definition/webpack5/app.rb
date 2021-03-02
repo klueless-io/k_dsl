@@ -35,8 +35,8 @@ KDsl.microapp :{{snake name}} do
       github_new_repo s.git_repo_name, organization: s.git_organization
     when 2 # Create package.json
       setup_package(s)
-    when 3 # Setup WebPack V4 for now
-      rc 'npm i --save-dev webpack@4 webpack-cli webpack-dev-server'
+    when 3 # Setup WebPack for now
+      rc 'npm i --save-dev webpack webpack-cli webpack-dev-server'
       rc 'npx npe scripts.build "webpack"'
     when 4 # Add SWC Transpiler
       # rc 'npm i -D @swc/core swc-loader regenerator-runtime'

@@ -1,7 +1,7 @@
 # KDsl.cmd :cmd do
 KDsl.document :html do
   s = settings do
-    name                    :l04_transpiler_swc
+    name                    :l05_bootstrap_components
     description_suffix      'in HTML'
     definition_subfolder    'html'
     project_group           :html
@@ -9,7 +9,7 @@ KDsl.document :html do
   end
   
   s.website_slug = s.name
-  s.main_story   = "As a Javascript Developer, I want to target the latest ES features while maintaining browser compatibility, so that I can code fast but support older browsers"
+  s.main_story   = "As a Bootstrap 5 Developer, I want to understand how to work with components, so that I can build modular HTML"
   
   def on_action
     s = d.settings
