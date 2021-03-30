@@ -115,7 +115,7 @@ RSpec.describe Github::GithubApi, :integration_tests do
       let(:test_repo_full_key) { 'klueless-csharp-samples/z-test-kdsl' }
       # let(:test_repo_full_key) { 'klueless-csharp-samples/p02_ef4' }
 
-      fit 'delete a repositories' do
+      it 'delete a repositories' do
 
         # Github::GithubPrinter::p_repositories_as_table api.repositories
 
