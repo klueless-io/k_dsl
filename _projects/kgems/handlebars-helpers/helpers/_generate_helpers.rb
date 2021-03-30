@@ -29,6 +29,7 @@ KDsl.blueprint :_generate_helpers do
     # row :path        , :path                   , 'Path handling routines'                           , ['https://github.com/helpers/handlebars-helpers/blob/master/lib/path.js', 'https://github.com/helpers/handlebars-helpers/blob/master/test/path.js']
     # row :regex       , :regex                  , 'Regex handling routines'                          , ['https://github.com/helpers/handlebars-helpers/blob/master/lib/regex.js', 'https://github.com/helpers/handlebars-helpers/blob/master/test/regex.js']
     # row :url         , :url                    , 'Url handling routines'                            , ['https://github.com/helpers/handlebars-helpers/blob/master/lib/url.js', 'https://github.com/helpers/handlebars-helpers/blob/master/test/url.js']
+    # row :javascript  , :javascript             , 'Javascript handling routines'                     , []
     # row :json        , :json                   , 'Json handling routines'                           , ['https://github.com/rails/rails/blob/v6.1.1/activesupport/lib/active_support/json.rb']
   end
 
@@ -69,11 +70,62 @@ KDsl.blueprint :_generate_helpers do
         'Handlebars::Helpers::StringFormatting',
         'String formatting and manipulation methods'
 
+    row :javascript, true,
+        :code_javascript,
+        'handlebars/helpers/code_javascript',
+        'Handlebars::Helpers::CodeJavascript',
+        'Javascript code handling routines',
+        examples: []
+
+    row :json, true,
+        :json,
+        'handlebars/helpers/json',
+        'Handlebars::Helpers::Json',
+        'Json handling routines',
+        examples: ['https://github.com/rails/rails/blob/v6.1.1/activesupport/lib/active_support/json.rb']
     end
 
   # Add format 
   table :helpers do
     fields %i[group names description test_in test_out test_case template is_string_formatter]
+
+    # ----------------------------------------------------------------------
+    # :json formatting
+    # ----------------------------------------------------------------------
+
+    row :json, %i[as_json json]                                                 , 'value as JSON string',
+        test_case: {
+          expected_value: '{ "david": "was here" }',
+          params: [
+            {name: 'value', string_value: '{ "david": "was here" }' }
+          ],
+          template: '{{$ALIAS$ value}}'
+        }
+
+    # ----------------------------------------------------------------------
+    # :javascript formatting
+    # ----------------------------------------------------------------------
+
+    row :javascript, %i[as_javascript]                                          , 'value as javascript string',
+        test_case: {
+          expected_value: '{ david: "was here" }',
+          params: [
+            {name: 'value', hash_value: '{ david: "was here" }' },
+            {name: 'format', nil_value: true}
+          ],
+          template: '{{$ALIAS$ value format}}',
+          custom_expectation: <<~HEREDOC.strip
+            it {
+              expected_value = <<~RUBY.strip
+                    {
+                      david: "was here"
+                    }
+                  RUBY
+    
+              is_expected.to eq(expected_value)
+            }
+          HEREDOC
+        }
 
     # ----------------------------------------------------------------------
     # :inflections
@@ -94,9 +146,9 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: '3 people',
           params: [
-            {name: 'value', value: 'person'},
-            {name: 'count', value: '3'},
-            {name: 'format', value: 'number_word'}
+            {name: 'value', string_value: 'person'},
+            {name: 'count', string_value: '3'},
+            {name: 'format', string_value: 'number_word'}
           ],
           template: '{{$ALIAS$ value count format}}'
         }
@@ -115,20 +167,11 @@ KDsl.blueprint :_generate_helpers do
     # :miscellaneous
     # ----------------------------------------------------------------------
 
-    row :misc, %i[json]                                                         , 'value as JSON string',
-        test_case: {
-          expected_value: '{ "david": "was here" }',
-          params: [
-            {name: 'value', value: '{ "david": "was here" }'}
-          ],
-          template: '{{$ALIAS$ value}}'
-        }
-
     row :misc, %i[safe]                                                         , 'value in safe string format',
         test_case: {
           expected_value: '"hello"',
           params: [
-            {name: 'value', value: '"hello"'}
+            {name: 'value', string_value: '"hello"'}
           ],
           template: '{{$ALIAS$ value}}'
         }
@@ -139,9 +182,6 @@ KDsl.blueprint :_generate_helpers do
           params: [ ],
           template: '{{{{$ALIAS$}}}}{{no_parse}}{{{{/$ALIAS$}}}}'
         }
-    # ----------------------------------------------------------------------
-    # :misc
-    # ----------------------------------------------------------------------
     
     # ----------------------------------------------------------------------
     # :string_formatting
@@ -150,8 +190,8 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'the-quick-brown-foxes',
           params: [
-            {name: 'value', value: 'the quick brown fox'},
-            {name: 'format', value: 'pluralize,dashify'}
+            {name: 'value', string_value: 'the quick brown fox'},
+            {name: 'format', string_value: 'pluralize,dashify'}
           ],
           template: '{{$ALIAS$ value format}}'
         }
@@ -217,9 +257,9 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'pad-me....',
           params: [
-            {name: 'value', value: 'pad-me'},
-            {name: 'count', value: 10},
-            {name: 'char', value: '.'}
+            {name: 'value', string_value: 'pad-me'},
+            {name: 'count', string_value: 10},
+            {name: 'char', string_value: '.'}
           ],
           template: '{{$ALIAS$ value count char}}'
         }
@@ -228,9 +268,9 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: '....pad-me',
           params: [
-            {name: 'value', value: 'pad-me'},
-            {name: 'count', value: 10},
-            {name: 'char', value: '.'}
+            {name: 'value', string_value: 'pad-me'},
+            {name: 'count', string_value: 10},
+            {name: 'char', string_value: '.'}
           ],
           template: '{{$ALIAS$ value count char}}'
         }
@@ -239,9 +279,9 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: '# product_categories',
           params: [
-            {name: 'value', value: 'product category'},
-            {name: 'prefix', value: '# '},
-            {name: 'formats', value: 'pluralize,snake'}
+            {name: 'value', string_value: 'product category'},
+            {name: 'prefix', string_value: '# '},
+            {name: 'formats', string_value: 'pluralize,snake'}
           ],
           template: '{{$ALIAS$ value prefix formats}}'
         }
@@ -250,9 +290,9 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'product_categories:',
           params: [
-            {name: 'value', value: 'product category'},
-            {name: 'suffix', value: ':'},
-            {name: 'formats', value: 'pluralize,snake'}
+            {name: 'value', string_value: 'product category'},
+            {name: 'suffix', string_value: ':'},
+            {name: 'formats', string_value: 'pluralize,snake'}
           ],
           template: '{{$ALIAS$ value suffix formats}}'
         }
@@ -261,10 +301,10 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: '(product_categories)',
           params: [
-            {name: 'value', value: 'product category'},
-            {name: 'prefix', value: '('},
-            {name: 'suffix', value: ')'},
-            {name: 'formats', value: 'pluralize,snake'}
+            {name: 'value', string_value: 'product category'},
+            {name: 'prefix', string_value: '('},
+            {name: 'suffix', string_value: ')'},
+            {name: 'formats', string_value: 'pluralize,snake'}
           ],
           template: '{{$ALIAS$ value prefix suffix formats}}'
         }
@@ -273,10 +313,10 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: '()',
           params: [
-            {name: 'value', value: nil},
-            {name: 'prefix', value: '('},
-            {name: 'suffix', value: ')'},
-            {name: 'formats', value: ''}
+            {name: 'value', nil_value: true},
+            {name: 'prefix', string_value: '('},
+            {name: 'suffix', string_value: ')'},
+            {name: 'formats', nil_value: true}
           ],
           template: '{{$ALIAS$ value prefix suffix formats}}'
         }
@@ -288,8 +328,8 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'hello world',
           params: [
-            {name: 'p1', value: nil},
-            {name: 'p2', value: nil}
+            {name: 'p1', nil_value: true},
+            {name: 'p2', nil_value: true}
           ],
           template: '{{$ALIAS$ p1 p2 "hello world"}}'
         }
@@ -298,8 +338,8 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'param2',
           params: [
-            {name: 'p1', value: nil},
-            {name: 'p2', value: 'param2'}
+            {name: 'p1', nil_value: true},
+            {name: 'p2', string_value: 'param2'}
           ],
           template: 
           %Q(
@@ -313,8 +353,8 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'all params exist',
           params: [
-            {name: 'p1', value: 'param1'},
-            {name: 'p2', value: 'param2'}
+            {name: 'p1', string_value: 'param1'},
+            {name: 'p2', string_value: 'param2'}
           ],
           template: 
           %Q(
@@ -328,8 +368,8 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'params are equal',
           params: [
-            {name: 'p1', value: 'david'},
-            {name: 'p2', value: 'david'}
+            {name: 'p1', string_value: 'david'},
+            {name: 'p2', string_value: 'david'}
           ],
           template: 
           %Q(
@@ -343,8 +383,8 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'params are not equal',
           params: [
-            {name: 'p1', value: 'aaa'},
-            {name: 'p2', value: 'bbb'}
+            {name: 'p1', string_value: 'aaa'},
+            {name: 'p2', string_value: 'bbb'}
           ],
           template: 
           %Q(
@@ -358,8 +398,8 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: '1 is less than 2',
           params: [
-            {name: 'p1', value: 1},
-            {name: 'p2', value: 2}
+            {name: 'p1', string_value: 1},
+            {name: 'p2', string_value: 2}
           ],
           template: 
           %Q(
@@ -373,8 +413,8 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: '1 is less than or equal 1',
           params: [
-            {name: 'p1', value: 1},
-            {name: 'p2', value: 1}
+            {name: 'p1', string_value: 1},
+            {name: 'p2', string_value: 1}
           ],
           template: 
           %Q(
@@ -388,8 +428,8 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: '2 is greater than 1',
           params: [
-            {name: 'p1', value: 2},
-            {name: 'p2', value: 1}
+            {name: 'p1', string_value: 2},
+            {name: 'p2', string_value: 1}
           ],
           template: 
           %Q(
@@ -403,8 +443,8 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: '1 is greater than or equal 1',
           params: [
-            {name: 'p1', value: 1},
-            {name: 'p2', value: 1}
+            {name: 'p1', string_value: 1},
+            {name: 'p2', string_value: 1}
           ],
           template: 
           %Q(
@@ -422,7 +462,7 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'ProductCategory',
           params: [
-            {name: 'table_name', value: 'product_categories'}
+            {name: 'table_name', string_value: 'product_categories'}
           ],
           template: '{{$ALIAS$ table_name}}'
         }
@@ -431,7 +471,7 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'Inflections',
           params: [
-            {name: 'namespaced_class', value: 'ActiveSupport::Inflector::Inflections'}
+            {name: 'namespaced_class', string_value: 'ActiveSupport::Inflector::Inflections'}
           ],
           template: '{{$ALIAS$ namespaced_class}}'
         }
@@ -440,7 +480,7 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'Net',
           params: [
-            {name: 'constant_expression', value: 'Net::HTTP'}
+            {name: 'constant_expression', string_value: 'Net::HTTP'}
           ],
           template: '{{$ALIAS$ constant_expression}}'
         }
@@ -449,7 +489,7 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'message_id',
           params: [
-            {name: 'class_name', value: 'Message'}
+            {name: 'class_name', string_value: 'Message'}
           ],
           template: '{{$ALIAS$ class_name}}'
         }
@@ -458,7 +498,7 @@ KDsl.blueprint :_generate_helpers do
         test_case: {
           expected_value: 'product_categories',
           params: [
-            {name: 'model_name', value: 'product_category'}
+            {name: 'model_name', string_value: 'product_category'}
           ],
           template: '{{$ALIAS$ model_name}}'
         },
@@ -468,8 +508,8 @@ KDsl.blueprint :_generate_helpers do
   instructions do
     fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, 'open')]
 
-    row '.handlebars_helpers.json', after_write: 'prettier,open'
-    row '.handlebars_string_formatters.json', after_write: 'prettier,open'
+    # row '.handlebars_helpers.json', after_write: 'prettier,open'
+    # row '.handlebars_string_formatters.json', after_write: 'prettier,open'
     row 'all_helper_spec.rb', 'spec/handlebars/helpers/$TEMPLATE_NAME$', after_write: 'prettier,open'
   end
 
@@ -496,7 +536,7 @@ KDsl.blueprint :_generate_helpers do
     groups = x.helper_groups.rows.map do |group|
       {
         **group.to_h.except(:key),
-        helpers: x.helpers.rows.select { |helper| group.key == helper.group && (true || helper.names.first == :or) }.map do |helper|
+        helpers: x.helpers.rows.select { |helper| group.key == helper.group && (true || helper.names.first == :as_javascript) }.map do |helper|
             name = helper.names.first
           {
             name: name,

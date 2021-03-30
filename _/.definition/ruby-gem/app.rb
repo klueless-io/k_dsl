@@ -9,18 +9,18 @@ KDsl.microapp :{{snake name}} do
     name                          parent.key
     app_type                      'Ruby Gem'
     description                   '{{titleize name}} {{settings.description_suffix}}'
-    application                   '{{dashify name}}'
+    application                   '{{name}}'
     avatar                        'Developer'
     main_story                    '{{settings.main_story}}'
     author                        'David Cruwys'
     author_email                  'david@ideasmen.com.au'
-    copyright_date                '2020'
+    copyright_date                '2021'
     website                       'http://appydave.com/{{settings.website_slug_group}}/{{dashify settings.website_slug}}'
     application_lib_path          '{{slash name}}'
     application_lib_namespace     '{{format_as name "titleize,namespace"}}'
     application_lib_namespaces    [{{custom_namespace_array name}}]
     template_rel_path             'ruby-gem'
-    app_path                      '~/dev/{{settings.project_group}}/{{dashify name}}'
+    app_path                      '~/dev/{{settings.project_group}}/{{name}}'
     data_path                     '_/.data'
   end
 

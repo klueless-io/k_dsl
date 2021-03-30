@@ -1,7 +1,7 @@
 # KDsl.cmd :cmd do
 KDsl.document :html do
   s = settings do
-    name                    :l05_bootstrap_components
+    name                    :l07_monopoly_board
     description_suffix      'in HTML'
     definition_subfolder    'html'
     project_group           :html
@@ -9,7 +9,7 @@ KDsl.document :html do
   end
   
   s.website_slug = s.name
-  s.main_story   = "As a Bootstrap 5 Developer, I want to understand how to work with components, so that I can build modular HTML"
+  s.main_story   = "As a Monopoly Player, I want a nice monopoly board in CSS, so that I feel lie I am playing the game"
   
   def on_action
     s = d.settings
