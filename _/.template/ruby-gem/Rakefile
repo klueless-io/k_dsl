@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
+# source: https://stephenagrice.medium.com/making-a-command-line-ruby-gem-write-build-and-push-aec24c6c49eb
+
+GEM_NAME = '{{snake microapp.settings.application}}'
+
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
+require '{{snake microapp.settings.application}}/version'
 
 RSpec::Core::RakeTask.new(:spec)
 
@@ -12,6 +17,17 @@ task build: :compile
 
 Rake::ExtensionTask.new('{{snake microapp.settings.application}}') do |ext|
   ext.lib_dir = 'lib/{{snake microapp.settings.application}}'
+end
+
+desc 'Publish the gem to RubyGems.org'
+task :publish do
+  system 'gem build'
+  system "gem push #{GEM_NAME}-#{{curly_open 1}}{{microapp.settings.application_lib_namespace}}::VERSION}.gem"
+end
+
+desc 'Remove old *.gem files'
+task :clean do
+  system 'rm *.gem'
 end
 
 task default: %i[clobber compile spec]

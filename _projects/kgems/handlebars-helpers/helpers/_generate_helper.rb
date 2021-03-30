@@ -1,7 +1,7 @@
 KDsl.blueprint :_generate_helper do
 
   s = settings do
-    name                  'json'
+    name                  'as_javascript'
     # category              'inflection'
     # category_description  'Inflection handling routines, eg. pluralize, singular, ordinalize'
     category              'misc'

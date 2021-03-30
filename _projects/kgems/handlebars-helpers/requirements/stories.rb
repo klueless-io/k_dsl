@@ -23,11 +23,22 @@ KDsl.document :stories do
     # CURRENT
     #----------------------------------------------------------------------
 
+
+    row :task, :current, 'add support for environment variables',
+    [
+    ]
+
     row :task, :current, 'add support for string_formatter usage via STRING_FORMATTER.md',
     [
     ]
 
-    row :task, :current, 'add gem release rake task',
+    row :task, :current, 'add factory methods so that I can just use any helper from Ruby Code',
+    [
+      'Handlebars::Helpers::StringFormatting::Camel.new.parse to string_helper.camel.parse()',
+    ]
+
+
+    row :task, :current, 'add gem release rake task (see k_builder-watch',
     [
     ]
 

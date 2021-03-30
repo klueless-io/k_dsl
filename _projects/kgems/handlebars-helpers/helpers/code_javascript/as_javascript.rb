@@ -1,10 +1,10 @@
-KDsl.blueprint :json do
+KDsl.blueprint :as_javascript do
   microapp = import(:handlebars_helpers, :microapp)
 
   s = settings do
-    name                  'json'
-    description           "take handlebars object and write it out as JSON"
-    result                "value as JSON string"
+    name                  'as_javascript'
+    description           "take ruby object and write it out as Javascript notation"
+    result                "value as Javascript string"
     category              'misc'
     category_description  'Miscellaneous handling routines'
     base_class_require    'handlebars/helpers/base_helper'
@@ -16,9 +16,9 @@ KDsl.blueprint :json do
     # test_input_value      'the quick brown fox'
     # test_output_value     'TheQuickBrownFox'
     test_case(            { params: [
-                              {name: 'value', type: 'Object', sample_value: '{ "david": "was here" }', description: 'object to be converted to JSON string'}
+                              {name: 'value', type: 'Object', sample_value: '{ "david": "was here" }', description: 'object to be converted to Javascript notation string'}
                             ],
-                            example_output_value: '{ "david": "was here" }'
+                            example_output_value: '{ david: "was here" }'
                           })
 end
 

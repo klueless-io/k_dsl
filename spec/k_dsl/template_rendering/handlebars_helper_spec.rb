@@ -228,7 +228,7 @@ RSpec.describe KDsl::TemplateRendering::HandlebarsHelper do
           TEXT
         end
 
-        fit do
+        it do
           puts subject
         end
         it { is_expected.to include('[          ]') }

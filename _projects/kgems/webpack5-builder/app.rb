@@ -14,7 +14,7 @@ KDsl.microapp :webpack5_builder do
     main_story                    'As a SPA Developer, I want to configure webpack5 enabled applications quickly, so I don&#x27;t have to be a WebPack5 expert'
     author                        'David Cruwys'
     author_email                  'david@ideasmen.com.au'
-    copyright_date                '2020'
+    copyright_date                '2021'
     website                       'http://appydave.com/gems/webpack5-builder'
     application_lib_path          'webpack5/builder'
     application_lib_namespace     'Webpack5::Builder'
@@ -24,13 +24,13 @@ KDsl.microapp :webpack5_builder do
     data_path                     '_/.data'
   end
 
-  is_run = 1
+  is_run = 0
 
   def on_action
     s = d.settings
-    # github_new_repo s.application
-    # run_command 'bundle gem --coc --test=rspec --mit webpack5-builder', command_creates_top_folder: true
-    # run_command 'code .'
+    github_new_repo s.application
+    run_command 'bundle gem --coc --test=rspec --mit webpack5-builder', command_creates_top_folder: true
+    run_command 'code .'
 
     # new_blueprint :bootstrap_bin_hook       , definition_subfolder: 'ruby-gem', output_filename: 'bootstrap_01_bin_hook.rb', f: false, show_editor: true
     # new_blueprint :bootstrap_upgrade        , definition_subfolder: 'ruby-gem', output_filename: 'bootstrap_02_upgrade.rb' , f: false, show_editor: true

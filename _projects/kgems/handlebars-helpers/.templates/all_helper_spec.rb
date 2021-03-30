@@ -41,13 +41,17 @@ describe '{{safe ./description}}' do
   {{#each tests}}
   {{#if @first}}
   let(:expected) { '{{safe expected_value}}' }
-  let(:data) { { {{#each params}}{{name}}: {{#if value}}'{{safe value}}'{{^}}nil{{/if}}{{#if @last}}{{else}}, {{/if}}{{/each}} } }
+  let(:data) { { {{#each params}}{{name}}: {{#if hash_value}}{{safe hash_value}}{{/if}}{{#if string_value}}'{{safe string_value}}'{{/if}}{{#if nil_value}}nil{{/if}}{{#if @last}}{{else}}, {{/if}}{{/each}} } }
   {{/if}}
 
   context '{{alias}}' do
     let(:template) { '{{~#if template~}}{{safe template}}{{^}}{{curly_open 2}}{{alias}} {{#each params}}{{name}}{{#if @last}}{{else}} {{/if}}{{/each}}{{curly_close 2}}{{~/if~}}' }
 
+    {{#if custom_expectation}}
+    {{safe custom_expectation}}
+    {{^}}
     it { is_expected.to eq(expected) }
+    {{/if}}
   end
 
   {{/each}}

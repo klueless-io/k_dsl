@@ -1,7 +1,7 @@
 # KDsl.cmd :cmd do
 KDsl.document :react do
   s = settings do
-    name                    :r03_props
+    name                    :r06_monopoly
     description_suffix      ''
     definition_subfolder    'react'
     project_group           :react
@@ -9,7 +9,7 @@ KDsl.document :react do
   end
   
   s.website_slug = s.name
-  s.main_story   = "As a Front End Developer, I quickly understand components, state and functions, so that I can build complex react applications"
+  s.main_story   = "As a Monopoly Player, I want a beautiful UX to play monopoly on, so that I am an engaged player"
   
   def on_action
     s = d.settings

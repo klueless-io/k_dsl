@@ -50,12 +50,12 @@ KDsl.microapp :p03_domain_models do
     # new_blueprint :basic_class              , definition_subfolder: 'csharp-console'                                             , f: false, show_editor: true
 
     # Models
-    new_archetype :competition, :basic_class, definition_subfolder: 'csharp-console', f: true
+    # new_archetype :competition, :basic_class, definition_subfolder: 'csharp-console', f: true
 
-    # new_blueprint :backlog           , definition_subfolder: 'csharp-console/requirements', output_subfolder: 'requirements', show_editor: true
-    # new_blueprint :stories           , definition_subfolder: 'csharp-console/requirements', output_subfolder: 'requirements', show_editor: true
-    # new_blueprint :usage             , definition_subfolder: 'csharp-console/requirements', output_subfolder: 'requirements', show_editor: true
-    # new_blueprint :readme            , definition_subfolder: 'csharp-console/requirements', output_subfolder: 'requirements', show_editor: true
+    new_blueprint :backlog           , definition_subfolder: 'csharp-console/requirements', output_subfolder: 'requirements', show_editor: true
+    new_blueprint :stories           , definition_subfolder: 'csharp-console/requirements', output_subfolder: 'requirements', show_editor: true
+    new_blueprint :usage             , definition_subfolder: 'csharp-console/requirements', output_subfolder: 'requirements', show_editor: true
+    new_blueprint :readme            , definition_subfolder: 'csharp-console/requirements', output_subfolder: 'requirements', show_editor: true
 
   end if is_run == 1
 

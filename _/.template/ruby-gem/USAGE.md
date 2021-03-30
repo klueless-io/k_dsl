@@ -15,7 +15,7 @@
 {{#if ./name}}
 #### {{./name}}
 {{/if}}
-{{./description}}
+{{#if ./description}}{{safe ./description}}{{/if}}
 
 {{#if ./ruby}}
 ```ruby
@@ -27,6 +27,7 @@
 {{safe ./content}}```
 {{/with}}
 {{/if}}
+{{#if ./image}}![]({{image}}){{/if}}
 
 {{/each}}
 

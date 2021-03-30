@@ -7,8 +7,8 @@ BASE_PATH = '~/dev/kgems/k_dsl/_'
 BASE_PATH_RESOURCES = '~/dev/kgems/k_dsl/_projects'
 
 namespace :k_dsl do
-  def build_project(relative_resource_path)
-    project_config = get_config(relative_resource_path: relative_resource_path)
+  def build_project(relative_resource_path, app_template_path: nil)
+    project_config = get_config(relative_resource_path: relative_resource_path, app_template_path: app_template_path)
     project = KDsl::Manage::Project.new(relative_resource_path, project_config)
     project.watch_path('**/*.rb')
     project
@@ -90,11 +90,59 @@ namespace :k_dsl do
     project_handlebars_helpers.watch_path('**/*.rb', ignore: /.template/)
     project_handlebars_helpers.watch_path('~/dev/kgems/handlebars-helpers/.handlebars*.json')
 
+    # app-builder
+    project_k_doc_config = get_config(relative_resource_path: 'kgems/k_doc',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_doc/.templates')
+    project_k_doc = KDsl::Manage::Project.new('k_doc', project_k_doc_config)
+    project_k_doc.watch_path('**/*.rb', ignore: /.template/)
+
+    project_k_util_config = get_config(relative_resource_path: 'kgems/k_util',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_util/.templates')
+    project_k_util = KDsl::Manage::Project.new('k_util', project_k_util_config)
+    project_k_util.watch_path('**/*.rb', ignore: /.template/)
+
+    project_k_log_config = get_config(relative_resource_path: 'kgems/k_log',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_log/.templates')
+    project_k_log = KDsl::Manage::Project.new('k_log', project_k_log_config)
+    project_k_log.watch_path('**/*.rb', ignore: /.template/)
+
+    project_k_builder_config = get_config(relative_resource_path: 'kgems/k_builder',
+          app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_builder/.templates')
+    project_k_builder = KDsl::Manage::Project.new('k_builder', project_k_builder_config)
+    project_k_builder.watch_path('**/*.rb', ignore: /.template/)
+
+    project_k_builder_watch_config = get_config(relative_resource_path: 'kgems/k_builder-watch',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_builder-watch/.templates')
+    project_k_builder_watch = KDsl::Manage::Project.new('k_builder-watch', project_k_builder_watch_config)
+    project_k_builder_watch.watch_path('**/*.rb', ignore: /.template/)
+
+    project_k_builder_dotnet_config = get_config(relative_resource_path: 'kgems/k_builder-dotnet',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_builder-dotnet/.templates')
+    project_k_builder_dotnet = KDsl::Manage::Project.new('k_builder-dotnet', project_k_builder_dotnet_config)
+    project_k_builder_dotnet.watch_path('**/*.rb', ignore: /.template/)
+
+    project_k_builder_package_json_config = get_config(relative_resource_path: 'kgems/k_builder-package_json',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_builder-package_json/.templates')
+    project_k_builder_package_json = KDsl::Manage::Project.new('k_builder-package_json', project_k_builder_package_json_config)
+    project_k_builder_package_json.watch_path('**/*.rb', ignore: /.template/)
+
+    project_k_builder_webpack5_config = get_config(relative_resource_path: 'kgems/k_builder-webpack5',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_builder-webpack5/.templates')
+    project_k_builder_webpack5 = KDsl::Manage::Project.new('k_builder-webpack5', project_k_builder_webpack5_config)
+    project_k_builder_webpack5.watch_path('**/*.rb', ignore: /.template/)
+    
+
     # webpack5-builder
     project_webpack5_builder_config = get_config(relative_resource_path: 'kgems/webpack5-builder',
-                                               app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/webpack5-builder/.templates')
+     app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/webpack5-builder/.templates')
     project_webpack5_builder = KDsl::Manage::Project.new('webpack5-builder', project_webpack5_builder_config)
     project_webpack5_builder.watch_path('**/*.rb', ignore: /.template/)
+
+    # print_speak
+    project_print_speak_config = get_config(relative_resource_path: 'kgems/print_speak',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/print_speak/.templates')
+    project_print_speak = KDsl::Manage::Project.new('print_speak', project_print_speak_config)
+    project_print_speak.watch_path('**/*.rb', ignore: /.template/)
 
     # C# - Samples (Programs)
     project_cs_p02_config = get_config(relative_resource_path: 'c#/P02Ef4')
@@ -103,7 +151,14 @@ namespace :k_dsl do
 
     project_cs_p03 = build_project('c#/p03_domain_models')
     project_cs_p04_domain_monopoly_v1 = build_project('c#/p04_domain_monopoly_v1')
-    current_cs = project_cs_p04_domain_monopoly_v1
+    project_cs_p05_mvc_app = build_project('c#/p05_mvc_app')
+    project_cs_p06_sales_terminal = build_project('c#/p06_sales_terminal')
+    project_cs_p07_weather_microservice = build_project('c#/p07_weather_microservice', app_template_path: '~/dev/c#/P07WeatherMicroservice/_/app/.templates')
+    project_cs_p08_mvc_basic = build_project('c#/p08_mvc_basic')
+    project_cs_p09_mvc_bootstrap_plugins = build_project('c#/p09_mvc_bootstrap_plugins')
+    current_cs = project_cs_p09_mvc_bootstrap_plugins
+
+    project_cs_pitstop = build_project('csharp/pitstop')
 
     # HTML - Samples (Lessons)
     project_html_l01_config = get_config(relative_resource_path: 'html/l01_ux_design_principals')
@@ -116,7 +171,9 @@ namespace :k_dsl do
     # project_html_l04 = build_project('html/l04_transpiler_babel')
     project_html_l04 = build_project('html/l04_transpiler_swc')
     project_html_l05 = build_project('html/l05_bootstrap_components')
-    current_html = project_html_l05
+    project_html_l06 = build_project('html/l06_responsive_html')
+    project_html_l07 = build_project('html/l07_monopoly_board')
+    current_html = project_html_l07
 
     # Webpack (By Example)
     project_webpack5_transpiler_babel = build_project('webpack5/transpiler_babel')
@@ -130,8 +187,11 @@ namespace :k_dsl do
 
     project_react_l02 = build_project('react/r02_component_state_function')
     project_react_l03 = build_project('react/r03_props')
+    project_react_l04 = build_project('react/r04_react_router')
+    project_react_l05 = build_project('react/r05_storage')
+    project_react_l06 = build_project('react/r06_monopoly')
 
-    current_react = project_react_l03
+    current_react = project_react_l06
 
     # KDSL
     project_gem_kdsl_config = get_config(relative_resource_path: 'kgems/k_dsl',
@@ -174,18 +234,23 @@ namespace :k_dsl do
 
     manager = KDsl.project_manager
 
-    group = %i[current rspec_usecases peeky k_dsl ideas play_loquacious xyz_commands].first
+    group = %i[current handlebars_helpers rspec_usecases peeky k_dsl ideas play_loquacious xyz_commands].first
 
     case group
     when :current
       manager.add_projects(project_command,
+                           # project_print_speak
                            # project_rspec_usecases,
-                          #  project_webpack5_builder,
+                           # project_webpack5_builder,
                            # project_idea_video,
-                           current_html
-                           #  current_react,
+                           #  current_html
+                           # current_react,
                           #  current_cs,
-                            # current_webpack5
+                           # current_webpack5
+                           #  project_k_builder_watch, project_k_builder_dotnet, project_k_builder_webpack5, project_k_builder_package_json, project_k_builder
+                          #  project_k_doc,
+                           project_k_log,
+                          #  project_k_util
                           )
     when :xyz_commands
       manager.add_projects(project_command,

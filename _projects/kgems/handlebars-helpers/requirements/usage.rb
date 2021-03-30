@@ -21,19 +21,21 @@ KDsl.document :usage do
     fields [:group_key, :name, :description, :ruby]
 
     row :basic_example, 'Basic example', <<~TEXT, ruby: <<~RUBY
-      Description for a basic example to be featured in the main README.MD file
-    TEXT
-      class SomeRuby
-      end
-    RUBY
+      Render a template value using camel case and dasherize case
+      TEXT
+        Handlebars::Helpers::Template.render('{{camel .}}', 'david was here')
+        # => "DavidWasHere"
+        Handlebars::Helpers::Template.render('{{dasherize .}}', 'david was here')
+        # => "david-was-here"
+      RUBY
 
     row :sample, 'Simple example', <<~TEXT, ruby: <<~RUBY
-        Description for a simple example that shows up in the USAGE.MD
+        Render a template value using camel case and dasherize case
       TEXT
-        class SomeRuby
-          def initialize
-          end
-        end
+        Handlebars::Helpers::Template.render('{{camel .}}', 'david was here')
+        # => "DavidWasHere"
+        Handlebars::Helpers::Template.render('{{dasherize .}}', 'david was here')
+        # => "david-was-here"
       RUBY
 
   end
