@@ -1,0 +1,12 @@
+{{#*inline "fields"}}
+{{#each entity.columns}}
+<div class="form-group">
+    <label asp-for="{{camel ./name}}" class="control-label"></label>
+    <input asp-for="{{camel ./name}}" class="form-control" />
+    <span asp-validation-for="{{camel ./name}}" class="text-danger"></span>
+</div>
+{{/each}}
+{{~/inline}}
+@model {{project.application_namespace}}.Data.{{camel entity.model_name}}
+
+{{> fields}}

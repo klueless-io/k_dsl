@@ -18,6 +18,15 @@ KDsl.document :stories do
     [
     ], featured_position: 1
 
+    row :task, 'add if(true) concept, eg.',
+    [
+      "builder.if(true).add_file('only-adds-file-if-true.txt')"
+    ]
+    row :task, 'log(:debug, :other_target)',
+    [
+      "add_file and other methods need logging capability"
+    ]
+
     row :story, :current, 'As a Developer, I need the builder API easier to use, so I am more efficient',
     [
       'Add file parts into layered and named folders',
@@ -26,6 +35,7 @@ KDsl.document :stories do
       'Touch as an alias for add_file with no content',
       'Add vscode support',
       'Add_file needs to support folder_key',
+      'TODO: Delete folder, so that I can regenerate a complete folder without leftover artifacts',
       'TODO: Add vscode compare support',
       'TODO: Add vscode last target_file support',
       'TODO: Add vscode last template_file support',

@@ -8,7 +8,7 @@ KDsl.microapp :k_log do
 
     name                          parent.key
     app_type                      'Ruby Gem'
-    description                   'K Log provides console logging helpers and formatters'
+    description                   'KLog provides console logging helpers and formatters'
     application                   'k_log'
     avatar                        'Developer'
     main_story                    'As a Developer, I need formatted console logs, so that information presents clearly'

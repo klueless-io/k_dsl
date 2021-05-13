@@ -1,0 +1,45 @@
+{{#*inline "fieldHeadings"}}
+{{#each entity.columns}}
+<th>
+  @Html.DisplayNameFor(model => model.{{camel ./name}})
+</th>
+{{/each}}
+{{~/inline}}
+{{#*inline "fieldRows"}}
+{{#each entity.columns}}
+<td>
+  @Html.DisplayFor(modelItem => item.{{camel ./name}})
+</td>
+{{/each}}
+{{~/inline}}
+@model IEnumerable<{{project.application_namespace}}.Data.{{camel entity.model_name}}>
+
+@{
+    ViewData["Title"] = "List of {{camel entity.model_name_plural}}";
+}
+
+<h2>List of {{camel entity.model_name_plural}}</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+  <thead>
+    <tr>
+      {{> fieldHeadings}}
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+@foreach (var item in Model) {
+    <tr>
+      {{> fieldRows}}
+      <td>
+          <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+          <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+          <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+      </td>
+    </tr>
+}
+    </tbody>
+</table>

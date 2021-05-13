@@ -33,19 +33,19 @@ module Gsheet
     end
 
     # Open a worksheet from an already open spreadsheet by it's index (position)
-    def get_ws_by_index(index)
+    def worksheet_by_index(index)
       assert_valid_spreadsheet
       return @spreadsheet.worksheets[index]
     end
 
     # Open a worksheet from an already open spreadsheet by it's title
-    def get_ws_by_title(title)
+    def worksheet_by_title(title)
       assert_valid_spreadsheet
       return @spreadsheet.worksheet_by_title(title)
     end
 
     # Open list of worksheet titles from an already open spreadsheet by it's title
-    def get_ws_titles()
+    def worksheet_titles
       assert_valid_spreadsheet
       return @spreadsheet.worksheets.map { |ws| ws.title }
     end

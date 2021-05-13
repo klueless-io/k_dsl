@@ -1,1 +1,0 @@
-class TimeInput < Formtastic::Inputs::TimePickerInput; end

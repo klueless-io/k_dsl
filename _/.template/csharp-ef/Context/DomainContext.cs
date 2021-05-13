@@ -1,13 +1,12 @@
-﻿namespace {{app.application_namespace}}.Context
+﻿namespace {{project.application_namespace}}.Context
 {
+  using {{project.application_namespace}}.Data;
   using Microsoft.EntityFrameworkCore;
-  using {{app.application_namespace}}.Models;
 
-  public class DomainContext : DbContext
+  public partial class DomainContext : DbContext
   {
     {{#each entities}}
     public DbSet<{{camel name}}> {{format_as name 'camel,pluralize'}} { get; set; }
-
     {{/each}}
   }
 }
