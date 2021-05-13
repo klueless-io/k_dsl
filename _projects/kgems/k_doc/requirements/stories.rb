@@ -18,13 +18,22 @@ KDsl.document :stories do
     [
     ], featured_position: 1
 
-    row :task, :backlog, 'add DSL for settings'
-    row :task, :backlog, 'add DSL for table and rows'
-    row :task, :backlog, 'add DSL for data structure'
-    row :task, :backlog, 'add document to wrap around the data structure'
-    row :task, :backlog, 'add flexible builder DSS support'
+    row :story, :done, 'As a Domain Modeler, I can define flexible tabular structures, so I can access dynamic tabular arrays',
+    [
+      'add DSL for table with columns and rows',
+      'add support for data decorators'
+    ]
 
-    row :task, :current, 'Setup RubyGems and RubyDoc',
+    row :story, :done, 'As a Domain Modeler, I can define flexible key/value stores, so I can access settings data',
+    [
+      'add DSL for key/value settings',
+      'add support for data decorators'
+    ]
+
+    row :task, :backlog, 'add DSL for builder data structure'
+    row :task, :backlog, 'add document to wrap around the data structure or managed document helper'
+
+    row :task, :done, 'Setup RubyGems and RubyDoc',
     [
       'Build and deploy gem to [rubygems.org](https://rubygems.org/gems/k_doc)',
       'Attach documentation to [rubydoc.info](https://rubydoc.info/github/to-do-/k_doc/master)'
@@ -38,7 +47,7 @@ KDsl.document :stories do
       'Setup an examples/usage document'
     ]
 
-    row :task, :current, 'Setup GitHub Action (test and lint)',
+    row :task, :done, 'Setup GitHub Action (test and lint)',
       [
         'Setup Rspec action',
         'Setup RuboCop action'

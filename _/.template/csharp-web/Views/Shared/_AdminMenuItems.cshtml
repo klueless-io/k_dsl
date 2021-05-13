@@ -1,0 +1,5 @@
+﻿{{#each entities}}
+<li class="nav-item">
+    <a class="nav-link text-dark" asp-area="" asp-controller="{{camel ./model_name}}" asp-action="Index">{{titleize ./model_name_plural}}</a>
+</li>
+{{/each}}

@@ -1,0 +1,32 @@
+{{#*inline "fields"}}
+{{#each entity.columns}}
+<div class="form-group">
+    <label asp-for="{{camel ./name}}" class="control-label"></label>
+    <input asp-for="{{camel ./name}}" class="form-control" />
+    <span asp-validation-for="{{camel ./name}}" class="text-danger"></span>
+</div>
+{{/each}}
+{{~/inline}}
+@model {{project.application_namespace}}.Data.{{camel entity.model_name}}
+
+@{
+    ViewData["Title"] = "Create {{camel entity.model_name}}";
+}
+
+<h4>{{camel entity.model_name}}</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            {{> fields}}
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

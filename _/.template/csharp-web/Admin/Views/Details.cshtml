@@ -1,0 +1,27 @@
+{{#*inline "fields"}}
+{{#each entity.columns}}
+<dt class = "col-sm-2">
+  @Html.DisplayNameFor(model => model.{{camel ./name}})
+</dt>
+<dd class = "col-sm-10">
+  @Html.DisplayFor(model => model.{{camel ./name}})
+</dd>
+{{/each}}
+{{~/inline}}
+@model {{project.application_namespace}}.Data.{{camel entity.model_name}}
+
+@{
+    ViewData["Title"] = "{{camel entity.model_name}} Details";
+}
+
+<div>
+  <h4>{{camel entity.model_name}}</h4>
+  <hr />
+  <dl class="row">
+    {{> fields}}
+  </dl>
+</div>
+<div>
+  <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+  <a asp-action="Index">Back to List</a>
+</div>

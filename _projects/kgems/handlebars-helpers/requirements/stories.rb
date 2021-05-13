@@ -24,13 +24,17 @@ KDsl.document :stories do
     #----------------------------------------------------------------------
 
 
-    row :task, :current, 'add support for environment variables',
-    [
-    ]
+    row :task, :current, 'add support for environment variables', [ ]
 
-    row :task, :current, 'add support for string_formatter usage via STRING_FORMATTER.md',
-    [
-    ]
+    row :task, :current, 'wrap string in single/double quotes', [ ]
+
+    row :task, :current, 'add support for string_formatter usage via STRING_FORMATTER.md', [ ]
+
+    row :task, :current, 'add array/enumerable support, in particular take(array, limit)'
+
+    row :task, :current, 'titleize to support :symbols, and other methods need to be checked'
+
+    row :task, :current, "add nil/empty handlers, such as nil to '', or nil to nil || 'xyz', '' to nil", [ ]
 
     row :task, :current, 'add factory methods so that I can just use any helper from Ruby Code',
     [
@@ -38,9 +42,7 @@ KDsl.document :stories do
     ]
 
 
-    row :task, :current, 'add gem release rake task (see k_builder-watch',
-    [
-    ]
+    row :task, :current, 'add gem release rake task (see k_builder-watch', [ ]
 
     row :story, :current, 'As a Documentor, I can create usage examples for this GEM, so that I can document the project',
     [

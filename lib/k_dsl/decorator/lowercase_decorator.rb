@@ -2,7 +2,7 @@
 
 module KDsl
   module Decorator
-    # Turn all string and symbol values in the data hash into upercase
+    # Turn all string and symbol values in the data hash into uppercase
     class LowercaseDecorator
       def update(data)
         data.update(data) do |_key, value|

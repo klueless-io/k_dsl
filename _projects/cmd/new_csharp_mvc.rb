@@ -1,15 +1,15 @@
 # KDsl.cmd :cmd do
 KDsl.document :csharp_mvc do
   s = settings do
-    name                    :p09_mvc_bootstrap_plugins
-    description_suffix      'simple mvc app using bootstrap 5 and bootstrap plugins'
+    name                    :p11_club_membership
+    description_suffix      'Membership management system for a Sydney Club'
     definition_subfolder    'csharp-mvc'
     project_group           'c#'
     website_slug_group      'csharp/samples'
   end
   
   s.website_slug = s.name
-  s.main_story   = "As a C# Developer, I want a simple MVC app with bootstrap plugins, so that I practice web apps"
+  s.main_story   = "As a Club Owner, I want to record and find member details, so I know who is in my club"
   
   def on_action
     s = d.settings

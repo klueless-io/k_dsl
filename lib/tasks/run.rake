@@ -6,6 +6,7 @@ BASE_PATH_OLD = '~/dev/kweb/klue-less/_'
 BASE_PATH = '~/dev/kgems/k_dsl/_'
 BASE_PATH_RESOURCES = '~/dev/kgems/k_dsl/_projects'
 
+# rake k_dsl:run
 namespace :k_dsl do
   def build_project(relative_resource_path, app_template_path: nil)
     project_config = get_config(relative_resource_path: relative_resource_path, app_template_path: app_template_path)
@@ -70,6 +71,10 @@ namespace :k_dsl do
     project_playrb_loquacious = KDsl::Manage::Project.new('playrb_loquacious', get_config(relative_resource_path: 'kgems/playrb_loquacious'))
     project_playrb_loquacious.watch_path('**/*.rb')
 
+    # Rails
+    project_rails_printspeakx = build_project('rails/printspeakx')
+    current_rails = project_rails_printspeakx
+
     # Peeky
     project_peeky_config = get_config(relative_resource_path: 'kgems/peeky',
                                       app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/peeky/.templates')
@@ -96,15 +101,40 @@ namespace :k_dsl do
     project_k_doc = KDsl::Manage::Project.new('k_doc', project_k_doc_config)
     project_k_doc.watch_path('**/*.rb', ignore: /.template/)
 
+    project_k_github_config = get_config(relative_resource_path: 'kgems/k_github',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_github/.templates')
+    project_k_github = KDsl::Manage::Project.new('k_github', project_k_github_config)
+    project_k_github.watch_path('**/*.rb', ignore: /.template/)
+
+    project_k_ext_github_config = get_config(relative_resource_path: 'kgems/k_ext-github',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_ext-github/.templates')
+    project_k_ext_github = KDsl::Manage::Project.new('k_ext-github', project_k_ext_github_config)
+    project_k_ext_github.watch_path('**/*.rb', ignore: /.template/)
+
+    project_k_type_config = get_config(relative_resource_path: 'kgems/k_type',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_type/.templates')
+    project_k_type = KDsl::Manage::Project.new('k_type', project_k_type_config)
+    project_k_type.watch_path('**/*.rb', ignore: /.template/)
+
     project_k_util_config = get_config(relative_resource_path: 'kgems/k_util',
       app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_util/.templates')
     project_k_util = KDsl::Manage::Project.new('k_util', project_k_util_config)
     project_k_util.watch_path('**/*.rb', ignore: /.template/)
 
+    project_k_decor_config = get_config(relative_resource_path: 'kgems/k_decor',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_decor/.templates')
+    project_k_decor = KDsl::Manage::Project.new('k_decor', project_k_decor_config)
+    project_k_decor.watch_path('**/*.rb', ignore: /.template/)
+
     project_k_log_config = get_config(relative_resource_path: 'kgems/k_log',
       app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_log/.templates')
     project_k_log = KDsl::Manage::Project.new('k_log', project_k_log_config)
     project_k_log.watch_path('**/*.rb', ignore: /.template/)
+
+    project_k_manager_config = get_config(relative_resource_path: 'kgems/k_manager',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_manager/.templates')
+    project_k_manager = KDsl::Manage::Project.new('k_manager', project_k_manager_config)
+    project_k_manager.watch_path('**/*.rb', ignore: /.template/)
 
     project_k_builder_config = get_config(relative_resource_path: 'kgems/k_builder',
           app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_builder/.templates')
@@ -156,9 +186,17 @@ namespace :k_dsl do
     project_cs_p07_weather_microservice = build_project('c#/p07_weather_microservice', app_template_path: '~/dev/c#/P07WeatherMicroservice/_/app/.templates')
     project_cs_p08_mvc_basic = build_project('c#/p08_mvc_basic')
     project_cs_p09_mvc_bootstrap_plugins = build_project('c#/p09_mvc_bootstrap_plugins')
-    current_cs = project_cs_p09_mvc_bootstrap_plugins
+    project_cs_p10_mvc_with_identity = build_project('c#/p10_mvc_with_identity')
 
     project_cs_pitstop = build_project('csharp/pitstop')
+    project_cs_peterpan = build_project('csharp/peterpan')
+    project_cs_p11_club_membership = build_project('csharp/p11_club_membership')
+    project_cs_p12_location = build_project('csharp/p12_location')
+    project_cs_printspeak = build_project('csharp/printspeak')
+    project_cs_courses = build_project('csharp/p13_courses')
+    project_cs_movies = build_project('csharp/p14_movie_theatre')
+
+    current_cs = project_cs_movies
 
     # HTML - Samples (Lessons)
     project_html_l01_config = get_config(relative_resource_path: 'html/l01_ux_design_principals')
@@ -193,6 +231,10 @@ namespace :k_dsl do
 
     current_react = project_react_l06
 
+    project_react_native_l01 = build_project('react_native/r01_getting_started')
+    project_react_native_l02 = build_project('react_native/r02_navigation')
+    
+    current_react_native = project_react_native_l02
     # KDSL
     project_gem_kdsl_config = get_config(relative_resource_path: 'kgems/k_dsl',
                                          app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_dsl/.templates')
@@ -243,15 +285,21 @@ namespace :k_dsl do
                            # project_rspec_usecases,
                            # project_webpack5_builder,
                            # project_idea_video,
-                           #  current_html
+                           # current_html
                            # current_react,
-                          #  current_cs,
+                           # current_react_native,
+                           # current_rails,
+                           current_cs,
                            # current_webpack5
-                           #  project_k_builder_watch, project_k_builder_dotnet, project_k_builder_webpack5, project_k_builder_package_json, project_k_builder
-                          #  project_k_doc,
-                           project_k_log,
-                          #  project_k_util
-                          )
+                           # project_k_builder_watch, project_k_builder_dotnet, project_k_builder_webpack5, project_k_builder_package_json, project_k_builder
+                           # project_k_type,
+                           # project_k_ext_github
+                           # project_k_doc,
+                           # project_k_manager,
+                           # project_k_log,
+                           # project_k_util,
+                           # project_k_decor
+                           )
     when :xyz_commands
       manager.add_projects(project_command,
                            project_k_xmen_command,

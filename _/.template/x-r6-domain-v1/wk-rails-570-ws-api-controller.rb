@@ -40,7 +40,7 @@ module Api
         query = Query::{{camelU settings.Model}}Query.new(params[:options])
 
         rows = query.run
-        page = query.get_current_page
+        page = query.current_page
 
         # How do we handle errors?, e.g. is there a 404
         render_success_query(rows, page)

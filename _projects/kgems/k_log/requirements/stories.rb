@@ -14,12 +14,12 @@ KDsl.document :stories do
     # status: :done, :current
     fields [f(:type, :story), f(:status, :todo), :story, :tasks, f(:featured_position, 0)]
 
-    row :story, :current, 'As a Developer, I can DO_SOMETHING, so that I QUALITY_OF_LIFE',
+    row :story, :current, 'As a Developer, I need formatted console logs, so that information presents clearly',
     [
-      'Subtask'
+      'A range of helper methods that write formatted log entries to the console'
     ], featured_position: 1
 
-    row :task, :current, 'Setup RubyGems and RubyDoc',
+    row :task, :done, 'Setup RubyGems and RubyDoc',
     [
       'Build and deploy gem to [rubygems.org](https://rubygems.org/gems/k_log)',
       'Attach documentation to [rubydoc.info](https://rubydoc.info/github/to-do-/k_log/master)'
@@ -33,7 +33,7 @@ KDsl.document :stories do
       'Setup an examples/usage document'
     ]
 
-    row :task, :current, 'Setup GitHub Action (test and lint)',
+    row :task, :done, 'Setup GitHub Action (test and lint)',
       [
         'Setup Rspec action',
         'Setup RuboCop action'

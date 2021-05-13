@@ -42,7 +42,6 @@ KDsl.microapp :{{snake name}} do
     # run_command 'dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL'
     # run_command 'dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL.Design'
     # run_command 'dotnet add package StyleCop.Analyzers'
-    # run_command 'dotnet add package Microsoft.CodeAnalysis.FxCopAnalyzers'
 
     # dotnet user-secrets init
     # dotnet user-secrets set "Db:Password" "12345"
