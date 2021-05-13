@@ -5,7 +5,7 @@ module KDsl
     # Configuration data for the manager.
     #
     # You may want to have multiple managers and so it is useful to
-    # store the configuation in an object that can be passed. 
+    # store the configuration in an object that can be passed. 
     class ProjectConfig
       # Base path for project resources (defaults to current working directory)
       # Usually set to centralized path that is reused across projects

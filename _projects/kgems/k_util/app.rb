@@ -11,7 +11,7 @@ KDsl.microapp :k_util do
     description                   'KUtil provides simple utility methods'
     application                   'k_util'
     avatar                        'Developer'
-    main_story                    'As a Developer, I need simple utility helpers, to solve cross cutting issues'
+    main_story                    'As a Developer, I need simple utility helpers, to solve cross cutting issues and simplify common access methods'
     author                        'David Cruwys'
     author_email                  'david@ideasmen.com.au'
     copyright_date                '2021'
@@ -24,7 +24,7 @@ KDsl.microapp :k_util do
     data_path                     '_/.data'
   end
 
-  is_run = 1
+  is_run = 0
 
   def on_action
     s = d.settings

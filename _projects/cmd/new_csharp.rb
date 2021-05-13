@@ -1,15 +1,15 @@
 # KDsl.cmd :cmd do
 KDsl.document :csharp_mvc do
   s = settings do
-    name                    :pitstop
-    description_suffix      'Based on ideas from EdwinVW/pitstop, this repo re-imagines the Garage Management System for Pitstop - a fictitious garage / car repair shop.'
+    name                    :p14_movie_theatre
+    description_suffix      'Ticketing system for a movie theatre'
     definition_subfolder    'csharp-mvc'
     project_group           'csharp'
     website_slug_group      'csharp/samples'
   end
   
   s.website_slug = s.name
-  s.main_story   = "As a C# Developer, I want a simple MVC application, so that I practice web apps"
+  s.main_story   = "As a Movie Theatre Owner, I want sell ticket to different sessions, so that I can make money"
   
   def on_action
     s = d.settings

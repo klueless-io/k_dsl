@@ -1,6 +1,0 @@
-{{#each models}}
-{{snake this.name}}:
-  can_import: true
-  can_reset: true
-
-{{/each}}

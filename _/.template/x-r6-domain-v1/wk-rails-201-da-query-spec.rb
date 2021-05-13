@@ -132,7 +132,7 @@ describe Query::{{camelU settings.Model}}Query do
         query = Query::{{camelU settings.Model}}Query.new(config.parse_json)
 
         result = query.run
-        page = query.get_current_page()
+        page = query.current_page()
 
         expect(page.no).to eq(1)
         expect(page.size).to eq(20)
@@ -161,7 +161,7 @@ describe Query::{{camelU settings.Model}}Query do
         query = Query::{{camelU settings.Model}}Query.new(config.parse_json)
 
         result = query.run
-        page = query.get_current_page()
+        page = query.current_page()
 
         # p_{{snake settings.Models}}_as_table(result)
 
@@ -206,7 +206,7 @@ describe Query::{{camelU settings.Model}}Query do
         query = Query::{{camelU settings.Model}}Query.new(config.parse_json)
 
         result = query.run
-        page = query.get_current_page()
+        page = query.current_page()
 
         # p_{{snake settings.Models}}_as_table(result)
 
