@@ -4,7 +4,7 @@
 namespace :api, defaults: { format: "json" } do
   namespace :v1 do
 {{#each entities}}
-    resources :{{snake ./model_name_plural}} do
+    resources :{{snake ./name_plural}} do
       collection do
         get "multi"
         get "sample"

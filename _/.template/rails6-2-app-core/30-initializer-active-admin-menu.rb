@@ -16,12 +16,12 @@ ActiveAdmin.setup do |config|
         sites.add label: "Admin Users", url: "/admin/admin_users", priority: 2
       end
       menu.add label: "All Models", priority: 2 do |sites|{{#menus}}
-      sites.add label: "{{titleize (humanize name)}}", url: "/admin/{{snake model_name_plural}}", priority: {{@index}}
+      sites.add label: "{{titleize (humanize name)}}", url: "/admin/{{snake name_plural}}", priority: {{@index}}
 
       {{/menus}}
       {{^menus}}
 {{#entities}}{{#if (eq name "user")}}{{else if (eq name "admin_user" )}}{{else}}
-        sites.add label: "{{titleize (humanize name)}}", url: "/admin/{{snake model_name_plural}}", priority: {{@index}}{{/if}}{{/entities}}
+        sites.add label: "{{titleize (humanize name)}}", url: "/admin/{{snake name_plural}}", priority: {{@index}}{{/if}}{{/entities}}
       {{/menus}}
       end
     end

@@ -1,3 +1,4 @@
+require "pg_util"
 # frozen_string_literal: true
 
 # Access statistics for table

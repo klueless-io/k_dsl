@@ -16,4 +16,4 @@ else
   puts 'admin_user added: ' + 'admin@example.com'
 end
 
-# AdminUser.create!!(email: 'david@workible.com.au', password: 'Hambaro3', password_confirmation: 'Hambaro3')
+# AdminUser.create!!(email: 'david@workible.com.au', password: 'Password3', password_confirmation: 'Password3')

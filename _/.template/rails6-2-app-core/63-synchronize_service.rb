@@ -9,7 +9,7 @@ class SynchronizeService
   # --------------------------------------------------------------------------------
 
 {{#each entities}}
-  def self.{{snake this.model_name_plural}}(sync: false, reset_table: false, spreadsheet_name: AppService::DEFAULT_SPREADSHEET_NAME, worksheet_name: "{{dashify this.model_name}}", source_key: DEFAULT_SOURCE)
+  def self.{{snake this.name_plural}}(sync: false, reset_table: false, spreadsheet_name: AppService::DEFAULT_SPREADSHEET_NAME, worksheet_name: "{{dashify this.model_name}}", source_key: DEFAULT_SOURCE)
     bulk_upsert = BulkUpsert::{{camelU this.model_name}}BulkUpsert.new
 
     upsert(bulk_upsert, sync, reset_table, spreadsheet_name, worksheet_name, source_key)
