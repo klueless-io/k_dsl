@@ -160,7 +160,6 @@ namespace :k_dsl do
       app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_builder-webpack5/.templates')
     project_k_builder_webpack5 = KDsl::Manage::Project.new('k_builder-webpack5', project_k_builder_webpack5_config)
     project_k_builder_webpack5.watch_path('**/*.rb', ignore: /.template/)
-    
 
     # webpack5-builder
     project_webpack5_builder_config = get_config(relative_resource_path: 'kgems/webpack5-builder',
@@ -168,11 +167,30 @@ namespace :k_dsl do
     project_webpack5_builder = KDsl::Manage::Project.new('webpack5-builder', project_webpack5_builder_config)
     project_webpack5_builder.watch_path('**/*.rb', ignore: /.template/)
 
+    project_mindmeister_api_config = get_config(relative_resource_path: 'kgems/mindmeister_api',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/mindmeister_api/.templates')
+    project_mindmeister_api = KDsl::Manage::Project.new('mindmeister_api', project_mindmeister_api_config)
+    project_mindmeister_api.watch_path('**/*.rb', ignore: /.template/)
+
     # print_speak
     project_print_speak_config = get_config(relative_resource_path: 'kgems/print_speak',
       app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/print_speak/.templates')
     project_print_speak = KDsl::Manage::Project.new('print_speak', project_print_speak_config)
     project_print_speak.watch_path('**/*.rb', ignore: /.template/)
+
+    project_test_miniracer_config = get_config(relative_resource_path: 'kgems/test-miniracer',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/test-miniracer/.templates')
+    project_test_miniracer = KDsl::Manage::Project.new('test-miniracer', project_test_miniracer_config)
+    project_test_miniracer.watch_path('**/*.rb', ignore: /.template/)
+
+    project_test_gpt3 = KDsl::Manage::Project.new('test_gpt3', get_config(relative_resource_path: 'kgems/test_gpt3'))
+    project_test_gpt3.watch_path('**/*.rb')
+
+    project_gpt3_builder_config = get_config(relative_resource_path: 'kgems/gpt3-builder',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/gpt3-builder/.templates')
+    project_gpt3_builder = KDsl::Manage::Project.new('gpt3-builder', project_gpt3_builder_config)
+    project_gpt3_builder.watch_path('**/*.rb', ignore: /.template/)
+
 
     # C# - Samples (Programs)
     project_cs_p02_config = get_config(relative_resource_path: 'c#/P02Ef4')
@@ -195,6 +213,7 @@ namespace :k_dsl do
     project_cs_printspeak = build_project('csharp/printspeak')
     project_cs_courses = build_project('csharp/p13_courses')
     project_cs_movies = build_project('csharp/p14_movie_theatre')
+    project_cs_movies = build_project('csharp/p15_areas')
 
     current_cs = project_cs_movies
 
@@ -249,7 +268,7 @@ namespace :k_dsl do
     project_idea_post.watch_path('**/*.rb')
 
     project_idea_video = KDsl::Manage::Project.new('idea_video', get_config(relative_resource_path: 'idea_video'))
-    project_idea_video.watch_path('**/*.rb')
+    project_idea_video.watch_path('**/*.rb', ignore: /template_code/)
 
     config_microapp = KDsl::Manage::ProjectConfig.new do
       self.base_path = BASE_PATH
@@ -284,12 +303,12 @@ namespace :k_dsl do
                            # project_print_speak
                            # project_rspec_usecases,
                            # project_webpack5_builder,
-                           # project_idea_video,
+                          #  project_idea_video,
                            # current_html
                            # current_react,
                            # current_react_native,
                            # current_rails,
-                           current_cs,
+                          #  current_cs,
                            # current_webpack5
                            # project_k_builder_watch, project_k_builder_dotnet, project_k_builder_webpack5, project_k_builder_package_json, project_k_builder
                            # project_k_type,
@@ -298,7 +317,10 @@ namespace :k_dsl do
                            # project_k_manager,
                            # project_k_log,
                            # project_k_util,
-                           # project_k_decor
+                           # project_k_decor,
+                           #  project_mindmeister_api
+                          #  project_test_miniracer
+                           project_gpt3_builder
                            )
     when :xyz_commands
       manager.add_projects(project_command,

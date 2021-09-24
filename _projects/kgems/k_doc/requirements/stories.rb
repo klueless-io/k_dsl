@@ -27,7 +27,8 @@ KDsl.document :stories do
     row :story, :done, 'As a Domain Modeler, I can define flexible key/value stores, so I can access settings data',
     [
       'add DSL for key/value settings',
-      'add support for data decorators'
+      'add support for data decorators',
+      'cleaning symbols in table rows should be an option that can be turned on or off, lib/k_doc/table.rb:60:66'
     ]
 
     row :task, :backlog, 'add DSL for builder data structure'

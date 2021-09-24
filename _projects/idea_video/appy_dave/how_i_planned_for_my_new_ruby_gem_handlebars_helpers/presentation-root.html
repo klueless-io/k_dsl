@@ -15,20 +15,24 @@
         {{#if raw}}
           {{{./raw}}}
         {{else}}
-        <section data-transition="{{transition}}" data-transition-speed="{{transition_speed}}"
-          {{#if animate}} data-auto-animate{{/if ~}}
-          {{#if image_name}} data-background="{{image_name}}" data-background-size='{{background_size}}' data-background-opacity='{{background_opacity}}'{{/if ~}}
+        <section
+          data-transition="{{transition}}"
+          data-transition-speed="{{transition_speed}}"
+          {{#if animate}}data-auto-animate{{/if ~}}
+          {{#if image_name}} data-background="{{image_name}}"
+            data-background-size='{{background_size}}'
+            data-background-opacity='{{background_opacity}}'{{/if ~}}
         >
-            {{#if h1_fit}}<h1 data-id='h1_fit' class="r-fit-text">{{{h1_fit}}}</h1>{{/if}}
-            {{#if h1}}<h1 data-id='h1'>{{{h1}}}</h1>{{/if}}
-            {{#if h2_fit}}<h2 data-id='h2_fit' class="r-fit-text">{{{h2_fit}}}</h2>{{/if}}
-            {{#if h2}}<h2 data-id='h2'>{{{h2}}}</h2>{{/if}}
-            {{#if h3_fit}}<h3 data-id='h3_fit' class="r-fit-text">{{{h3_fit}}}</h3>{{/if}}
-            {{#if h3}}<h3 data-id='h3'>{{{h3}}}</h3>{{/if}}
-            {{#if p1}}<p data-id='p1'>{{{p1}}}</p>{{/if}}
-            {{#if p2}}<p data-id='p2'>{{{p2}}}</p>{{/if}}
-            {{#if p3}}<p data-id='p3'>{{{p3}}}</p>{{/if}}
-            {{#if code}}<pre data-id='code'><code class="hljs {{code_format}}">{{{code}}}</code></pre>{{/if}}
+            {{#if h1_fit}}<h1 data-id='h1_fit' class="r-fit-text">{{{h1_fit}}}</h1>{{/if~}}
+            {{#if h1}}<h1 data-id='h1'>{{{h1}}}</h1>{{/if~}}
+            {{#if h2_fit}}<h2 data-id='h2_fit' class="r-fit-text">{{{h2_fit}}}</h2>{{/if~}}
+            {{#if h2}}<h2 data-id='h2'>{{{h2}}}</h2>{{/if~}}
+            {{#if h3_fit}}<h3 data-id='h3_fit' class="r-fit-text">{{{h3_fit}}}</h3>{{/if~}}
+            {{#if h3}}<h3 data-id='h3'>{{{h3}}}</h3>{{/if~}}
+            {{#if p1}}<p data-id='p1'>{{{p1}}}</p>{{/if~}}
+            {{#if p2}}<p data-id='p2'>{{{p2}}}</p>{{/if~}}
+            {{#if p3}}<p data-id='p3'>{{{p3}}}</p>{{/if~}}
+            {{#if code}}<pre data-id='code'><code class="hljs {{code_format}}">{{{code}}}</code></pre>{{/if~}}
             {{#each fragments}}
               <p class='fragment fade-in-then-semi-out'>{{{.}}}</p>
             {{/each ~}}

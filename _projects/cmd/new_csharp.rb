@@ -1,8 +1,8 @@
 # KDsl.cmd :cmd do
 KDsl.document :csharp_mvc do
   s = settings do
-    name                    :p14_movie_theatre
-    description_suffix      'Ticketing system for a movie theatre'
+    name                    :p15_areas
+    description_suffix      'Areas and routing'
     definition_subfolder    'csharp-mvc'
     project_group           'csharp'
     website_slug_group      'csharp/samples'

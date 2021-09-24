@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>PrintSpeak Architecture</title>
+		<link rel="stylesheet" href="../dist/reveal.css">
+		<link rel="stylesheet" href="../dist/theme/printspeak.css" id="theme">
+
+    <!--
+		<link rel="stylesheet" href="../plugin/highlight/zenburn.css">
+		<link rel="stylesheet" href="../plugin/highlight/monokai.css">
+    -->
+    <link rel='stylesheet' href='../highlight_css/github-dark-dimmed.css'>
+
+  </head>
+	<body>
+
+		<div class="reveal">
+			<div class="slides">
+
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-spec-1.rb.png" data-background-size='30% auto' data-background-opacity='.2'>
+            <h2 data-id='h2'>Code audit on <a>campaign.rb</a></h2>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-spec-1.rb.png" data-background-size='30% auto' data-background-opacity='.2'>
+            <h2 data-id='h2'>Campaign - Fat Model</h2>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-spec-1.rb.png" data-background-size='30% auto' data-background-opacity='.2'>
+            <h2 data-id='h2'>Campaign - Fat Model</h2>
+            <h3 data-id='h3'><a>82</a> methods, <a>1300</a> lines</h3>
+              <p class='fragment fade-in-then-semi-out'>Including Rails DSL methods</p>
+              <p class='fragment fade-in-then-semi-out'>scope<br/>belongs_to<br/>has_one<br/>has_many</p>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-spec-1.rb.png" data-background-size='30% auto' data-background-opacity='1'>
+              <p class='fragment fade-in-then-semi-out'><a>DSL methods</a></p>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-spec-2.rb.png" data-background-size='30% auto' data-background-opacity='1'>
+              <p class='fragment fade-in-then-semi-out'><a>Read only methods</a></p>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-spec-3.rb.png" data-background-size='50% auto' data-background-opacity='1'>
+              <p class='fragment fade-in-then-semi-out'><a>Operations</a></p>
+              <p class='fragment fade-in-then-semi-out'><a>Queries / Presenters</a></p>
+              <p class='fragment fade-in-then-semi-out'><a>Commands / Async Jobs</a></p>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-01-thin-1.rb.png" data-background-size='70% auto' data-background-opacity='.2'>
+            <h3 data-id='h3'>Campaign - Thin Model</h3>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-01-thin-1.rb.png" data-background-size='70% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-01-thin-2.rb.png" data-background-size='60% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-0.rb.png" data-background-size='45% auto' data-background-opacity='.2'>
+            <h3 data-id='h3'>Campaign - Virtual Fields  <br /> <a>readonly</a> fields</h3>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-0.rb.png" data-background-size='45% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-1b-count.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+              <p class='fragment fade-in-then-semi-out'><a>count records</a></p>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-1b-count.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-2b-lookup.rb.png" data-background-size='60% auto' data-background-opacity='1'>
+              <p class='fragment fade-in-then-semi-out'><a>lookup single records</a></p>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-2b-lookup.rb.png" data-background-size='60% auto' data-background-opacity='.2'>
+            <h2 data-id='h2'>Why would we care?</h2>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-2b-lookup.rb.png" data-background-size='60% auto' data-background-opacity='.2'>
+            <h2 data-id='h2'>Why would we care?</h2>
+            <h3 data-id='h3'>Patterns</h3>
+              <p class='fragment fade-in-then-semi-out'>different patterns require different tests</p>
+              <p class='fragment fade-in-then-semi-out'>data setup is based on patterns</p>
+              <p class='fragment fade-in-then-semi-out'>what you test is based on patterns</p>
+              <p class='fragment fade-in-then-semi-out'>pattern tags can be used for code generation</p>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-2b-lookup.rb.png" data-background-size='60% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-2c-lookup.rb.png" data-background-size='60% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-3b-predicate.rb.png" data-background-size='60% auto' data-background-opacity='1'>
+              <p class='fragment fade-in-then-semi-out'><a>predicates return true/false</a></p>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-3b-predicate.rb.png" data-background-size='60% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-3c-predicate.rb.png" data-background-size='70% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-3d-predicate.rb.png" data-background-size='70% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-4b.rb.png" data-background-size='50% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-4b.rb.png" data-background-size='50% auto' data-background-opacity='.2'>
+            <h3 data-id='h3'>Policy vs Predicate</h3>
+              <p class='fragment fade-in-then-semi-out'>policy is a type of predicate</p>
+              <p class='fragment fade-in-then-semi-out'>policy also known as <a>access grant</a></p>
+              <p class='fragment fade-in-then-semi-out'>policies are related to authorization</p>
+              <p class='fragment fade-in-then-semi-out'>policies are are cross-cutting concerns</p>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-4b.rb.png" data-background-size='50% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-5a-validation-0.rb.png" data-background-size='60% auto' data-background-opacity='.2'>
+            <h3 data-id='h3'><a>Validators</a></h3>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-5a-validation-0.rb.png" data-background-size='60% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-5a-validation-2a.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-5a-validation-2b.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-5a-validation-2c.rb.png" data-background-size='60% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-04-5a-validation-9.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/base_presenter.rb.png" data-background-size='60% auto' data-background-opacity='.2'>
+            <h3 data-id='h3'><a>Presenters</a></h3>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/base_presenter.rb.png" data-background-size='60% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-click-statistics-0.rb.png" data-background-size='50% auto' data-background-opacity='.2'>
+            <h3 data-id='h3'>Click Statistics - Presenter <br/><a>combined</a> query/present</h3>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-click-statistics-0.rb.png" data-background-size='50% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-click-statistics-2-1.rb.png" data-background-size='45% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-click-statistics-2-2.rb.png" data-background-size='50% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-click-statistics-2-3.rb.png" data-background-size='40% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-click-statistics-9.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-contact-0.rb.png" data-background-size='45% auto' data-background-opacity='.2'>
+            <h3 data-id='h3'>Contacts - Presenter <br/><a>separated</a> query/present</h3>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-contact-0.rb.png" data-background-size='45% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-contact-2.rb.png" data-background-size='60% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-contact-2a.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-contact-2b.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-contact-2c.rb.png" data-background-size='60% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-05-action-contact-9.rb.png" data-background-size='50% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-08-decorator-campaign-0.rb.png" data-background-size='80% auto' data-background-opacity='.2'>
+            <h3 data-id='h3'>Decorators</h3>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-08-decorator-campaign-0.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-08-decorator-campaign-2.rb.png" data-background-size='70% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-08-decorator-campaign-9.rb.png" data-background-size='70% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-06-action-check-bounce-rate-0.rb.png" data-background-size='55% auto' data-background-opacity='.2'>
+            <h3 data-id='h3'>Commands</h3>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-06-action-check-bounce-rate-0.rb.png" data-background-size='55% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-06-action-check-bounce-rate-1.rb.png" data-background-size='40% auto' data-background-opacity='.2'>
+            <h3 data-id='h3'>Check Bounce Rate - <a>Command</a></h3>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-06-action-check-bounce-rate-1.rb.png" data-background-size='40% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-06-action-check-bounce-rate-1a.rb.png" data-background-size='70% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-06-action-check-bounce-rate-1b.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-06-action-check-bounce-rate-1c.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-06-action-check-bounce-rate-9.rb.png" data-background-size='70% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-07-job-resend-messages-0.rb.png" data-background-size='80% auto' data-background-opacity='.2'>
+            <h3 data-id='h3'>Async Jobs</h3>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-07-job-resend-messages-0.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-07-job-resend-messages-2.rb.png" data-background-size='80% auto' data-background-opacity='.2'>
+            <h3 data-id='h3'>Resend Messages - <a>Job</a></h3>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-07-job-resend-messages-2.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-07-job-resend-messages-9.rb.png" data-background-size='80% auto' data-background-opacity='1'>
+
+          </section>
+        <section data-transition="zoom-in" data-transition-speed="slow"
+           data-auto-animate data-background="images/code-campaign-spec-1.rb.png" data-background-size='30% auto' data-background-opacity='.2'>
+            <h2 data-id='h2'>Code audit on <a>campaign.rb</a> - end</h2>
+
+          </section>
+</div>
+		</div>
+
+		<script src="../dist/reveal.js"></script>
+		<!--
+    <script src="../plugin/zoom/zoom.js"></script>
+		<script src="../plugin/notes/notes.js"></script>
+		<script src="../plugin/search/search.js"></script>
+		<script src="../plugin/markdown/markdown.js"></script>
+    -->
+		<script src="../plugin/highlight/highlight.js"></script>
+		<script>
+      Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+        // disableLayout: false,
+        // width: 960,
+        // height: 700,
+        // // Factor of the display size that should remain empty around the content
+        margin: 0.00,
+        // // Bounds for smallest/largest possible scale to apply to content
+        minScale: 0.0,
+        maxScale: 2.0,
+        plugins: [ RevealHighlight ] // RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, 
+      });
+		</script>
+    <style>
+      .reveal pre code {
+        max-height: 600px;
+      }
+    </style>
+	</body>
+</html>
