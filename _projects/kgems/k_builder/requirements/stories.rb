@@ -30,23 +30,27 @@ KDsl.document :stories do
     row :story, :current, 'As a Developer, I need the builder API easier to use, so I am more efficient',
     [
       'Add file parts into layered and named folders',
+      'Add content_file got support for looking up in template folders, but it did not get a unit test',
+      'BUG BIG ONE, should content file be reading from template folders? and what happens when content file is absolute',
       'Add variant that writes to clipboard called add_clipboard',
       'TargetFile, needs support for absolute target_file',
       'Touch as an alias for add_file with no content',
       'Add vscode support',
       'Add_file needs to support folder_key',
-      'TODO: Delete folder, so that I can regenerate a complete folder without leftover artifacts',
-      'TODO: Add vscode compare support',
-      'TODO: Add vscode last target_file support',
-      'TODO: Add vscode last template_file support',
-      'TODO: A TF variable support. add_file with template_file: needs to support optional filename that is the same as the template_file (or use a token, eg. $TF_PATH$, $TF_NAME$, $TF_FILE$',
+      'Delete folder, so that I can regenerate a complete folder without leftover artifacts',
+      'Add vscode compare support',
+      'Add vscode last target_file support',
+      'Add vscode last template_file support',
+      'A TF variable support. add_file with template_file: needs to support optional filename that is the same as the template_file (or use a token, eg. $TF_PATH$, $TF_NAME$, $TF_FILE$',
+      'need to support the fork process options as I was not able to run k_builder_watch -n because it hid all the following output',
+      'Need support for rubocop -a'
     ]
-
 
     row :story, :current, 'BACKLOG: As a Developer, I need builders to be easier to use, so I am more efficient',
     [
       'Folder Key, also need support for template_folder_key',
       'cb (change_back) method which is the opposite of cd (change_dir)',
+      'cd needs to support subfolders, but this will mean that the target folder system will need to allow for relative path concepts',
       'It would be useful to have two configurations, one for new code and the other for new builders',
       '* wild card support for add_file, maybe call it add_files or copy files',
       'Xml File Update for .csproj',

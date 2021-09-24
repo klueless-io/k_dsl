@@ -36,12 +36,20 @@ Lint/NonDeterministicRequireOrder:
   
 Metrics/MethodLength:
   Max: 25
+  Exclude:
+    - "spec/helpers/**/*"
+
+Metrics/AbcSize:
+  Exclude:
+    - "spec/helpers/**/*"
 
 Layout/LineLength:
   Max: 200
   # Ignores annotate output
   IgnoredPatterns: ['\A# \*\*']
   IgnoreCopDirectives: true
+  Exclude:
+    - "spec/helpers/**/*"
 
 Lint/UnusedMethodArgument:
   AllowUnusedKeywordArguments: true

@@ -15,8 +15,6 @@ KDsl.blueprint :how_i_planned_for_my_new_ruby_gem_handlebars_helpers do
     author_email                  'david@ideasmen.com.au'
     website                       'http://appydave.com/video/how-i-planned-for-my-new-ruby-gem-handlebars-helpers'
     publish_on                    ['youtube.com', 'facebook.com', 'linkedin.com']
-    app_path                      '~/dev/idea_video/how_i_planned_for_my_new_ruby_gem_handlebars_helpers'
-    data_path                     '_/.data'
   end
 
   table :slides do
@@ -165,7 +163,7 @@ TEXT
 
     source_path = File.expand_path(app.settings.app_path)
     template_file = File.join(source_path, 'presentation-root.html')
-    test_file = File.join(source_path, 'xmen.html')
+    test_file = File.join(source_path, 'presentation-sample.html')
 
     target_path = "/Users/davidcruwys/dev/slides/presentation/#{custom_data.settings.title.parameterize.dasherize}"
     output_file = File.join(target_path, "#{custom_data.settings.short_file}.html")

@@ -7,11 +7,11 @@ module ImportDataResetAll
     settings = open_settings
 
     {{#each entities}}
-    # Delete data for {{titleize (humanize this.model_name_plural)}}
+    # Delete data for {{titleize (humanize this.name_plural)}}
     if settings["{{snake this.model_name}}"] && settings["{{snake this.model_name}}"]["can_reset"]
       L.kv "Delete", "{{camelU this.model_name}}"
       {{camelU this.model_name}}.delete_all
-      PgUtil.execute_sql("alter sequence {{snake this.model_name_plural}}_id_seq restart with 1;")
+      PgUtil.execute_sql("alter sequence {{snake this.name_plural}}_id_seq restart with 1;")
     end{{#if @last}}{{else}}
 {{/if}}
 

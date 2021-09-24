@@ -7,12 +7,12 @@ module ImportDataRunAll
     settings = open_settings
 
 {{#each entities}}
-    # Import Sample/Seed data for {{titleize (humanize this.model_name_plural)}}
+    # Import Sample/Seed data for {{titleize (humanize this.name_plural)}}
     if settings["{{snake this.model_name}}"] && settings["{{snake this.model_name}}"]["can_import"]
       L.heading "Import {{camelU this.model_name}}"
-      {{snake this.model_name_plural}} = open("{{snake this.model_name}}.yaml")
+      {{snake this.name_plural}} = open("{{snake this.model_name}}.yaml")
 
-      import_{{snake this.model_name}}({{snake this.model_name_plural}}) if {{snake this.model_name_plural}}.present?
+      import_{{snake this.model_name}}({{snake this.name_plural}}) if {{snake this.name_plural}}.present?
     end{{#if @last}}{{else}}
 {{/if}}
 

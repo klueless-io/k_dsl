@@ -25,12 +25,24 @@ KDsl.document :stories do
 
 
     row :task, :current, 'add support for environment variables', [ ]
+    row :task, :current, 'klueless:', [
+      'array_has_key_value',
+      'includes settings.ModelType array AdminUser BasicUser, include?',
+      'default_value if empty',
+      'template comment, how can I have content in a template that is not written to the output file',
+      'quote_and_ljust',
+      'padd by object.length',
+      'join using comma or other char',
+      "{{padr (surround . '' ':') 40}} does not work?",
+      "need support for curly_open/close"
+    ]
 
     row :task, :current, 'wrap string in single/double quotes', [ ]
 
     row :task, :current, 'add support for string_formatter usage via STRING_FORMATTER.md', [ ]
 
     row :task, :current, 'add array/enumerable support, in particular take(array, limit)'
+    row :task, :current, 'add array/enumerable support, in particular filter_variant(array, ...)'
 
     row :task, :current, 'titleize to support :symbols, and other methods need to be checked'
 
