@@ -33,13 +33,7 @@ RSpec.describe {{camel entity.model_name}}, type: :model do
   describe "#public API methods" do
     {{#each entity.rails_model.public_instance_methods}}
     describe "#{{./name}}" do
-      # subject { described_model.{{./name}} }
-      {{#if ./arguments}}
-      # let(:xxx) {} # {{./arguments}}
-      {{/if}}
-      
-      # it { is_expected.not_to be_nil }
-      # it { is_expected.to eq('xyz') }
+      it { refactor(:ok) }
     end
     {{/each}}
   end
@@ -49,13 +43,7 @@ RSpec.describe {{camel entity.model_name}}, type: :model do
   describe "#public class methods" do
     {{#each entity.rails_model.public_class_methods}}
     describe "#{{./name}}" do
-      # subject { described_class.{{./name}} }
-      {{#if ./arguments}}
-      # let(:xxx) {} # {{./arguments}}
-      {{/if}}
-
-      # it { is_expected.not_to be_nil }
-      # it { is_expected.to eq('xyz') }
+      it { refactor(:ok) }
     end
     {{/each}}
   end

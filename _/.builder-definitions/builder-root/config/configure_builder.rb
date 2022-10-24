@@ -4,7 +4,7 @@ def builder
   @builder ||= KBuilder::BaseBuilder.init
 end
 
-KBuilder.configure do |config|
+KConfig.configure do |config|
   raise 'app.settings.app_path is required' if app.settings.app_path.nil?
 
   base_folder       = app.settings.app_path
@@ -38,7 +38,7 @@ KBuilder.configure do |config|
 end
 
 
-# KBuilder.configure do |config|
+# KConfig.configure do |config|
 #   solution_root       = '~/dev/csharp/P15Areas'
 #   project_root       = '~/dev/csharp/P15Areas'
 #   templates_root    = '~/dev/kgems/k_dsl/_/.template'

@@ -122,7 +122,7 @@ class ProjectDefinition
   protected
 
   def message
-    titleize.parse([variant, type].compact.join(' '))
+    titleize.call([variant, type].compact.join(' '))
   end
 
   def guard_log(msg)

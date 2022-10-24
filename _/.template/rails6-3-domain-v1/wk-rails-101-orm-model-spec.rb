@@ -26,40 +26,21 @@ Date.parse("0{{num}} Jan 2017")
 require {{{q}}}rails_helper{{{q}}}
 require {{{q}}}spec_helper{{{q}}}
 
-# These tests have let blocks with the following types of prefixes that will help test
-# different aspects of saving, updating and query a model
-#   - required        - data columns that have been marked with a simple required validation
-#   - optional        - data columns that can be set to nil or a value
-#   - virtual         - virtual columns are not normally set by developer.
-#                       examples: updated_as created_at, deleted_at
-#   - has_one         - has one relationships
-#   - belongs_to      - has one relationships via foreign key
-#   - has_many        - has many relationships via join table
-#
-# if you need to debug the test data that is in the data base at anytime, you can run the
-# following methods from your tests to get a formatted console log of the data
-#   - print_me        - test data related to the {{downcase (humanize entity.model_name)}} model
-#   - print_data_set  - test data related to the {{downcase (humanize entity.model_name)}} model and it's parent dependencies
-# if you want to see test data before and after each test you can put this line inside any context or describe block
-#   around(:each) { |example| print_me; example.run; print_me }
 RSpec.describe {{camel entity.model_name}}, type: :model do
+  include_examples :factory_data
   before(:each) do
     FactoryBot.reload
   end
 
-  # focus models
   let(:{{snake entity.model_name}}_{{snake entity.trait1}}) { FactoryBot.create(:{{snake entity.model_name}}, :{{snake entity.trait1}}{{#each entity.has_one}}, {{snake ./name}}: {{snake ./related_entity.name}}_{{snake ./related_entity.trait1}}{{/each}}{{#each entity.belongs_to}}, {{snake ./name}}: {{snake ./related_entity.name}}_{{snake ./related_entity.trait1}}{{/each}}) }
   let(:{{snake entity.model_name}}_{{snake entity.trait2}}) { FactoryBot.create(:{{snake entity.model_name}}, :{{snake entity.trait2}}{{#each entity.has_one}}, {{snake ./name}}: {{snake ./related_entity.name}}_{{snake ./related_entity.trait2}}{{/each}}{{#each entity.belongs_to}}, {{snake ./name}}: {{snake ./related_entity.name}}_{{snake ./related_entity.trait2}}{{/each}}) }
-  let(:{{snake entity.model_name}}_{{snake entity.trait3}}) { FactoryBot.create(:{{snake entity.model_name}}, :{{snake entity.trait3}}{{#each entity.has_one}}, {{snake ./name}}: {{snake ./related_entity.name}}_{{snake ./related_entity.trait3}}{{/each}}{{#each entity.belongs_to}}, {{snake ./name}}: {{snake ./related_entity.name}}_{{snake ./related_entity.trait3}}{{/each}}) }
 
   let(:described_model) { {{snake entity.model_name}}_{{snake entity.trait1}} }
-
   {{#if entity.belongs_to}}
   # belongs to dependencies
   {{#each entity.belongs_to}}
   let(:{{snake this.related_entity.name}}_{{snake this.related_entity.trait1}}) { FactoryBot.build(:{{snake this.related_entity.name}}, :{{snake this.related_entity.trait1}}) }
   let(:{{snake this.related_entity.name}}_{{snake this.related_entity.trait2}}) { FactoryBot.build(:{{snake this.related_entity.name}}, :{{snake this.related_entity.trait2}}) }
-  let(:{{snake this.related_entity.name}}_{{snake this.related_entity.trait3}}) { FactoryBot.build(:{{snake this.related_entity.name}}, :{{snake this.related_entity.trait3}}) }
   {{/each}}
   {{/if}}
 
@@ -68,10 +49,8 @@ RSpec.describe {{camel entity.model_name}}, type: :model do
   {{#each entity.has_one}}
   let(:{{snake this.name}}_{{snake this.trait1}}) { FactoryBot.build(:{{snake this.name}}, :{{snake this.trait1}}) }
   let(:{{snake this.name}}_{{snake this.trait2}}) { FactoryBot.build(:{{snake this.name}}, :{{snake this.trait2}}) }
-  let(:{{snake this.name}}_{{snake this.trait3}}) { FactoryBot.build(:{{snake this.name}}, :{{snake this.trait3}}) }
   {{/each}}
   {{/if}}
-
   describe {{{q}}}#find{{{q}}} do
     context {{{q}}}when row ID exists{{{q}}} do
       before(:each) { described_model }
@@ -81,7 +60,6 @@ RSpec.describe {{camel entity.model_name}}, type: :model do
       it {{{q}}}should find by id{{{q}}} do
         expect(found.id).to eq(described_model.id)
       end
-
       {{#if entity.has_one}}
       describe {{{q}}}#has_one{{{q}}} do
         {{#each entity.has_one}}
@@ -205,34 +183,13 @@ RSpec.describe {{camel entity.model_name}}, type: :model do
             {{#each entity.belongs_to}}
             it { is_expected.to include({{{../q}}}{{titleize ./name}} must exist{{{../q}}}) }
 
-            it "before and after example for belongs_to relationship in Rails 4 and 5" do
-              rails4_existing = <<-RUBY
-                belongs_to :{{snake ./name}}
-              RUBY
-  
-              rails4_to_rails5_compatible = <<-RUBY
-                # From Rails 5 onward, required: true will be the default value
-                # this is achieved via a new attribute called optional: false
-                belongs_to :{{snake ./name}}, optional: false
-                # to simulate that in Rails 4, we add validates presence
-                validates :{{snake ./name}}, presence: { message: "must exist" }
-                # we add the previous unit test to check existence.
-              RUBY
-  
-              # We can go back to the old code after migrating to rails 5
-              rails5 = <<-RUBY
-                belongs_to :{{snake ./name}}
-              RUBY
-  
-              expect(1).to eq(1)
-            end
             {{/each}}
           end
           {{^}}
           # no relationships for belongs_to
           {{/if}}
         end
-
+        {{#if false}}
         context {{{q}}}because data columns are missing{{{q}}} do
           let(:attributes) { {}{{#if entity.belongs_to}}.merge(belongs_to_values){{/if}} }
 
@@ -251,6 +208,7 @@ RSpec.describe {{camel entity.model_name}}, type: :model do
           #   # .to raise_error(ActiveRecord::NotNullViolation)
           # end
         end
+{{/if}}
       end
     end
   end
@@ -320,7 +278,7 @@ RSpec.describe {{camel entity.model_name}}, type: :model do
         end
       end
     end
-
+    {{#if false}}
     describe {{{q}}}unhappy path :({{{q}}} do
       context {{{q}}}data fields with nil{{{q}}} do
         before(:each) { update.assign_attributes(attributes) }
@@ -346,12 +304,13 @@ RSpec.describe {{camel entity.model_name}}, type: :model do
         # NOT APPLICABLE
       end
     end
+{{/if}}
   end
 
   describe {{{q}}}#destroy{{{q}}} do
     context {{{q}}}when delete by id{{{q}}} do
       before(:each) { described_model }
-  
+
       it {{{q}}}when the row exists{{{q}}} do
         expect { described_class.destroy(described_model.id) }
           .to change { described_class.count }.by(-1)
@@ -359,7 +318,7 @@ RSpec.describe {{camel entity.model_name}}, type: :model do
     end
     context {{{q}}}when delete by multiple ids{{{q}}} do
       before(:each) { full_data_set }
-  
+
       it {{{q}}}should rows with valid ids exist{{{q}}} do
         expect { described_class.where(id: [{{snake entity.model_name}}_{{snake entity.trait1}}.id, {{snake entity.model_name}}_{{snake entity.trait2}}.id]).destroy_all }
         .to change { described_class.count }.by(-2)
@@ -371,7 +330,6 @@ RSpec.describe {{camel entity.model_name}}, type: :model do
   def full_data_set
     {{snake entity.model_name}}_{{snake entity.trait1}}
     {{snake entity.model_name}}_{{snake entity.trait2}}
-    # {{snake entity.model_name}}_{{snake entity.trait3}}
   end
 
   context "factories" do
@@ -381,23 +339,15 @@ RSpec.describe {{camel entity.model_name}}, type: :model do
 
     describe "check factory data" do
       it "validate test data" do
-        # print_data_set
+        print_data_set
 
         expect({{snake entity.model_name}}_{{snake entity.trait1}}).to_not be_nil
         expect({{snake entity.model_name}}_{{snake entity.trait2}}).to_not be_nil
-        expect({{snake entity.model_name}}_{{snake entity.trait3}}).to_not be_nil
       end
     end
   end
 
-  def print_me
-    print_{{snake entity.name_plural}}_as_table
-    # print_{{snake entity.name_plural}}(nil, 'detailed')
-  end
-
   def print_data_set
-    # return unless AppService.debug?
-
     {{#if settings.parent_dependencies}}
     # print higher level parents
     {{/if}}
@@ -414,6 +364,6 @@ RSpec.describe {{camel entity.model_name}}, type: :model do
 {{/each}}
 {{/if}}
 
-    print_me
+    print_{{snake entity.name_plural}}_as_table
   end
 end

@@ -33,7 +33,7 @@ KDsl.document :usage do
       TEXT
         usecases_folder = File.join(Dir.getwd, 'spec', 'usecases')
 
-        KBuilder.configure do |config|
+        KConfig.configure do |config|
           config.template_folder = File.join(usecases_folder, '.app_template')
           config.global_template_folder = File.join(usecases_folder, '.global_template')
           config.target_folder = File.join(usecases_folder, '.output')
@@ -60,13 +60,13 @@ KDsl.document :usage do
     row :sample, '', 'Print the configuration', ruby: <<~RUBY
         usecases_folder = File.join(Dir.getwd, 'spec', 'usecases')
 
-        KBuilder.configure do |config|
+        KConfig.configure do |config|
           config.template_folder = File.join(usecases_folder, '.app_template')
           config.global_template_folder = File.join(usecases_folder, '.global_template')
           config.target_folder = File.join(usecases_folder, '.output')
         end
 
-        puts JSON.pretty_generate(KBuilder.configuration.to_hash)
+        puts JSON.pretty_generate(KConfig.configuration.to_hash)
       RUBY
 
     row :sample, '', <<~TEXT

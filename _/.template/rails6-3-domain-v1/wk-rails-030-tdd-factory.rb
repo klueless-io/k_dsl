@@ -5,8 +5,6 @@ association :{{model}}{{#key}}, :{{../key}}{{/key}}
 {{#*inline "column_name"}}{{#if (eq name 'method')}}{{padr 'add_attribute(:method)' padsize}}{{^}}{{padr (snake name) padsize }}{{/if}}{{/inline}}
 FactoryBot.define do
   factory :{{snake entity.model_name}} do
-    # initialize_with { {{camel entity.model_name}}.find_or_create_by({{snake entity.main_key}}: {{snake entity.main_key}}) }
-
 {{#if (and false entity.has_one)}}
     # One to one associations
 {{#entity.has_one}}
@@ -14,16 +12,9 @@ FactoryBot.define do
 {{/entity.has_one}}
 
 {{/if}}
-    # Default column values
-    # TODO: this needs to take into consideration the required flag
-    #       default columns should be nil, unless they are required and in that scenario
-    #       the value can be uncommented
-    # TODO: This needs work from the data dictionary and use the faker gem
-    # TODO: This needs to put created_at, updated_at and deleted_at in own traits
 {{#each entity.columns_data}}
     {{> make_trait_key_value default=true column=. settings=settings td_key="" alpha="" num=9 bool=true padsize=40}}
 {{/each}}
-
 {{#*inline "make_trait_key_value"}}
 {{#if (eq column.db_type 'jsonb')}}
 {{> column_name name=column.name}} {{#if default}}{ nil } # {{/if}}{ { a: "{{alpha}}{{column.name}}" } }

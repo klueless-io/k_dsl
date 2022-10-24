@@ -7,7 +7,7 @@ KDsl.blueprint :bootstrap_bin_hook do
 
   instructions do
     fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, '')]
-
+    
     row '.gitignore'
 
     row 'bin/k'

@@ -121,6 +121,16 @@ namespace :k_dsl do
     project_k_util = KDsl::Manage::Project.new('k_util', project_k_util_config)
     project_k_util.watch_path('**/*.rb', ignore: /.template/)
 
+    project_k_fileset_config = get_config(relative_resource_path: 'kgems/k_fileset',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_fileset/.templates')
+    project_k_fileset = KDsl::Manage::Project.new('k_fileset', project_k_fileset_config)
+    project_k_fileset.watch_path('**/*.rb', ignore: /.template/)
+
+    project_conventional_gitflow_config = get_config(relative_resource_path: 'kgems/conventional_gitflow',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/conventional_gitflow/.templates')
+    project_conventional_gitflow = KDsl::Manage::Project.new('conventional_gitflow', project_conventional_gitflow_config)
+    project_conventional_gitflow.watch_path('**/*.rb', ignore: /.template/)
+
     project_k_decor_config = get_config(relative_resource_path: 'kgems/k_decor',
       app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_decor/.templates')
     project_k_decor = KDsl::Manage::Project.new('k_decor', project_k_decor_config)
@@ -191,6 +201,20 @@ namespace :k_dsl do
     project_gpt3_builder = KDsl::Manage::Project.new('gpt3-builder', project_gpt3_builder_config)
     project_gpt3_builder.watch_path('**/*.rb', ignore: /.template/)
 
+    project_k_domain_config = get_config(relative_resource_path: 'kgems/k_domain',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/k_domain/.templates')
+    project_k_domain = KDsl::Manage::Project.new('k_domain', project_k_domain_config)
+    project_k_domain.watch_path('**/*.rb', ignore: /.template/)
+
+    project_funcky_config = get_config(relative_resource_path: 'kgems/funcky',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/funcky/.templates')
+    project_funcky = KDsl::Manage::Project.new('funcky', project_funcky_config)
+    project_funcky.watch_path('**/*.rb', ignore: /.template/)
+
+    project_ruby_handlebars_helpers_config = get_config(relative_resource_path: 'kgems/ruby-handlebars-helpers',
+      app_template_path: '~/dev/kgems/k_dsl/_projects/kgems/ruby-handlebars-helpers/.templates')
+    project_ruby_handlebars_helpers = KDsl::Manage::Project.new('ruby-handlebars-helpers', project_ruby_handlebars_helpers_config)
+    project_ruby_handlebars_helpers.watch_path('**/*.rb', ignore: /.template/)
 
     # C# - Samples (Programs)
     project_cs_p02_config = get_config(relative_resource_path: 'c#/P02Ef4')
@@ -299,29 +323,35 @@ namespace :k_dsl do
 
     case group
     when :current
-      manager.add_projects(project_command,
-                           # project_print_speak
-                           # project_rspec_usecases,
-                           # project_webpack5_builder,
-                          #  project_idea_video,
-                           # current_html
-                           # current_react,
-                           # current_react_native,
-                           # current_rails,
-                          #  current_cs,
-                           # current_webpack5
-                           # project_k_builder_watch, project_k_builder_dotnet, project_k_builder_webpack5, project_k_builder_package_json, project_k_builder
-                           # project_k_type,
-                           # project_k_ext_github
-                           # project_k_doc,
-                           # project_k_manager,
-                           # project_k_log,
-                           # project_k_util,
-                           # project_k_decor,
-                           #  project_mindmeister_api
-                          #  project_test_miniracer
-                           project_gpt3_builder
-                           )
+      manager.add_projects(
+        project_command,
+        # project_print_speak
+        # project_rspec_usecases,
+        # project_webpack5_builder,
+        #  project_idea_video,
+        # current_html
+        # current_react,
+        # current_react_native,
+        # current_rails,
+        #  current_cs,
+        # current_webpack5
+        # project_k_builder_watch, project_k_builder_dotnet, project_k_builder_webpack5, project_k_builder_package_json, project_k_builder
+        # project_k_type,
+        # project_k_ext_github
+        # project_k_doc,
+        # project_k_manager,
+        # project_k_log,
+        # project_k_util,
+        # project_k_fileset,
+        project_conventional_gitflow,
+        # project_k_decor,
+        # project_mindmeister_api
+        # project_test_miniracer
+        # project_gpt3_builder,
+        # project_k_domain,
+        # project_funcky,
+        # project_ruby_handlebars_helpers
+        )
     when :xyz_commands
       manager.add_projects(project_command,
                            project_k_xmen_command,

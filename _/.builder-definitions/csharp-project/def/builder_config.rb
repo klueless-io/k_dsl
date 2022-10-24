@@ -1,4 +1,4 @@
-KBuilder.configure do |config|
+KConfig.configure do |config|
   solution_root       = '{{solution.app_path}}'
   project_root       = '{{project.app_path}}'
   templates_root    = '~/dev/kgems/k_dsl/_/.template'

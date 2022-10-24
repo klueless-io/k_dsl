@@ -41,7 +41,7 @@ opts = option_builder.build
 
 option_builder.print                    if opts.debug.me
 AppSettings.debug                       if opts.debug.app
-KBuilder.configuration.debug            if opts.debug.config
+KConfig.configuration.debug            if opts.debug.config
 
 solution_settings = AppSettings.current.solution
 project_settings = AppSettings.current.project(:{{project.name}})

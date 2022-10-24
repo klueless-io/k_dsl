@@ -1,3 +1,6 @@
+{{#*inline "related_values_tabular"}}
+{{#each relations}}{{#if ./related_entity}}, "{{snake this.related_entity.name}}.{{snake this.related_entity.main_key}}"{{/if}}{{/each}}
+{{/inline}}
 {{#*inline "related_values"}}
 {{#if relations}}
 
@@ -37,7 +40,7 @@ module Printer
 
     rows = {{camel entity.model_name}}.unscoped.all if rows.nil?
 
-    tp rows{{#each entity.columns_primary}}, :{{snake this.name}}{{/each}}{{#each entity.has_one}}, '{{snake this.name}}.{{snake this.related_entity.main_key}}'{{/each}}{{#each entity.columns_data}}, :{{snake this.name}}{{/each}}
+    tp rows{{#each entity.columns_primary}}, :{{snake this.name}}{{/each}}{{#each entity.has_one}}, '{{snake this.name}}.{{snake this.related_entity.main_key}}'{{/each}}{{#each entity.columns_data}}, :{{snake this.name}}{{/each}}{{> related_values_tabular relations=entity.belongs_to}}
   end
 
   def print_{{snake entity.model_name}}(row)

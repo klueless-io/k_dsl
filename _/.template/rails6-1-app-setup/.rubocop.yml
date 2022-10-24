@@ -46,7 +46,7 @@ Metrics/AbcSize:
 Layout/LineLength:
   Max: 200
   # Ignores annotate output
-  IgnoredPatterns: ['\A# \*\*']
+  AllowedPatterns: ['\A# \*\*']
   IgnoreCopDirectives: true
   Exclude:
     - "spec/helpers/**/*"
