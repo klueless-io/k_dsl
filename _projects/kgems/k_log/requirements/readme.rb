@@ -1,13 +1,16 @@
+# frozen_string_literal: true
+
 # Build README.MD
 # ------------------------------------------------------------
 
 KDsl.blueprint :readme do
   settings do
-    template_rel_path   'ruby-gem'
+    template_rel_path 'ruby-gem'
   end
 
   instructions do
-    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, 'prettier,open')]
+    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true),
+            f(:conflict, 'overwrite'), f(:after_write, 'prettier,open')]
 
     row 'README.md'
     row 'STORIES.md'
@@ -18,7 +21,7 @@ KDsl.blueprint :readme do
     all = rows.select { |row| row.type == 'story' }
     done = all.select { |row| row.status == 'done' }
     current = all.select { |row| row.status == 'current' }
-    featured = done.select { |row| row.featured_position.to_i > 0 }
+    featured = done.select { |row| row.featured_position.to_i.positive? }
                    .sort { |row, _| row.featured_position }
 
     OpenStruct.new(all: all, done: done, current: current, feature: featured)
@@ -38,7 +41,7 @@ KDsl.blueprint :readme do
     # Build Usage
     all = group_rows.map do |group|
       examples = example_rows.select { |example| group.key == example.group_key }
-                             .map    { |example| example.to_h.except(:group_key) } 
+                             .map    { |example| example.to_h.except(:group_key) }
 
       {
         **group.to_h.except(:key),
@@ -49,7 +52,7 @@ KDsl.blueprint :readme do
     detailed = all.select { |g| g[:featured] == false }
     featured = all.select { |g| g[:featured] == true }
 
-    OpenStruct.new(all: all, detailed: detailed, featured: featured)#.to_h
+    OpenStruct.new(all: all, detailed: detailed, featured: featured) # .to_h
   end
 
   def on_action

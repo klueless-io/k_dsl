@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 KDsl.blueprint :bootstrap_github_actions do
   settings do
     name                parent.key
@@ -6,7 +8,8 @@ KDsl.blueprint :bootstrap_github_actions do
   end
 
   instructions do
-    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true), f(:conflict, 'overwrite'), f(:after_write, '')]
+    fields [:template_name, f(:output, '$TEMPLATE_NAME$'), f(:command, 'generate'), f(:active, true),
+            f(:conflict, 'overwrite'), f(:after_write, '')]
 
     # Setup CLI and command execution
     row '.github/workflows/main.yml'
@@ -14,9 +17,11 @@ KDsl.blueprint :bootstrap_github_actions do
 
   is_run = 1
 
-  def on_action
-    run_blueprint microapp: import(:k_log, :microapp)
-  end if is_run == 1
+  if is_run == 1
+    def on_action
+      run_blueprint microapp: import(:k_log, :microapp)
+    end
+  end
 
-  L.warn 'set is_run to true if you want to run the action' if is_run == 0
+  L.warn 'set is_run to true if you want to run the action' if is_run.zero?
 end

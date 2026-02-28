@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Examples on how to use for inclusion into USAGE.MD
 # ------------------------------------------------------------
 
@@ -9,16 +11,16 @@ KDsl.document :usage do
   table :example_groups do
     fields [:key, :group, :description, f(:featured, false)]
 
-    row :basic_example  , :basic_example          , '', featured: true
+    row :basic_example, :basic_example, '', featured: true
 
-    row :sample         , :sample_classes         , ''
+    row :sample, :sample_classes, ''
   end
 
   table :examples do
     # status: :done, :current, :backlog:
     # fields [f(:type, :story), f(:status, :todo), :story, :tasks, f(:featured_position, 0)]
 
-    fields [:group_key, :name, :description, :ruby]
+    fields %i[group_key name description ruby]
 
     row :basic_example, 'Basic example', <<~TEXT, ruby: <<~RUBY
       Description for a basic example to be featured in the main README.MD file
@@ -28,13 +30,12 @@ KDsl.document :usage do
     RUBY
 
     row :sample, 'Simple example', <<~TEXT, ruby: <<~RUBY
-        Description for a simple example that shows up in the USAGE.MD
-      TEXT
-        class SomeRuby
-          def initialize
-          end
+      Description for a simple example that shows up in the USAGE.MD
+    TEXT
+      class SomeRuby
+        def initialize
         end
-      RUBY
-
+      end
+    RUBY
   end
 end

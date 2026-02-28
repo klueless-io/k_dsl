@@ -19,7 +19,7 @@ namespaces.each do |namespace|
   indent += 1
 end
 
-output.push "#{'  ' * indent}VERSION = \'#{version}'"
+output.push "#{'  ' * indent}VERSION = '#{version}'"
 indent -= 1
 
 namespaces.each do
@@ -30,4 +30,4 @@ end
 output.push('')
 
 printf "%-25<label>s : %<version>s\n", label: 'GEM VERSION', version: version
-File.open('lib/{{microapp.settings.application_lib_path}}/version.rb', 'w+') { |f| f.write(output.join("\n")) }
+File.write('lib/{{microapp.settings.application_lib_path}}/version.rb', output.join("\n"))
