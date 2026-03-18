@@ -47,3 +47,6 @@ Gemfile.lock
 
 # ByeBug history
 .byebug_history
+
+# macOS
+.DS_Store
